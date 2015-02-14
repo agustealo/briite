@@ -1,0 +1,103 @@
+/*  Fonts  */
+
+@import url(http://fonts.googleapis.com/css?family=Raleway:400,100,200,300,500,600,700,800,900);
+
+
+a {
+	margin: 0;
+	padding: 0;
+	color: $fontclr;
+	vertical-align: baseline;
+	background: transparent;
+	text-decoration: none;
+	font-weight: 700;
+}
+a:hover{
+	color: $lighter;
+}
+
+content p {
+	line-height: 24px;
+	margin-bottom: 60px;
+}
+
+header .rights p {
+	font-size: 11px;
+	letter-spacing: 1px;
+	line-height: 5px;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	font-family: "raleway", sans-serif, arial;
+	color: $fontclr;
+	font-weight: bold;
+	line-height: 28px;
+	margin-bottom: 30px;
+	letter-spacing: 1px;
+}
+
+h1 {
+	font-size: 2em;
+	margin: .67em 0
+}
+
+h2 {
+	font-size: 1.5em;
+	margin: .75em 0
+}
+
+h3 {
+	font-size: 1.17em;
+	margin: .83em 0
+}
+
+h5 {
+	font-size: .83em;
+	margin: 1.5em 0
+}
+
+h6 {
+	font-size: .75em;
+	margin: 1.67em 0
+}
+
+blockquote,
+q {
+	quotes: none;
+}
+
+blockquote:before,
+blockquote:after,
+q:before,
+q:after {
+	content: '';
+	content: none;
+}
+
+ins {
+	background-color: $alternate;
+	color: $inscolr;
+	border-bottom: 1px dotted;
+}
+
+mark {
+	background-color: $alternate;
+	color: $markcolr;
+	font-style: italic;
+	font-weight: bold;
+}
+
+del {
+	text-decoration: line-through;
+}
+
+abbr[title],
+dfn[title] {
+	border-bottom: 1px dotted;
+	cursor: help;
+}

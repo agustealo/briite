@@ -1,0 +1,28 @@
+/*
+* Colors
+*///////////////////////////////////////////////////////////////////
+
+//Declear palette
+$primary: #414d61;//** fonts | H tags | hr | header nav | Tooltip BG
+$lighter: lighten($primary, 50%);//** main BG |  nav link active
+$darker: darken($primary, 50%);//** ins font | mark font | <a> link
+$base: #fff;//** Nav link | Header BG | Caption BG | Content BG
+$alternate: #ff9;//** ins background | mark background
+
+//Typography
+$fontclr: $primary;
+$lnkcolr: $darker;
+$inscolr: $darker;
+$markcolr: $darker;
+$tooltipcolr: $base;
+
+//Backgrounds
+$bg1: $base;//** body | header |  .main .work .caption | .top .title | .content
+$bg2: $lighter;//** .main | header nav ul li a:active |
+$bg3: $primary;//** .tooltip
+$bg4: $alternate;//** ins | mark
+  //Background image
+$bgimg1: url('../images/sm.png');//** Social links
+$bgimg2: url('../images/sm_hover.png');//** Social links hover
+$bgimg3: url('../images/men_icons.png');//** Work navigation links
+$bgimg4: url('../images/p_navigation.png');//** Menu icon links

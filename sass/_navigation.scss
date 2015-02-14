@@ -1,0 +1,148 @@
+header nav ul {
+	display: block;
+	overflow: hidden;
+	margin-top: 100px;
+}
+
+header nav ul li {
+	display: block;
+	line-height: 30px;
+}
+
+header nav ul li a {
+	font-size: 14px;
+	text-decoration: none;
+	letter-spacing: 1px;
+}
+
+header nav ul li a:hover {
+	color: $primary;
+	letter-spacing: 3px;
+}
+
+.current_page_item a,
+.main-navigation a:hover,
+.main-navigation a:active,
+.main-navigation a:focus {
+	border-left: solid 5px;
+	padding-left: 3px;
+}
+
+.work_nav {
+	display: block;
+	width: 100%;
+}
+
+.work_nav .btn {
+	float: right;
+}
+
+.work_nav ul li {
+	display: block;
+	float: left;
+	margin: 0 0 1px 1px;
+	position: relative;
+}
+
+.work_nav a {
+	display: block;
+	width: 40px;
+	height: 40px;
+	background: $bgimg4 no-repeat;
+	background-position: 0 0;
+}
+
+.work_nav a.previous {
+	background-position: 0 0;
+}
+
+.work_nav a.grid {
+	background-position: -41px 0;
+}
+
+.work_nav a.next {
+	background-position: -82px 0;
+}
+
+@media (max-width: 1100px) {
+	#menu_icon,
+	.close_menu,
+	.show_menu {
+		display: block;
+	}
+	header #menu_icon,
+	header .close_menu {
+		float: right;
+		margin: 30px 30px 0 0;
+		clear: both;
+	}
+	header nav ul {
+		display: none;
+		margin-top: 35px;
+		position: relative;
+	}
+	header nav ul li a {
+		display: block;
+		width: 100%;
+		padding: 30px 0;
+		text-align: center;
+		font-size: 14px;
+		text-decoration: none;
+		border-top: 1px solid #f7f5f5;
+		background: #fff;
+	}
+	header nav ul li a:active {
+		background: $lighter;
+	}
+}
+
+//** Post pagination
+.post-navigation {
+	width: 100%;
+	margin-bottom: 20px;
+	position: relative;
+	text-transform: uppercase;
+	letter-spacing: 5px;
+}
+
+.post-navigation a {
+	position: relative;
+	font-weight: 400;
+}
+
+.post-navigation span {
+	font-size: 30px;
+	display: inline;
+	display: inline-block;
+	display: -webkit-inline-box;
+	display: -moz-inline-box;
+}
+
+.post-navigation .screen-reader-text {
+	margin-top: 50px;
+	font-size: 14px;
+	color: $lighter;
+	text-transform: uppercase;
+	border-bottom: 1px solid $lighter;
+}
+
+.nav-previous,
+.nav-next {
+	position: relative;
+	margin-top: 20px;
+}
+
+.nav-previous a:hover,
+.nav-next a:hover {
+	color: $lighter;
+}
+
+.nav-previous {
+	float: left;
+	margin-left: 50px !important;
+}
+
+.nav-next {
+	float: right;
+	margin-right: 50px !important;
+}
