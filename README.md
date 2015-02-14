@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/agustealo/briite.svg?branch=master)](https://travis-ci.org/agustealo/briite)
+
 _s
 ===
 
