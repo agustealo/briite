@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.org/agustealo/briite.svg?branch=master)](https://travis-ci.org/agustealo/briite)
 
-_s
+briite | A WordPress theme
 ===
 
 briite is a lightweight WordPress theme design for online portfolio presentation. briite was built on the Automattic _s framework.
