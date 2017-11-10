@@ -68,7 +68,14 @@ $(document).ready(function(){
 
 });
 
+// Dictionary List
 
+(function(){
+  $('dl').on('click', 'dt', function() {
+      $(this).next().toggleClass('expand');
+      $(this).toggleClass('expand');
+  });
+})();
 
 
 

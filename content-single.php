@@ -3,8 +3,7 @@
  * @package kriate
  */
 ?>
-
-<article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
+<article id="post-<?php the_ID(); ?>" <?php post_class('work'); ?>>
 	<header class="entry-header">
 		<?php the_title( '<h1 class="entry-title">', '</h1>' ); ?>
 
@@ -32,7 +31,7 @@
 			$tag_list = get_the_tag_list( '', __( ', ', 'kriate' ) );
 
 			if ( ! kriate_categorized_blog() ) {
-				// This blog only has 1 category so we just need to worry about tags in the meta text
+				// If this blog only has 1 category we just need to worry about tags in the meta text
 				if ( '' != $tag_list ) {
 					$meta_text = __( 'This entry was tagged %2$s. Bookmark the <a href="%3$s" rel="bookmark">permalink</a>.', 'kriate' );
 				} else {
@@ -40,7 +39,7 @@
 				}
 
 			} else {
-				// But this blog has loads of categories so we should probably display them here
+				// If this blog has loads of categories we should display them here
 				if ( '' != $tag_list ) {
 					$meta_text = __( 'This entry was posted in %1$s and tagged %2$s. Bookmark the <a href="%3$s" rel="bookmark">permalink</a>.', 'kriate' );
 				} else {

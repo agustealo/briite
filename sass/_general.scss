@@ -2,51 +2,57 @@
 ///////////////////////////////////////////
 *,
 *:after,
-*:before {
+*:before,
+code,
+cite,
+kbd {
 	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
 	box-sizing: border-box;
+    border-radius: 0;
+}
+
+article, aside, dialog, figcaption, figure, footer, header, hgroup, main, nav, section {
+  display: block;
 }
 
 html {
+	margin-top: 0 !important;
+	font-family: sans-serif; // 2
+	line-height: 1.15; // 3
+	-webkit-text-size-adjust: 100%; // 4
+	-ms-text-size-adjust: 100%; // 4
+	-ms-overflow-style: scrollbar; // 5
+	-webkit-tap-highlight-color: rgba(0,0,0,0); // 6
 	-webkit-font-smoothing: subpixel-antialiased;
+}
+
+// IE10+ doesn't honor `<meta name="viewport">` in some cases.
+@at-root {
+  @-ms-viewport {
+    width: device-width;
+  }
+}
+
+// Suppress the focus outline on elements that cannot be accessed via keyboard.
+// This prevents an unwanted focus outline from appearing around elements that
+// might still respond to pointer events.
+//
+[tabindex="-1"]:focus {
+  outline: none !important;
 }
 
 body {
 	font-family: "raleway", sans-serif, arial;
 	color: $fontclr;
-	font-size: 1em;
-	background: $lighter;
-	color: $primary;
-	font-weight: 400;
+	font-size: 14px;
+	background: #f1f1f1;
 	letter-spacing: 1px;
 	line-height: 1;
 	margin: 0;
 	min-height: 100%;
 	padding: 0;
 	word-wrap: break-word;
-}
-
-a {
-	-webkit-transition: all .3s ease-out;
-	-moz-transition: all .3s ease-out;
-	-o-transition: all .3s ease-out;
-	transition: all .3s ease-out;
-}
-
-
-article,
-aside,
-details,
-figcaption,
-figure,
-footer,
-header,
-hgroup,
-menu,
-nav,
-section {
-	letter-spacing: 1.5px;
 }
 
 div {
@@ -58,104 +64,15 @@ img {
 	height: auto;
 }
 
-hr {
-	display: block;
-	height: 1px;
-	border: 0;
-	border-top: 1px solid $primary;
-	margin: 1em 0;
-	padding: 0;
-}
-.entry-content h1,
-.entry-content h2,
-.entry-content h3,
-.entry-content h4,
-.entry-content h5,
-.entry-content h6 {
-	font-weight: bold;
-	margin: 100px 0 30px;
-}
-
-h1 {
-	font-size: 40px;
-	text-transform: none;
-}
-
-h2 {
-	font-size: 36px;
-	text-transform: none;
-}
-
-h3 {
-	font-size: 24px;
-}
-
-h4 {
-	font-size: 18px;
-}
-
-h5 {
-	font-size: 16px;
-}
-
-h6 {
-	font-size: 14px;
-}
-
-.entry-content h1 {
-	font-size: 36px;
-}
-
-.entry-content h2 {
-	font-size: 26px;
-}
-
-.entry-content h3 {
-	font-size: 22px;
-}
-
-.entry-content h4 {
-	font-size: 18px;
-}
-
-.entry-content h5 {
-	font-size: 16px;
-}
-
-.entry-content h6 {
-	font-size: 14px;
-}
-
-b,
-strong {
-	font-weight: 600;
-}
-
-ul {
-	list-style: none;
-	margin: 0;
-	padding: 0;
-}
-
-ul li {
-	line-height: 1.5;
-}
-
-p {
-	margin: 1em 0 2em;
-}
-
 iframe {
 	border: none;
 	max-width: 100% !important;
 }
 
 hr {
-	border: none;
 	clear: both;
-	display: block;
-	height: 1px;
-	margin: 0;
-	padding: 50px 0;
-	position: relative;
+  	box-sizing: content-box; // 1
+	height: 0; // 1
+	overflow: visible; // 2
+	border-top: 1px solid;
 }

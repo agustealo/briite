@@ -7,7 +7,7 @@
  * @package kriate
  */
 
-get_header(); ?>Archive
+get_header(); ?>
 
 		<?php if ( have_posts() ) : ?>
 
@@ -94,5 +94,3 @@ get_header(); ?>Archive
 			<?php get_template_part( 'content', 'none' ); ?>
 
 		<?php endif; ?>
-
-<?php get_footer(); ?>

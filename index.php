@@ -25,7 +25,7 @@ get_header(); ?>
 					 
 						if ( is_home() ) {
 							// This is the blog posts index
-							get_template_part( 'content', 'grid' );
+							get_template_part( 'content', 'home' );
 						} else {
 							// This is not the blog posts index
 							get_template_part( 'content', get_post_format() );

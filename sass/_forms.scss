@@ -184,9 +184,8 @@ label {
 }
 
 #comments {
-	border-top: 1px solid #e5e5e5;
 	clear: both;
-	margin: 90px 0 0;
+	margin: 0;
 	padding: 30px 20px 10px;
 	position: relative;
 }
@@ -360,6 +359,7 @@ label {
 /* Comment form */
 
 .comment-respond {
+	border-top: 1px solid $primary;
 	padding: 30px 0 0;
 }
 
@@ -369,7 +369,7 @@ label {
 }
 
 .comment-reply-title small a {
-	color: #131310;
+	color: $fontclr;
 	display: inline-block;
 	float: right;
 	height: 22px;
@@ -409,7 +409,7 @@ label {
 }
 
 .comment-form .required {
-	color: #ed331c;
+	color: $fontclr;
 }
 
 .comment-form input[type="text"],
@@ -420,17 +420,6 @@ label {
 
 .comment-form textarea {
 	width: 100%;
-}
-
-code {
-	background: $lighter;
-	padding: 5px 10px;
-	font-family: Pragmata, Menlo, 'DejaVu LGC Sans Mono', 'DejaVu Sans Mono', Consolas, 'Everson Mono', 'Lucida Console', 'Andale Mono', 'Nimbus Mono L', 'Liberation Mono', FreeMono, 'Osaka Monospaced', Courier, 'New Courier', monospace;
-}
-
-pre {
-	background: $lighter;
-	padding: 20px;
 }
 
 .form-allowed-tags,

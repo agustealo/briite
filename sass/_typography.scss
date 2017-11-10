@@ -2,6 +2,19 @@
 
 @import url(http://fonts.googleapis.com/css?family=Raleway:400,100,200,300,500,600,700,800,900);
 
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section {
+	letter-spacing: 1.5px;
+}
 
 a {
 	margin: 0;
@@ -11,9 +24,13 @@ a {
 	background: transparent;
 	text-decoration: none;
 	font-weight: 700;
-}
-a:hover{
+	-webkit-transition: all .3s ease-out;
+	-moz-transition: all .3s ease-out;
+	-o-transition: all .3s ease-out;
+	transition: all .3s ease-out;
+	&:hover{
 	color: $lighter;
+	}
 }
 
 content p {
@@ -22,10 +39,46 @@ content p {
 }
 
 header .rights p {
+	display: inline-block;
 	font-size: 11px;
 	letter-spacing: 1px;
 	line-height: 5px;
 }
+//------------------------------------------------------------------------------------------------
+
+b,
+strong {
+	font-weight: 600;
+}
+
+ul {
+    list-style-type: square;
+}
+
+.widget-area {
+  ul {
+      list-style-type: none;
+  }
+}
+ol {
+    list-style-type: decimal;
+}
+
+ul, ol {
+    list-style-position: inside;
+    padding-left: 1em;
+    margin-top: 0;
+    margin-bottom: 10px;
+    li {
+	line-height: 1.5em;
+	}
+}
+
+p {
+	margin: 1em 0 2em;
+}
+
+//------------------------------------------------------------------------------------------------
 
 h1,
 h2,
@@ -34,10 +87,8 @@ h4,
 h5,
 h6 {
 	font-family: "raleway", sans-serif, arial;
-	color: $fontclr;
 	font-weight: bold;
 	line-height: 28px;
-	margin-bottom: 30px;
 	letter-spacing: 1px;
 }
 
@@ -66,23 +117,16 @@ h6 {
 	margin: 1.67em 0
 }
 
-blockquote,
-q {
-	quotes: none;
-}
+//
 
-blockquote:before,
-blockquote:after,
-q:before,
-q:after {
-	content: '';
-	content: none;
-}
 
 ins {
-	background-color: $alternate;
-	color: $inscolr;
+	background-color: $fontclr;
+	color: $base;
 	border-bottom: 1px dotted;
+	font-size: .8em;
+	padding: .2em;
+	margin: .2em;
 }
 
 mark {
@@ -95,9 +139,279 @@ mark {
 del {
 	text-decoration: line-through;
 }
+small, sub, s {
+	font-size: smaller;
+}
+sub {
+    vertical-align: sub;
+}
+s {
+    font-weight: bold;
+}
+
+sup {
+    vertical-align: super;
+    font-size: smaller;
+}
+
+em, cite {
+    font-style: italic;
+    font-weight: 600;
+    font-size: .9em;
+}
+
+abbr[title],
+dfn[title],
+acronym {
+    letter-spacing: 4px;
+    text-decoration: none;
+    border-bottom: 4px dotted;
+}
 
 abbr[title],
 dfn[title] {
-	border-bottom: 1px dotted;
 	cursor: help;
+}
+.entry-content a {
+    border-bottom: 1px dashed;
+    &:hover {
+    border-bottom: 1px solid;
+    transition: ease-out;
+    text-decoration: none;
+    }
+}
+
+// <pre> and <code> styling ****************************************************
+
+
+code, samp, kbd {
+	background: $fontclr;
+	color: $base;
+}
+
+code, samp, kbd, pre, tt, var {
+    line-height: 2em;
+    padding: .15em 1em;
+    font-size: .8em;
+	font-family: Pragmata, Menlo, 'DejaVu LGC Sans Mono', 'DejaVu Sans Mono', Consolas, 'Everson Mono', 'Lucida Console', 'Andale Mono', 'Nimbus Mono L', 'Liberation Mono', FreeMono, 'Osaka Monospaced', Courier, 'New Courier', monospace, sans-serif;
+	text-align: left;
+    display: inline-block;
+    margin-top: 1em;
+}
+
+pre {
+	color: $fontclr;
+	background: $base;
+	padding: 0.1em 0.5em 0.3em 0.7em;
+	border: 1px solid;
+	border-top: 10px solid;
+	margin: 1.7em 0 1.7em 0.3em;
+	overflow: auto;
+	width: 100%;
+	white-space: pre-wrap;
+	code {
+	line-height: 1.6em;
+	font-size: 11px;
+	}
+	
+}
+/* target IE7 and IE6 */
+*:first-child+html pre {
+	padding-bottom: 2em;
+	overflow-y: hidden;
+	overflow: visible;
+	overflow-x: auto; 
+	}
+* html pre { 
+	padding-bottom: 2em;
+	overflow: visible;
+	overflow-x: auto;
+	}
+	
+// Definition list ***********************************************************
+
+dl {
+    position: relative;
+    display: block;
+    padding: 20px;
+    font-size: 12px;
+    line-height: 1.2;
+    color: #414d61;
+    border: solid 1px;
+    background: $bgimg5;
+    background-color: $base;
+    margin: 3em;
+    
+  &:before {
+  	font-family: 'Glyphicons Halflings';
+    content: "\e043";
+    background-color: #fff;
+    border: solid 1px;
+    border-radius: 50%;
+    width: 75px;
+    height: 75px;
+    font-size: 3em;
+    font-weight: bold;
+    color: #414d61;
+    text-align: center;
+    line-height: 75px;
+    position: absolute;
+    left: -30px;
+    top: -30px;
+  }
+  dt:first-child {
+  	margin-top: 3em;
+	}
+}
+dt {
+    font-weight: bold;
+    font-size: 1.1em;
+  }
+  dd {
+    margin: .5em;
+    padding: 0 0 0.5em 0;
+  }
+  
+  
+/*
+dl{  border-bottom: 1px solid #ddd;background-color:#fff;}
+dt {
+  border-left: 1px solid #eee;
+  border-right: 1px solid #eee;
+  border-top: 1px solid #eee; 
+  cursor: pointer;
+  transition:all .4s ease;
+}
+dt:hover{background-color:#f9f9f9;}
+dt.expand{background-color:#eee;}
+dt.expand:before{content:"-";color:#777;border-right: 1px solid #f8f8f8;}
+
+dt:before {
+  content: "+";
+  display: inline-block;
+  margin-right:10px;
+  padding:8px 0 0 0;
+  width:38px;
+  height:30px;
+  text-align:center;
+  color:#ccc;
+  font-size: 18px;
+  border-right: 1px solid #eee;
+  position: relative;
+}
+
+dd {
+  padding:0 25px;
+  background: #f8f8f8;
+  border-left: 1px solid #eee;
+  border-right: 1px solid #eee;
+  margin: 0;
+  height:auto;
+  overflow:hidden;
+  position: relative;
+  max-height:0;
+  transition:all .4s ease;
+}
+dd.expand{ max-height:200px;  padding:10px 25px;}
+ */
+  
+// Blockqoutes *****************************************************************
+
+// Blockqoute 1
+blockquote {
+  position: relative;
+  display:block;
+  padding: 20px;
+  font-size: 14px;
+  line-height: 1.2;
+  color: $fontclr;
+  border: solid 1px;
+  background: $bgimg5;
+  background-color: $base;
+  margin: 3em;
+ p {
+    padding: 0 3em;
+    margin: 0;
+    line-height: 1.8em;
+	}
+	a, a code{
+    color: #ff7f50;
+    text-decoration: underline;
+	}
+}
+
+blockquote::before{
+  content: "\201C"; 
+  background-color: $base;
+  border: solid 1px;
+  border-radius: 50%;
+  width: 75px;
+  height:75px;
+  font-size: 60px;
+  font-weight: bold;
+  color: $fontclr;
+  text-align: center;
+  line-height: 93px;
+  position: absolute;
+  left: -30px;
+  top: -30px;
+}
+
+blockquote::after{
+  content: "\201D"; 
+  background-color: $base;
+  border: solid 1px;
+  border-radius: 50%;
+  width: 75px;
+  height:75px;
+  font-size: 60px;
+  font-weight: bold;
+  color: $fontclr;
+  text-align: center;
+  line-height: 93px;
+  position: absolute;
+  right: -30px;
+  bottom: -30px;
+}
+
+// Blockqoute style 2
+.blockquote_1{
+  display:block;
+  background: #fff;
+  padding: 15px 20px 15px 45px;
+  margin: 0 0 20px;
+  position: relative;
+  
+  /*Font*/
+  font-family: Georgia, serif;
+  font-size: 16px;
+  line-height: 1.2;
+  color: $fontclr;
+  text-align: justify;
+  
+  /*Borders - (Optional)*/
+  border-left: 15px solid $fontclr;
+  border-right: 2px solid $fontclr;
+  
+  /*Box Shadow - (Optional)*/
+  @include border-radius(10px);
+}
+
+.blockquote_1::before{
+  content: "\201C"; /*Unicode for Left Double Quote*/
+  
+  /*Font*/
+  font-family: Georgia, serif;
+  font-size: 60px;
+  font-weight: bold;
+  
+  /*Positioning*/
+  position: absolute;
+  left: 10px;
+  top:5px;
+} 
+
+.blockquote_1 a{
+  cursor: pointer;
+  padding: 0 3px;
 }

@@ -1,0 +1,7 @@
+
+// Box Shadow ******************************************************************
+@mixin border-radius($radius) {
+    -moz-box-shadow: 2px 2px 15px #ccc;
+    -webkit-box-shadow: 2px 2px 15px #ccc;
+    box-shadow: 2px 2px 15px #ccc;
+}

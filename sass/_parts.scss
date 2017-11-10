@@ -9,60 +9,6 @@ select {
 	margin: 0 auto;
 }
 
-header ul.social li a,
-.main .work a .caption,
-header nav ul li a {
-	transition: all .1s linear;
-	-webkit-transition: all .1s linear;
-	-moz-transition: all .1s linear;
-	-o-transition: all .1s linear;
-}
-/*  Header  */
-
-@media (min-width: 1000px) {
-	header {
-		display: block;
-		position: fixed;
-		top: 0;
-		left: 0;
-		width: 300px;
-		min-height: 100%;
-		padding: 0 0 0 50px;
-		background: #ffffff;
-		float: left;
-		overflow: hidden;
-		z-index: 9999;
-	}
-	header .logo {
-		margin-top: 100px;
-	}
-	header .footer {
-		position: absolute;
-		bottom: 50px;
-	}
-	#menu_icon,
-	.close_menu {
-		display: none;
-	}
-}
-
-#menu_icon,
-.close_menu {
-	float: right;
-	margin-right: 40px;
-	width: 40px;
-	height: 40px;
-	cursor: pointer;
-	background: $bgimg3 no-repeat;
-}
-
-#menu_icon {
-	background-position: 0 0;
-}
-
-.close_menu {
-	background-position: -41px 0!important;
-}
 /*  Main  */
 
 .main {
@@ -121,6 +67,23 @@ header nav ul li a {
 	background-position: 50% 50%;
 }
 
+.main .top > .title { // Displays on pages without images
+	
+	background: none;
+    text-align: center;
+    text-transform: uppercase;
+    overflow: hidden;
+    font-weight: 400;
+    letter-spacing: 5px;
+    color: rgba(255, 255, 255, .4);
+    margin-top: 2em !important;
+    font-size: 3em;
+    font-family: inherit;
+    text-shadow: 4px 3px 0 rgba(255, 255, 255, 0.3),
+    			-19px -19px 0 rgba(155, 155, 155, 0.20),
+    	   		19px 19px 0 rgba(155, 155, 155, 0.15);
+}
+
 .top .title {
 	display: block;
 	width: 100%;
@@ -140,7 +103,7 @@ header nav ul li a {
 
 .content {
 	line-height: 22px;
-	padding: 60px 30px;
+	padding: 60px;
 	background: #fff;
 	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;

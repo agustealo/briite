@@ -14,12 +14,33 @@ get_header(); ?>
  * @package kriate
  */
 ?>
-
 <?php if (has_post_thumbnail( $post->ID ) ): ?>
 <?php $image = wp_get_attachment_image_src( get_post_thumbnail_id( $post->ID ), 'single-featured' ); ?>
+<?php $bckgrnd_img = "background-image: url('" . $image[0] . "')" ; // Get image for header background?>
+<?php function kriatetitle(){} ?>
 
-		<section class="top" style="background-image: url('<?php echo $image[0]; ?>')">
-		<?php endif; ?>
+<?php else: ?>
+
+<?php function kriatetitle() { return the_title( '<h1 class="title">', '</h1>' ); } ?>
+
+<?php endif; ?>
+
+<?php /* Color Generator | Generate random hex values for background-color assignment */
+	
+	function random_color_part() { // Value generator, generates a random dechex value
+			
+			$low = 0; // Lowest Hexadecimal Hue Value
+			$high = 75; // Highest Hexadecimal Hue Value
+		    return str_pad( dechex( mt_rand( $low, $high ) ), 2, '0', STR_PAD_LEFT);
+		}
+		
+	function random_color() {
+		    return random_color_part() . random_color_part() . random_color_part();
+		}
+		
+?>
+		<section class="top" style="background-color: #<?php echo random_color(); ?>; <?php echo $bckgrnd_img; ?>">
+			<?php $kriate_title = kriatetitle(); ?>
 			<div class="wrapper content_header clearfix">
 				<div class="work_nav">
 							
@@ -60,7 +81,7 @@ if (!empty( $prev_post )): ?>
 
 	<section class="wrapper">
 	<div class="content">
-		<div class="entry-content">
+		<article class="entry-content">
 			<?php the_content(); ?>
 			<?php
 				wp_link_pages( array(
@@ -68,7 +89,7 @@ if (!empty( $prev_post )): ?>
 					'after'  => '</div>',
 				) );
 			?>
-		</div><!-- .entry-content -->
+		</article><!-- .entry-content -->
 
 	<footer class="entry-footer">
 		<?php
