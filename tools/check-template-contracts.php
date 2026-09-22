@@ -11,7 +11,7 @@ $kriate_root   = dirname( __DIR__ );
 $kriate_failed = false;
 
 $kriate_contracts = array(
-	'category.php' => array(
+	'category.php'     => array(
 		"get_template_part( 'content', 'grid' )",
 		'kriate_paging_nav()',
 	),
