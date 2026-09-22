@@ -38,6 +38,10 @@ Existing media files are not rewritten. WordPress core controls compression for 
 
 Briite no longer adds or saves custom user-profile fields because persistent profile data is outside a theme's presentation responsibility. Existing `twitter`, `facebook`, and `linkedin` user-meta values are not deleted or rewritten during the upgrade. The historical PHP callback names remain available as inert compatibility shims.
 
+= What happened to the Thumbnail column in the Posts and Pages admin lists? =
+
+Briite no longer registers custom WordPress admin list-table columns because that behavior is separate from the theme's front-end presentation. This does not remove featured images or attachment data. The historical thumbnail-column PHP callbacks remain available for a child theme or plugin that deliberately registers them.
+
 == Changelog ==
 
 = 1.1.1 =
@@ -49,6 +53,7 @@ Briite no longer adds or saves custom user-profile fields because persistent pro
 * Removed inactive legacy template and Customizer wiring that duplicated live behavior.
 * Returned future JPEG compression policy to WordPress core while preserving the historical callback symbol.
 * Returned generator output policy to WordPress core and retired theme-owned social-profile persistence without deleting stored user metadata.
+* Retired automatic admin post/page Thumbnail columns while preserving the historical callbacks for explicit downstream opt-in.
 * Added automated coding-standard, compatibility, contract, JavaScript, package, and WordPress runtime gates.
 
 = 1.0 =
@@ -57,7 +62,7 @@ Briite no longer adds or saves custom user-profile fields because persistent pro
 == Upgrade Notice ==
 
 = 1.1.1 =
-Compatibility-focused maintenance release for current WordPress and PHP versions. Existing Briite layout, navigation, widget IDs, Customizer data, and stored user metadata are preserved.
+Compatibility-focused maintenance release for current WordPress and PHP versions. Existing Briite front-end layout, navigation, widget IDs, Customizer data, featured images, attachment data, and stored user metadata are preserved.
 
 == Copyright ==
 
