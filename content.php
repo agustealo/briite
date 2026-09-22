@@ -1,57 +1,73 @@
 <?php
 /**
+ * The default content template part.
+ *
  * @package kriate
  */
-?>
 
+?>
 <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
 	<header class="entry-header">
 		<?php the_title( sprintf( '<h1 class="entry-title"><a href="%s" rel="bookmark">', esc_url( get_permalink() ) ), '</a></h1>' ); ?>
 
-		<?php if ( 'post' == get_post_type() ) : ?>
-		<div class="entry-meta">
-			<?php kriate_posted_on(); ?>
-		</div><!-- .entry-meta -->
+		<?php if ( 'post' === get_post_type() ) : ?>
+			<div class="entry-meta">
+				<?php kriate_posted_on(); ?>
+			</div><!-- .entry-meta -->
 		<?php endif; ?>
 	</header><!-- .entry-header -->
 
 	<div class="entry-content">
-		<?php the_content( __( 'Continue reading <span class="meta-nav">&rarr;</span>', 'kriate' ) ); ?>
+		<?php the_content( wp_kses_post( __( 'Continue reading <span class="meta-nav">&rarr;</span>', 'kriate' ) ) ); ?>
 		<?php
-			wp_link_pages( array(
-				'before' => '<div class="page-links">' . __( 'Pages:', 'kriate' ),
+		wp_link_pages(
+			array(
+				'before' => '<div class="page-links">' . esc_html__( 'Pages:', 'kriate' ),
 				'after'  => '</div>',
-			) );
+			)
+		);
 		?>
 	</div><!-- .entry-content -->
 
 	<footer class="entry-footer">
-		<?php if ( 'post' == get_post_type() ) : // Hide category and tag text for pages on Search ?>
+		<?php if ( 'post' === get_post_type() ) : ?>
 			<?php
-				/* translators: used between list items, there is a space after the comma */
-				$categories_list = get_the_category_list( __( ', ', 'kriate' ) );
-				if ( $categories_list && kriate_categorized_blog() ) :
-			?>
-			<span class="cat-links">
-				<?php printf( __( 'Posted in %1$s', 'kriate' ), $categories_list ); ?>
-			</span>
-			<?php endif; // End if categories ?>
+			$kriate_categories_list = get_the_category_list( esc_html__( ', ', 'kriate' ) );
+			if ( $kriate_categories_list && kriate_categorized_blog() ) :
+				?>
+				<span class="cat-links">
+					<?php
+					printf(
+						/* translators: %s: post categories. */
+						wp_kses_post( __( 'Posted in %1$s', 'kriate' ) ),
+						wp_kses_post( $kriate_categories_list )
+					);
+					?>
+				</span>
+			<?php endif; ?>
 
 			<?php
-				/* translators: used between list items, there is a space after the comma */
-				$tags_list = get_the_tag_list( '', __( ', ', 'kriate' ) );
-				if ( $tags_list ) :
-			?>
-			<span class="tags-links">
-				<?php printf( __( 'Tagged %1$s', 'kriate' ), $tags_list ); ?>
-			</span>
-			<?php endif; // End if $tags_list ?>
-		<?php endif; // End if 'post' == get_post_type() ?>
-
-		<?php if ( ! post_password_required() && ( comments_open() || '0' != get_comments_number() ) ) : ?>
-		<span class="comments-link"><?php comments_popup_link( __( 'Leave a comment', 'kriate' ), __( '1 Comment', 'kriate' ), __( '% Comments', 'kriate' ) ); ?></span>
+			$kriate_tags_list = get_the_tag_list( '', esc_html__( ', ', 'kriate' ) );
+			if ( $kriate_tags_list ) :
+				?>
+				<span class="tags-links">
+					<?php
+					printf(
+						/* translators: %s: post tags. */
+						wp_kses_post( __( 'Tagged %1$s', 'kriate' ) ),
+						wp_kses_post( $kriate_tags_list )
+					);
+					?>
+				</span>
+			<?php endif; ?>
 		<?php endif; ?>
 
-		<?php edit_post_link( __( 'Edit', 'kriate' ), '<span class="edit-link">', '</span>' ); ?>
+		<?php if ( ! post_password_required() && ( comments_open() || 0 < (int) get_comments_number() ) ) : ?>
+			<span class="comments-link">
+				<?php comments_popup_link( esc_html__( 'Leave a comment', 'kriate' ), esc_html__( '1 Comment', 'kriate' ), esc_html__( '% Comments', 'kriate' ) ); ?>
+			</span>
+		<?php endif; ?>
+
+		<?php edit_post_link( esc_html__( 'Edit', 'kriate' ), '<span class="edit-link">', '</span>' ); ?>
 	</footer><!-- .entry-footer -->
 </article><!-- #post-## -->
