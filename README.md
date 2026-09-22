@@ -1,9 +1,13 @@
-briite | A WordPress theme
-===
+# Briite
 
-briite is a lightweight WordPress theme design for online portfolio presentation. briite was built on the Automattic _s framework.
-This ultra-lightweight theme was built with minimal third party libraries making it light and quick. Here are some of the other more interesting things you'll find here:
-•	A just right amount of lean, well-commented, modern, HTML5 templates.
-•	A helpful 404 template.
-•	Some small tweaks in inc/extras.php that can improve your theming experience.
-•	Licensed under GPLv2 or later. :) Use it to make something cool.
+Briite is a classic WordPress portfolio/blog theme maintained for current WordPress and PHP while preserving its original layout, template hierarchy, menu/widget contracts, Customizer behavior, and familiar front-end experience.
+
+## Compatibility
+
+- WordPress: 5.9+
+- Tested through WordPress 7.1
+- PHP: 7.4 through 8.5
+
+## Development
+
+Run `composer install` and `composer lint` for WordPress Coding Standards and PHP compatibility checks. GitHub Actions also performs PHP syntax checks and a real WordPress 7.1.1 activation/render smoke test.
