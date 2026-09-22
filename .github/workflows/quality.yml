@@ -71,8 +71,39 @@ jobs:
       - name: Run PHPCompatibilityWP
         run: composer phpcompat
 
+  wordpress-standards-modernized:
+    name: WordPress standards - modernized surface
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          coverage: none
+          tools: composer:v2
+
+      - name: Install development tools
+        run: composer install --no-interaction --no-progress --prefer-dist
+
+      - name: Enforce WPCS on compatibility slice
+        run: >-
+          vendor/bin/phpcs --standard=phpcs.xml.dist
+          archive.php
+          content-search.php
+          footer.php
+          functions.php
+          header.php
+          inc/profile.php
+          search.php
+          sidebar.php
+          single.php
+
   wordpress-standards-audit:
-    name: WordPress standards audit
+    name: WordPress standards - legacy backlog audit
     runs-on: ubuntu-latest
     continue-on-error: true
 
@@ -90,5 +121,5 @@ jobs:
       - name: Install development tools
         run: composer install --no-interaction --no-progress --prefer-dist
 
-      - name: Run WPCS audit
+      - name: Run full-repository WPCS audit
         run: composer lint
