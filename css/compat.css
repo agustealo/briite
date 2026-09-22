@@ -59,6 +59,23 @@
 	outline-offset: 3px;
 }
 
+@media (max-width: 1100px) {
+	.main-navigation .menu-item-has-children:focus-within,
+	.main-navigation .page_item_has_children:focus-within {
+		height: auto;
+	}
+
+	.main-navigation .menu-item-has-children:focus-within > .sub-menu,
+	.main-navigation .page_item_has_children:focus-within > .children {
+		display: block;
+		margin: 0;
+		padding: 0;
+		position: relative;
+		visibility: visible;
+		width: 100%;
+	}
+}
+
 @media (prefers-reduced-motion: reduce) {
 	*,
 	*::before,
