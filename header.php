@@ -46,9 +46,9 @@
 		</nav><!-- #site-navigation -->
 		<div class="footer clearfix">
 			<ul class="social clearfix">
-				<li><a href="#" class="fb" data-title="Facebook"><span class="screen-reader-text"><?php esc_html_e( 'Facebook', 'kriate' ); ?></span></a></li>
-				<li><a href="#" class="google" data-title="Google +"><span class="screen-reader-text"><?php esc_html_e( 'Google Plus', 'kriate' ); ?></span></a></li>
-				<li><a href="#" class="behance" data-title="Behance"><span class="screen-reader-text"><?php esc_html_e( 'Behance', 'kriate' ); ?></span></a></li>
+				<li><a class="fb" aria-hidden="true" tabindex="-1"></a></li>
+				<li><a class="google" aria-hidden="true" tabindex="-1"></a></li>
+				<li><a class="behance" aria-hidden="true" tabindex="-1"></a></li>
 				<li><a href="<?php echo esc_url( get_feed_link() ); ?>" class="rss" data-title="RSS"><span class="screen-reader-text"><?php esc_html_e( 'RSS', 'kriate' ); ?></span></a></li>
 			</ul><!-- end social -->
 			<div class="rights">
