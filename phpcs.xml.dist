@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<ruleset name="Briite">
+	<description>WordPress coding standards for the Briite theme.</description>
+
+	<file>.</file>
+
+	<arg name="basepath" value="."/>
+	<arg name="colors"/>
+	<arg value="ps"/>
+	<arg name="extensions" value="php"/>
+
+	<exclude-pattern>*/vendor/*</exclude-pattern>
+	<exclude-pattern>*/node_modules/*</exclude-pattern>
+	<exclude-pattern>*/.git/*</exclude-pattern>
+
+	<config name="minimum_supported_wp_version" value="5.9"/>
+
+	<rule ref="WordPress">
+		<exclude name="WordPress.NamingConventions.ValidFunctionName.FunctionNameInvalid"/>
+	</rule>
+
+	<!-- Historical public callbacks keep their names so child-theme integrations do not break. -->
+	<rule ref="WordPress.NamingConventions.PrefixAllGlobals">
+		<properties>
+			<property name="prefixes" type="array">
+				<element value="kriate"/>
+				<element value="complete"/>
+				<element value="smashing"/>
+				<element value="fb"/>
+				<element value="social"/>
+			</property>
+		</properties>
+	</rule>
+</ruleset>
