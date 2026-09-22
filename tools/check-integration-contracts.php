@@ -11,15 +11,17 @@ $kriate_root   = dirname( __DIR__ );
 $kriate_failed = false;
 
 $kriate_files = array(
-	'header.php'           => $kriate_root . '/header.php',
-	'inc/custom-header.php' => $kriate_root . '/inc/custom-header.php',
-	'inc/customizer.php'   => $kriate_root . '/inc/customizer.php',
-	'inc/jetpack.php'      => $kriate_root . '/inc/jetpack.php',
+	'header.php',
+	'inc/custom-header.php',
+	'inc/customizer.php',
+	'inc/jetpack.php',
 );
 
 $kriate_sources = array();
 
-foreach ( $kriate_files as $kriate_relative_path => $kriate_absolute_path ) {
+foreach ( $kriate_files as $kriate_relative_path ) {
+	$kriate_absolute_path = $kriate_root . '/' . $kriate_relative_path;
+
 	if ( ! is_file( $kriate_absolute_path ) ) {
 		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fwrite -- Development-only CLI output; WordPress is not bootstrapped.
 		fwrite( STDERR, "Missing Briite integration contract file: {$kriate_relative_path}\n" );
@@ -122,6 +124,7 @@ if ( isset( $kriate_sources['inc/jetpack.php'] ) ) {
 			fwrite( STDERR, "Retired Briite Jetpack Infinite Scroll setting remains: {$kriate_retired_setting}\n" );
 			$kriate_failed = true;
 		}
+	}
 }
 
 if ( $kriate_failed ) {
