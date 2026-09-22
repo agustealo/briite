@@ -1,14 +1,17 @@
-<?php /* @package kriate */
+<?php
+/**
+ * The template for displaying category archives.
+ *
+ * @package kriate
+ */
 
-get_header(); ?>
-		<?php if ( have_posts() ) : ?>
+get_header();
 
-			<?php /* Start the Loop */ ?>
-			<?php while ( have_posts() ) : the_post(); ?>
+if ( have_posts() ) :
+	while ( have_posts() ) :
+		the_post();
+		get_template_part( 'content', 'grid' );
+	endwhile;
+endif;
 
-				<?php get_template_part( 'content', 'grid' ); ?>
-
-			<?php endwhile; ?>
-
-		<?php endif; ?>
-<?php get_footer(); ?>
+get_footer();
