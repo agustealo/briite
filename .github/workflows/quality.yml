@@ -104,6 +104,46 @@ jobs:
       - name: Enforce WPCS on the full repository
         run: composer lint
 
+  release-package:
+    name: Consumer release package
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # v2
+        with:
+          php-version: '8.3'
+          coverage: none
+          tools: composer:v2
+
+      - name: Build consumer package
+        run: composer package
+
+      - name: Verify release archive contents
+        shell: bash
+        run: |
+          set -euo pipefail
+          THEME_ZIP="$(find dist -maxdepth 1 -type f -name 'briite-*.zip' -print -quit)"
+          CHECKSUM_FILE="${THEME_ZIP}.sha256"
+          test -n "${THEME_ZIP}"
+          test -f "${CHECKSUM_FILE}"
+          unzip -t "${THEME_ZIP}"
+          grep -q 'briite/readme.txt' < <(unzip -Z1 "${THEME_ZIP}")
+          grep -q 'briite/LICENSE.txt' < <(unzip -Z1 "${THEME_ZIP}")
+
+      - name: Upload consumer package
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: briite-release-${{ github.sha }}
+          path: |
+            dist/briite-*.zip
+            dist/briite-*.zip.sha256
+          if-no-files-found: error
+          compression-level: 0
+
   wordpress-runtime:
     name: WordPress 7.1.1 runtime smoke
     runs-on: ubuntu-latest
@@ -135,6 +175,9 @@ jobs:
           coverage: none
           tools: wp-cli
 
+      - name: Build consumer package
+        run: bash tools/build-release.sh
+
       - name: Install WordPress 7.1.1
         shell: bash
         run: |
@@ -159,16 +202,13 @@ jobs:
           wp config set WP_DEBUG_LOG true --raw --path=/tmp/wordpress
           wp config set WP_DEBUG_DISPLAY false --raw --path=/tmp/wordpress
 
-      - name: Install and activate Briite
+      - name: Install and activate packaged Briite
         shell: bash
         run: |
           set -euo pipefail
-          mkdir -p /tmp/wordpress/wp-content/themes/briite
-          rsync -a \
-            --exclude='.git' \
-            --exclude='vendor' \
-            ./ /tmp/wordpress/wp-content/themes/briite/
-          wp theme activate briite --path=/tmp/wordpress
+          THEME_ZIP="$(find dist -maxdepth 1 -type f -name 'briite-*.zip' -print -quit)"
+          test -n "${THEME_ZIP}"
+          wp theme install "${THEME_ZIP}" --force --activate --path=/tmp/wordpress
 
       - name: Verify preserved theme contracts
         shell: bash
@@ -267,23 +307,23 @@ jobs:
           CATEGORY_ID=$(wp term create category 'Briite Smoke Category' \
             --path=/tmp/wordpress \
             --porcelain)
-          wp post term add "$POST_ID" category "$CATEGORY_ID" --path=/tmp/wordpress
+          wp post term add "${POST_ID}" category "${CATEGORY_ID}" --path=/tmp/wordpress
           wp option update posts_per_page 1 --path=/tmp/wordpress >/dev/null
 
           MENU_ID=$(wp menu create 'Briite Smoke Menu' --path=/tmp/wordpress --porcelain)
-          PARENT_ITEM_ID=$(wp menu item add-post "$MENU_ID" "$PAGE_ID" \
+          PARENT_ITEM_ID=$(wp menu item add-post "${MENU_ID}" "${PAGE_ID}" \
             --path=/tmp/wordpress \
             --title='Briite Parent Menu Item' \
             --porcelain)
-          wp menu item add-post "$MENU_ID" "$CHILD_PAGE_ID" \
+          wp menu item add-post "${MENU_ID}" "${CHILD_PAGE_ID}" \
             --path=/tmp/wordpress \
             --title='Briite Child Menu Item' \
-            --parent-id="$PARENT_ITEM_ID" \
+            --parent-id="${PARENT_ITEM_ID}" \
             --porcelain >/dev/null
-          wp menu location assign "$MENU_ID" primary --path=/tmp/wordpress
+          wp menu location assign "${MENU_ID}" primary --path=/tmp/wordpress
 
           printf 'post_id=%s\nolder_post_id=%s\npage_id=%s\ncategory_id=%s\n' \
-            "$POST_ID" "$OLDER_POST_ID" "$PAGE_ID" "$CATEGORY_ID" >> "$GITHUB_OUTPUT"
+            "${POST_ID}" "${OLDER_POST_ID}" "${PAGE_ID}" "${CATEGORY_ID}" >> "${GITHUB_OUTPUT}"
 
       - name: Render representative front-end routes
         shell: bash
@@ -296,13 +336,13 @@ jobs:
           set -euo pipefail
           php -S 127.0.0.1:8080 -t /tmp/wordpress >/tmp/briite-php-server.log 2>&1 &
           SERVER_PID=$!
-          trap 'kill "$SERVER_PID" 2>/dev/null || true' EXIT
+          trap 'kill "${SERVER_PID}" 2>/dev/null || true' EXIT
 
           for attempt in $(seq 1 20); do
             if curl --fail --silent http://127.0.0.1:8080/ >/dev/null; then
               break
             fi
-            if [ "$attempt" -eq 20 ]; then
+            if [ "${attempt}" -eq 20 ]; then
               cat /tmp/briite-php-server.log
               exit 1
             fi
@@ -336,12 +376,12 @@ jobs:
           index=0
           for route in "${routes[@]}"; do
             output="/tmp/briite-route-${index}.html"
-            curl --fail --silent --show-error "http://127.0.0.1:8080${route}" > "$output"
-            grep -q '</html>' "$output"
-            grep -q '/js/theme.js' "$output"
-            grep -q '/css/bootstrap-3.3.7.min.css' "$output"
-            ! grep -q '/css/editor.css' "$output"
-            ! grep -q 'maxcdn.bootstrapcdn.com' "$output"
+            curl --fail --silent --show-error "http://127.0.0.1:8080${route}" > "${output}"
+            grep -q '</html>' "${output}"
+            grep -q '/js/theme.js' "${output}"
+            grep -q '/css/bootstrap-3.3.7.min.css' "${output}"
+            ! grep -q '/css/editor.css' "${output}"
+            ! grep -q 'maxcdn.bootstrapcdn.com' "${output}"
             index=$(( index + 1 ))
           done
 
@@ -359,15 +399,15 @@ jobs:
           not_found_status=$(curl \
             --silent \
             --show-error \
-            --output "$not_found_output" \
+            --output "${not_found_output}" \
             --write-out '%{http_code}' \
             'http://127.0.0.1:8080/?p=999999')
-          test "$not_found_status" = '404'
-          grep -q '</html>' "$not_found_output"
-          grep -q '/js/theme.js' "$not_found_output"
-          grep -q '/css/bootstrap-3.3.7.min.css' "$not_found_output"
-          ! grep -q '/css/editor.css' "$not_found_output"
-          ! grep -q 'maxcdn.bootstrapcdn.com' "$not_found_output"
+          test "${not_found_status}" = '404'
+          grep -q '</html>' "${not_found_output}"
+          grep -q '/js/theme.js' "${not_found_output}"
+          grep -q '/css/bootstrap-3.3.7.min.css' "${not_found_output}"
+          ! grep -q '/css/editor.css' "${not_found_output}"
+          ! grep -q 'maxcdn.bootstrapcdn.com' "${not_found_output}"
 
       - name: Fail on WordPress runtime diagnostics
         if: always()
