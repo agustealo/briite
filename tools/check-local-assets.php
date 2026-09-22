@@ -11,6 +11,7 @@ $kriate_root   = dirname( __DIR__ );
 $kriate_failed = false;
 
 $kriate_required_assets = array(
+	'css/bootstrap-3.3.7.css',
 	'css/bootstrap-3.3.7.min.css',
 	'css/editor.css',
 	'fonts/glyphicons-halflings-regular.eot',
@@ -37,6 +38,7 @@ foreach ( $kriate_required_assets as $kriate_relative_path ) {
 }
 
 $kriate_expected_git_blobs = array(
+	'css/bootstrap-3.3.7.css'                  => '6167622cecfb5c0f04156363565e3d4109fc55c5',
 	'css/bootstrap-3.3.7.min.css'              => 'ed3905e0e0c91d4ed7d8aa14412dffeb038745ff',
 	'fonts/glyphicons-halflings-regular.eot'   => 'b93a4953fff68df523aa7656497ee339d6026d64',
 	'fonts/glyphicons-halflings-regular.svg'   => '94fb5490a2ed10b2c69a4a567a4fd2e4f706d841',
