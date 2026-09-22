@@ -109,7 +109,7 @@ get_header(); ?>
 			<?php kriate_post_nav(); ?>
 
 			<?php
-			if ( comments_open() || '0' !== get_comments_number() ) {
+			if ( comments_open() || 0 < (int) get_comments_number() ) {
 				comments_template();
 			}
 			?>
