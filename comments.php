@@ -21,16 +21,14 @@ if ( post_password_required() ) {
 
 			if ( 1 === $kriate_comments_number ) {
 				/* translators: %s: post title. */
-				$kriate_comments_format = __( 'One thought on &ldquo;%s&rdquo;', 'kriate' );
-				$kriate_comments_title  = sprintf(
-					$kriate_comments_format,
+				$kriate_comments_title = sprintf(
+					__( 'One thought on &ldquo;%s&rdquo;', 'kriate' ),
 					'<span>' . esc_html( get_the_title() ) . '</span>'
 				);
 			} else {
 				/* translators: 1: comment count, 2: post title. */
-				$kriate_comments_format = _n( '%1$s thought on &ldquo;%2$s&rdquo;', '%1$s thoughts on &ldquo;%2$s&rdquo;', $kriate_comments_number, 'kriate' );
-				$kriate_comments_title  = sprintf(
-					$kriate_comments_format,
+				$kriate_comments_title = sprintf(
+					_n( '%1$s thought on &ldquo;%2$s&rdquo;', '%1$s thoughts on &ldquo;%2$s&rdquo;', $kriate_comments_number, 'kriate' ),
 					number_format_i18n( $kriate_comments_number ),
 					'<span>' . esc_html( get_the_title() ) . '</span>'
 				);
