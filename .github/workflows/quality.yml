@@ -230,7 +230,6 @@ jobs:
             "/?page_id=${PAGE_ID}"
             "/?s=Briite"
             "/?cat=${CATEGORY_ID}"
-            "/?p=999999"
           )
 
           index=0
@@ -241,6 +240,17 @@ jobs:
             grep -q '/js/theme.js' "$output"
             index=$(( index + 1 ))
           done
+
+          not_found_output=/tmp/briite-route-404.html
+          not_found_status=$(curl \
+            --silent \
+            --show-error \
+            --output "$not_found_output" \
+            --write-out '%{http_code}' \
+            'http://127.0.0.1:8080/?p=999999')
+          test "$not_found_status" = '404'
+          grep -q '</html>' "$not_found_output"
+          grep -q '/js/theme.js' "$not_found_output"
 
       - name: Fail on WordPress runtime diagnostics
         if: always()
