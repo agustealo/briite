@@ -1,0 +1,41 @@
+name: Vendor exact Bootstrap CSS
+
+on:
+  push:
+    branches:
+      - modernize/vendor-bootstrap-css
+
+permissions:
+  contents: write
+
+jobs:
+  vendor-bootstrap:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+
+      - name: Import verified Bootstrap 3.3.7 CSS
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p css/vendor
+          curl --fail --location --proto '=https' --tlsv1.2 \
+            https://raw.githubusercontent.com/twbs/bootstrap/v3.3.7/dist/css/bootstrap.min.css \
+            --output css/vendor/bootstrap-3.3.7.min.css
+
+          actual_blob="$(git hash-object css/vendor/bootstrap-3.3.7.min.css)"
+          expected_blob="ed3905e0e0c91d4ed7d8aa14412dffeb038745ff"
+
+          if [[ "${actual_blob}" != "${expected_blob}" ]]; then
+            echo "Bootstrap blob mismatch: expected ${expected_blob}, got ${actual_blob}" >&2
+            exit 1
+          fi
+
+          rm .github/workflows/vendor-bootstrap.yml
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add css/vendor/bootstrap-3.3.7.min.css .github/workflows/vendor-bootstrap.yml
+          git commit -m "Vendor exact Bootstrap 3.3.7 CSS [vendor-bootstrap]"
+          git push origin HEAD:modernize/vendor-bootstrap-css
