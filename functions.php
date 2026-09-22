@@ -151,6 +151,7 @@ function kriate_render_thumbnail_column( $column_name, $post_id ) {
 	echo esc_html__( 'None', 'kriate' );
 }
 
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedFunctionFound -- Public callback retained for backwards compatibility.
 /**
  * Historical post-column callback retained for compatibility.
  *
@@ -158,10 +159,10 @@ function kriate_render_thumbnail_column( $column_name, $post_id ) {
  * @param int    $post_id     Current post ID.
  * @return void
  */
-// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedFunctionFound -- Public callback retained for backwards compatibility.
 function fb_AddThumbValue( $column_name, $post_id ) {
 	kriate_render_thumbnail_column( $column_name, $post_id );
 }
+// phpcs:enable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedFunctionFound
 
 /**
  * Historical page-column callback retained for compatibility.
