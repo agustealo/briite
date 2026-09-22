@@ -33,6 +33,14 @@ if ( ! function_exists( 'kriate_setup' ) ) :
 		add_theme_support( 'title-tag' );
 		add_theme_support( 'post-thumbnails' );
 		add_theme_support( 'responsive-embeds' );
+		add_theme_support( 'editor-styles' );
+
+		add_editor_style(
+			array(
+				'css/fonts.css',
+				'css/editor.css',
+			)
+		);
 
 		add_image_size( 'single-banner', 1300, 500, array( 'center', 'center' ) );
 		add_image_size( 'grid-thumb', 450, 450, array( 'center', 'center' ) );
