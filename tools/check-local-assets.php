@@ -36,12 +36,12 @@ foreach ( $kriate_required_assets as $kriate_relative_path ) {
 }
 
 $kriate_expected_git_blobs = array(
-	'css/bootstrap-3.3.7.min.css'                => 'ed3905e0e0c91d4ed7d8aa14412dffeb038745ff',
-	'fonts/glyphicons-halflings-regular.eot'     => 'b93a4953fff68df523aa7656497ee339d6026d64',
-	'fonts/glyphicons-halflings-regular.svg'     => '94fb5490a2ed10b2c69a4a567a4fd2e4f706d841',
-	'fonts/glyphicons-halflings-regular.ttf'     => '1413fc609ab6f21774de0cb7e01360095584f65b',
-	'fonts/glyphicons-halflings-regular.woff'    => '9e612858f802245ddcbf59788a0db942224bab35',
-	'fonts/glyphicons-halflings-regular.woff2'   => '64539b54c3751a6d9adb44c8e3a45ba5a73b77f0',
+	'css/bootstrap-3.3.7.min.css'              => 'ed3905e0e0c91d4ed7d8aa14412dffeb038745ff',
+	'fonts/glyphicons-halflings-regular.eot'   => 'b93a4953fff68df523aa7656497ee339d6026d64',
+	'fonts/glyphicons-halflings-regular.svg'   => '94fb5490a2ed10b2c69a4a567a4fd2e4f706d841',
+	'fonts/glyphicons-halflings-regular.ttf'   => '1413fc609ab6f21774de0cb7e01360095584f65b',
+	'fonts/glyphicons-halflings-regular.woff'  => '9e612858f802245ddcbf59788a0db942224bab35',
+	'fonts/glyphicons-halflings-regular.woff2' => '64539b54c3751a6d9adb44c8e3a45ba5a73b77f0',
 );
 
 foreach ( $kriate_expected_git_blobs as $kriate_relative_path => $kriate_expected_blob ) {
