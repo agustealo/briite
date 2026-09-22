@@ -1,0 +1,27 @@
+/* Briite's bundled Raleway faces. Keep these local so the theme has no runtime font-service dependency. */
+@font-face {
+	font-family: 'Raleway';
+	font-style: normal;
+	font-weight: 400;
+	font-display: swap;
+	src: url('../fonts/raleway-regular.woff') format('woff'),
+		url('../fonts/raleway-regular.ttf') format('truetype');
+}
+
+@font-face {
+	font-family: 'Raleway';
+	font-style: normal;
+	font-weight: 600;
+	font-display: swap;
+	src: url('../fonts/raleway-semibold.woff') format('woff'),
+		url('../fonts/raleway-semibold.ttf') format('truetype');
+}
+
+@font-face {
+	font-family: 'Raleway';
+	font-style: normal;
+	font-weight: 700;
+	font-display: swap;
+	src: url('../fonts/raleway-bold.woff') format('woff'),
+		url('../fonts/raleway-bold.ttf') format('truetype');
+}
