@@ -21,7 +21,8 @@
       "@local-assets",
       "@template-contracts",
       "@integration-contracts",
-      "@theme-scope-contracts"
+      "@theme-scope-contracts",
+      "@package:wordpress-org"
     ],
     "local-assets": "php tools/check-local-assets.php",
     "template-contracts": "php tools/check-template-contracts.php",
