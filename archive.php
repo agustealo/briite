@@ -2,95 +2,67 @@
 /**
  * The template for displaying archive pages.
  *
- * Learn more: http://codex.wordpress.org/Template_Hierarchy
- *
  * @package kriate
  */
 
 get_header(); ?>
 
-		<?php if ( have_posts() ) : ?>
+	<?php if ( have_posts() ) : ?>
 
-			<header class="page-header">
-				<h1 class="page-title">
-					<?php
-						if ( is_category() ) :
-							single_cat_title();
-
-						elseif ( is_tag() ) :
-							single_tag_title();
-
-						elseif ( is_author() ) :
-							printf( __( 'Author: %s', 'kriate' ), '<span class="vcard">' . get_the_author() . '</span>' );
-
-						elseif ( is_day() ) :
-							printf( __( 'Day: %s', 'kriate' ), '<span>' . get_the_date() . '</span>' );
-
-						elseif ( is_month() ) :
-							printf( __( 'Month: %s', 'kriate' ), '<span>' . get_the_date( _x( 'F Y', 'monthly archives date format', 'kriate' ) ) . '</span>' );
-
-						elseif ( is_year() ) :
-							printf( __( 'Year: %s', 'kriate' ), '<span>' . get_the_date( _x( 'Y', 'yearly archives date format', 'kriate' ) ) . '</span>' );
-
-						elseif ( is_tax( 'post_format', 'post-format-aside' ) ) :
-							_e( 'Asides', 'kriate' );
-
-						elseif ( is_tax( 'post_format', 'post-format-gallery' ) ) :
-							_e( 'Galleries', 'kriate' );
-
-						elseif ( is_tax( 'post_format', 'post-format-image' ) ) :
-							_e( 'Images', 'kriate' );
-
-						elseif ( is_tax( 'post_format', 'post-format-video' ) ) :
-							_e( 'Videos', 'kriate' );
-
-						elseif ( is_tax( 'post_format', 'post-format-quote' ) ) :
-							_e( 'Quotes', 'kriate' );
-
-						elseif ( is_tax( 'post_format', 'post-format-link' ) ) :
-							_e( 'Links', 'kriate' );
-
-						elseif ( is_tax( 'post_format', 'post-format-status' ) ) :
-							_e( 'Statuses', 'kriate' );
-
-						elseif ( is_tax( 'post_format', 'post-format-audio' ) ) :
-							_e( 'Audios', 'kriate' );
-
-						elseif ( is_tax( 'post_format', 'post-format-chat' ) ) :
-							_e( 'Chats', 'kriate' );
-
-						else :
-							_e( 'Archives', 'kriate' );
-
-						endif;
-					?>
-				</h1>
+		<header class="page-header">
+			<h1 class="page-title">
 				<?php
-					// Show an optional term description.
-					$term_description = term_description();
-					if ( ! empty( $term_description ) ) :
-						printf( '<div class="taxonomy-description">%s</div>', $term_description );
-					endif;
+				if ( is_category() ) :
+					single_cat_title();
+				elseif ( is_tag() ) :
+					single_tag_title();
+				elseif ( is_author() ) :
+					printf( esc_html__( 'Author: %s', 'kriate' ), '<span class="vcard">' . esc_html( get_the_author() ) . '</span>' );
+				elseif ( is_day() ) :
+					printf( esc_html__( 'Day: %s', 'kriate' ), '<span>' . esc_html( get_the_date() ) . '</span>' );
+				elseif ( is_month() ) :
+					printf( esc_html__( 'Month: %s', 'kriate' ), '<span>' . esc_html( get_the_date( _x( 'F Y', 'monthly archives date format', 'kriate' ) ) ) . '</span>' );
+				elseif ( is_year() ) :
+					printf( esc_html__( 'Year: %s', 'kriate' ), '<span>' . esc_html( get_the_date( _x( 'Y', 'yearly archives date format', 'kriate' ) ) ) . '</span>' );
+				elseif ( is_tax( 'post_format', 'post-format-aside' ) ) :
+					esc_html_e( 'Asides', 'kriate' );
+				elseif ( is_tax( 'post_format', 'post-format-gallery' ) ) :
+					esc_html_e( 'Galleries', 'kriate' );
+				elseif ( is_tax( 'post_format', 'post-format-image' ) ) :
+					esc_html_e( 'Images', 'kriate' );
+				elseif ( is_tax( 'post_format', 'post-format-video' ) ) :
+					esc_html_e( 'Videos', 'kriate' );
+				elseif ( is_tax( 'post_format', 'post-format-quote' ) ) :
+					esc_html_e( 'Quotes', 'kriate' );
+				elseif ( is_tax( 'post_format', 'post-format-link' ) ) :
+					esc_html_e( 'Links', 'kriate' );
+				elseif ( is_tax( 'post_format', 'post-format-status' ) ) :
+					esc_html_e( 'Statuses', 'kriate' );
+				elseif ( is_tax( 'post_format', 'post-format-audio' ) ) :
+					esc_html_e( 'Audios', 'kriate' );
+				elseif ( is_tax( 'post_format', 'post-format-chat' ) ) :
+					esc_html_e( 'Chats', 'kriate' );
+				else :
+					esc_html_e( 'Archives', 'kriate' );
+				endif;
 				?>
-			</header><!-- .page-header -->
-
-			<?php /* Start the Loop */ ?>
-			<?php while ( have_posts() ) : the_post(); ?>
-
-				<?php
-					/* Include the Post-Format-specific template for the content.
-					 * If you want to override this in a child theme, then include a file
-					 * called content-___.php (where ___ is the Post Format name) and that will be used instead.
-					 */
-					get_template_part( 'content', get_post_format() );
+			</h1>
+			<?php
+			$term_description = term_description();
+			if ( ! empty( $term_description ) ) :
 				?>
+				<div class="taxonomy-description"><?php echo wp_kses_post( $term_description ); ?></div>
+			<?php endif; ?>
+		</header><!-- .page-header -->
 
-			<?php endwhile; ?>
+		<?php while ( have_posts() ) : the_post(); ?>
+			<?php get_template_part( 'content', get_post_format() ); ?>
+		<?php endwhile; ?>
 
-			<?php kriate_paging_nav(); ?>
+		<?php kriate_paging_nav(); ?>
 
-		<?php else : ?>
+	<?php else : ?>
+		<?php get_template_part( 'content', 'none' ); ?>
+	<?php endif; ?>
 
-			<?php get_template_part( 'content', 'none' ); ?>
-
-		<?php endif; ?>
+<?php get_footer(); ?>
