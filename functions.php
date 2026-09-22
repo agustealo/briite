@@ -112,9 +112,11 @@ function smashing_jpeg_quality( $quality, $mime_type = '' ) {
 }
 
 /**
- * Add the existing Thumbnail column to post and page list tables.
+ * Historical admin-column callback retained for compatibility.
  *
- * This function name is preserved for backwards compatibility.
+ * Briite no longer registers custom post or page list-table columns. A child
+ * theme or plugin may deliberately register this callback if it wants the old
+ * Thumbnail column behavior.
  *
  * @param array $columns Existing admin columns.
  * @return array
@@ -125,7 +127,7 @@ function kriate_Thumbnail_Column( $columns ) {
 }
 
 /**
- * Render a thumbnail value for post and page list tables.
+ * Render a historical thumbnail-column value when called explicitly.
  *
  * @param string $column_name Current column name.
  * @param int    $post_id     Current post ID.
@@ -188,11 +190,6 @@ function fb_AddThumbValue( $column_name, $post_id ) {
 function kriate_AddThumbValue( $column_name, $post_id ) {
 	kriate_render_thumbnail_column( $column_name, $post_id );
 }
-
-add_filter( 'manage_posts_columns', 'kriate_Thumbnail_Column' );
-add_action( 'manage_posts_custom_column', 'fb_AddThumbValue', 10, 2 );
-add_filter( 'manage_pages_columns', 'kriate_Thumbnail_Column' );
-add_action( 'manage_pages_custom_column', 'kriate_AddThumbValue', 10, 2 );
 
 /**
  * Register the existing footer widget areas.
