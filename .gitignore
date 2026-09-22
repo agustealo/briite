@@ -16,8 +16,9 @@ ehthumbs.db
 Desktop.ini
 $RECYCLE.BIN/
 
-# Development dependencies and caches
+# Development dependencies, caches, and generated artifacts
 /vendor/
+/dist/
 .phpcs-cache
 *.log
 
