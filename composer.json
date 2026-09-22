@@ -18,9 +18,11 @@
   "scripts": {
     "lint": [
       "phpcs --standard=phpcs.xml.dist .",
-      "@local-assets"
+      "@local-assets",
+      "@template-contracts"
     ],
     "local-assets": "php tools/check-local-assets.php",
+    "template-contracts": "php tools/check-template-contracts.php",
     "phpcompat": "phpcs --standard=PHPCompatibilityWP --runtime-set testVersion 7.4-8.5 --extensions=php --ignore=vendor ."
   }
 }
