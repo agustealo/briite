@@ -20,6 +20,10 @@ if ( have_posts() ) {
 			get_template_part( 'content', get_post_format() );
 		}
 	}
+
+	if ( is_home() ) {
+		kriate_paging_nav();
+	}
 } else {
 	get_template_part( 'content', 'none' );
 }

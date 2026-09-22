@@ -217,10 +217,28 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          DEFAULT_POST_IDS=$(wp post list \
+            --path=/tmp/wordpress \
+            --post_type=post \
+            --post_status=publish \
+            --format=ids)
+          if [ -n "$DEFAULT_POST_IDS" ]; then
+            wp post delete $DEFAULT_POST_IDS --force --path=/tmp/wordpress >/dev/null
+          fi
+
+          OLDER_POST_ID=$(wp post create \
+            --path=/tmp/wordpress \
+            --post_type=post \
+            --post_status=publish \
+            --post_date='2026-01-01 00:00:00' \
+            --post_title='Briite Older Smoke Post' \
+            --post_content='Briite older pagination smoke content.' \
+            --porcelain)
           POST_ID=$(wp post create \
             --path=/tmp/wordpress \
             --post_type=post \
             --post_status=publish \
+            --post_date='2026-01-02 00:00:00' \
             --post_title='Briite Smoke Post' \
             --post_content='Briite compatibility runtime smoke content.' \
             --porcelain)
@@ -242,6 +260,7 @@ jobs:
             --path=/tmp/wordpress \
             --porcelain)
           wp post term add "$POST_ID" category "$CATEGORY_ID" --path=/tmp/wordpress
+          wp option update posts_per_page 1 --path=/tmp/wordpress >/dev/null
 
           MENU_ID=$(wp menu create 'Briite Smoke Menu' --path=/tmp/wordpress --porcelain)
           PARENT_ITEM_ID=$(wp menu item add-post "$MENU_ID" "$PAGE_ID" \
@@ -255,13 +274,14 @@ jobs:
             --porcelain >/dev/null
           wp menu location assign "$MENU_ID" primary --path=/tmp/wordpress
 
-          printf 'post_id=%s\npage_id=%s\ncategory_id=%s\n' \
-            "$POST_ID" "$PAGE_ID" "$CATEGORY_ID" >> "$GITHUB_OUTPUT"
+          printf 'post_id=%s\nolder_post_id=%s\npage_id=%s\ncategory_id=%s\n' \
+            "$POST_ID" "$OLDER_POST_ID" "$PAGE_ID" "$CATEGORY_ID" >> "$GITHUB_OUTPUT"
 
       - name: Render representative front-end routes
         shell: bash
         env:
           POST_ID: ${{ steps.seed.outputs.post_id }}
+          OLDER_POST_ID: ${{ steps.seed.outputs.older_post_id }}
           PAGE_ID: ${{ steps.seed.outputs.page_id }}
           CATEGORY_ID: ${{ steps.seed.outputs.category_id }}
         run: |
@@ -302,6 +322,7 @@ jobs:
             "/?page_id=${PAGE_ID}"
             "/?s=Briite"
             "/?cat=${CATEGORY_ID}"
+            "/?paged=2"
           )
 
           index=0
@@ -319,6 +340,12 @@ jobs:
           grep -q 'menu-item-has-children' /tmp/briite-route-0.html
           grep -q 'class="sub-menu"' /tmp/briite-route-0.html
           grep -q 'Briite Child Menu Item' /tmp/briite-route-0.html
+          grep -q 'Briite Smoke Post' /tmp/briite-route-0.html
+          grep -q 'navigation paging-navigation' /tmp/briite-route-0.html
+          grep -q 'Older posts' /tmp/briite-route-0.html
+          grep -q 'Briite Older Smoke Post' /tmp/briite-route-5.html
+          grep -q 'navigation paging-navigation' /tmp/briite-route-5.html
+          grep -q 'Newer posts' /tmp/briite-route-5.html
 
           not_found_output=/tmp/briite-route-404.html
           not_found_status=$(curl \
