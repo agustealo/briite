@@ -25,6 +25,11 @@ REQUIRED_FILES=(
 	content-page.php
 	content-search.php
 	content.php
+	css/bootstrap-3.3.7.min.css
+	css/compat.css
+	css/editor.css
+	css/fonts.css
+	css/theme.css
 	footer.php
 	functions.php
 	header.php
@@ -41,7 +46,6 @@ REQUIRED_FILES=(
 )
 
 REQUIRED_DIRECTORIES=(
-	css
 	fonts
 	images
 	inc
@@ -62,11 +66,6 @@ for relative_path in "${REQUIRED_DIRECTORIES[@]}"; do
 		exit 1
 	fi
 done
-
-if [[ ! -f "${ROOT_DIR}/css/bootstrap-3.3.7.min.css" ]]; then
-	echo "Bundled Bootstrap 3.3.7 CSS is missing." >&2
-	exit 1
-fi
 
 if ! grep -q 'Bootstrap v3.3.7' "${ROOT_DIR}/css/bootstrap-3.3.7.min.css"; then
 	echo "Bundled Bootstrap CSS does not identify itself as version 3.3.7." >&2
@@ -127,6 +126,7 @@ rm -rf "${DIST_DIR}"
 mkdir -p "${STAGE_DIR}"
 
 for relative_path in "${REQUIRED_FILES[@]}"; do
+	mkdir -p "$(dirname "${STAGE_DIR}/${relative_path}")"
 	cp -p "${ROOT_DIR}/${relative_path}" "${STAGE_DIR}/${relative_path}"
 done
 
@@ -168,6 +168,7 @@ for required_path in \
 	'briite/readme.txt' \
 	'briite/LICENSE.txt' \
 	'briite/screenshot.png' \
+	'briite/css/bootstrap-3.3.7.min.css' \
 	'briite/css/theme.css' \
 	'briite/js/theme.js'; do
 	if ! grep -qxF "${required_path}" <<< "${PACKAGE_LIST}"; then
@@ -176,7 +177,7 @@ for required_path in \
 	fi
 done
 
-FORBIDDEN_PATTERN='^briite/(\.git|\.github|tools|sass|layouts|vendor|dist)(/|$)|^briite/(composer\.json|composer\.lock|phpcs\.xml\.dist|README\.md|\.gitignore|\.gitattributes)$'
+FORBIDDEN_PATTERN='^briite/(\.git|\.github|tools|sass|layouts|vendor|dist)(/|$)|^briite/(composer\.json|composer\.lock|phpcs\.xml\.dist|README\.md|\.gitignore|\.gitattributes)$|\.map$'
 if grep -Eq "${FORBIDDEN_PATTERN}" <<< "${PACKAGE_LIST}"; then
 	echo "Release archive contains development-only files:" >&2
 	grep -E "${FORBIDDEN_PATTERN}" <<< "${PACKAGE_LIST}" >&2
