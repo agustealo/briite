@@ -289,3 +289,39 @@ jobs:
             cat /tmp/briite-php-server.log
             exit 1
           fi
+
+  vendor-bootstrap:
+    name: Vendor exact Bootstrap 3.3.7 CSS
+    if: github.event_name == 'push' && github.ref == 'refs/heads/modernize/vendor-bootstrap-css'
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          fetch-depth: 0
+
+      - name: Import verified upstream CSS and remove importer
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p css/vendor
+          curl --fail --location --proto '=https' --tlsv1.2 \
+            https://raw.githubusercontent.com/twbs/bootstrap/v3.3.7/dist/css/bootstrap.min.css \
+            --output css/vendor/bootstrap-3.3.7.min.css
+
+          actual_blob="$(git hash-object css/vendor/bootstrap-3.3.7.min.css)"
+          expected_blob="ed3905e0e0c91d4ed7d8aa14412dffeb038745ff"
+          test "${actual_blob}" = "${expected_blob}"
+
+          git fetch --no-tags --depth=1 origin master
+          git show origin/master:.github/workflows/quality.yml > .github/workflows/quality.yml
+          rm -f .github/workflows/vendor-bootstrap.yml
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add css/vendor/bootstrap-3.3.7.min.css .github/workflows/quality.yml .github/workflows/vendor-bootstrap.yml
+          git commit -m "Vendor exact Bootstrap 3.3.7 CSS"
+          git push origin HEAD:modernize/vendor-bootstrap-css
