@@ -85,7 +85,7 @@ $strip_glyphicons(
 $strip_glyphicons(
 	$stage_dir . '/css/bootstrap-3.3.7.min.css',
 	"@font-face{font-family:'Glyphicons Halflings';",
-	' *{-webkit-box-sizing:border-box'
+	'*{-webkit-box-sizing:border-box'
 );
 PHP
 
