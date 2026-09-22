@@ -113,6 +113,28 @@ foreach ( $kriate_asset_sources as $kriate_source_file ) {
 	}
 }
 
+$kriate_header_path = $kriate_root . '/header.php';
+// phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- Development-only local source read; WordPress is not bootstrapped.
+$kriate_header_source = file_get_contents( $kriate_header_path );
+
+if ( false === $kriate_header_source ) {
+	// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fwrite -- Development-only CLI output; WordPress is not bootstrapped.
+	fwrite( STDERR, "Unable to read header.php.\n" );
+	$kriate_failed = true;
+} else {
+	if ( false === strpos( $kriate_header_source, 'esc_url( get_feed_link() )' ) ) {
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fwrite -- Development-only CLI output; WordPress is not bootstrapped.
+		fwrite( STDERR, "Header RSS control is not wired to WordPress's canonical feed URL.\n" );
+		$kriate_failed = true;
+	}
+
+	if ( false !== strpos( $kriate_header_source, 'href="#" class="rss"' ) ) {
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fwrite -- Development-only CLI output; WordPress is not bootstrapped.
+		fwrite( STDERR, "Header RSS control still uses a placeholder link.\n" );
+		$kriate_failed = true;
+	}
+}
+
 if ( $kriate_failed ) {
 	exit( 1 );
 }
