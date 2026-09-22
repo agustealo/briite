@@ -71,19 +71,21 @@ function social_save_profile_fields( $user_id ) {
 		return;
 	}
 
-	$fields = array(
-		'twitter'  => 'sanitize_text_field',
-		'facebook' => 'esc_url_raw',
-		'linkedin' => 'esc_url_raw',
-	);
+	$fields = array();
 
-	foreach ( $fields as $meta_key => $sanitize_callback ) {
-		if ( ! isset( $_POST[ $meta_key ] ) ) {
-			continue;
-		}
+	if ( isset( $_POST['twitter'] ) ) {
+		$fields['twitter'] = sanitize_text_field( wp_unslash( $_POST['twitter'] ) );
+	}
 
-		$value = call_user_func( $sanitize_callback, wp_unslash( $_POST[ $meta_key ] ) );
+	if ( isset( $_POST['facebook'] ) ) {
+		$fields['facebook'] = esc_url_raw( wp_unslash( $_POST['facebook'] ) );
+	}
 
+	if ( isset( $_POST['linkedin'] ) ) {
+		$fields['linkedin'] = esc_url_raw( wp_unslash( $_POST['linkedin'] ) );
+	}
+
+	foreach ( $fields as $meta_key => $value ) {
 		if ( '' === $value ) {
 			delete_user_meta( $user_id, $meta_key );
 			continue;
