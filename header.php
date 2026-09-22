@@ -16,6 +16,7 @@
 </head>
 <body <?php body_class(); ?>>
 <?php wp_body_open(); ?>
+<a class="screen-reader-text skip-link" href="#content"><?php esc_html_e( 'Skip to content', 'kriate' ); ?></a>
 	<header id="masthead" class="site-header" role="banner">
 		<div class="logo">
 			<a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home">
