@@ -228,7 +228,7 @@ function kriate_scripts() {
 	$theme_version = wp_get_theme()->get( 'Version' );
 
 	wp_enqueue_style( 'wp-style', get_stylesheet_uri(), array(), $theme_version );
-	wp_enqueue_style( 'bootstrap', 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css', array(), '3.3.7' );
+	wp_enqueue_style( 'bootstrap', get_template_directory_uri() . '/css/bootstrap-3.3.7.min.css', array(), '3.3.7' );
 	wp_enqueue_style( 'kriate-fonts', get_template_directory_uri() . '/css/fonts.css', array(), $theme_version );
 	wp_enqueue_style( 'theme-style', get_template_directory_uri() . '/css/theme.css', array( 'bootstrap', 'wp-style', 'kriate-fonts' ), $theme_version );
 	wp_enqueue_style( 'kriate-compat', get_template_directory_uri() . '/css/compat.css', array( 'theme-style' ), $theme_version );
