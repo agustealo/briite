@@ -1,81 +1,74 @@
-$(document).ready(function(){
+( function( $ ) {
+	'use strict';
 
+	$( function() {
+		var $menuToggle = $( '#menu_icon' );
+		var $primaryMenu = $( '#primary-menu' );
 
+		if ( ! $primaryMenu.length ) {
+			$primaryMenu = $( '#site-navigation ul' ).first();
+		}
 
-    //mobile menu toggling
-    $("#menu_icon").click(function(){
-        $("header nav ul").toggleClass("show_menu");
-        $("#menu_icon").toggleClass("close_menu");
-        return false;
-    });
+		// Mobile menu toggling. The existing CSS classes are preserved.
+		$menuToggle.on( 'click', function() {
+			var expanded = 'true' === $menuToggle.attr( 'aria-expanded' );
 
-    
+			$primaryMenu.toggleClass( 'show_menu' );
+			$menuToggle.toggleClass( 'close_menu' );
+			$menuToggle.attr( 'aria-expanded', String( ! expanded ) );
+		} );
 
-    //Contact Page Map Centering
-    var wh = $('header').width() + 50;
-    var wd = $('#map').width();
-    var hg = $(window).height();
+		// Contact page map centering. No-op on pages without #map.
+		var $map = $( '#map' );
+		if ( $map.length ) {
+			var headerWidth = $( 'header' ).width() + 50;
+			var mapWidth = $map.width();
+			var windowHeight = $( window ).height();
 
-    $('#map').css({
-        "max-width" : wd,
-        "height" : hg,
-        "margin-left" : wh
-    });
+			$map.css( {
+				'max-width': mapWidth,
+				height: windowHeight,
+				'margin-left': headerWidth
+			} );
+		}
 
-   
+		// Preserve Briite's existing visual tooltips while avoiding duplicate nodes.
+		$( document )
+			.on( 'mouseenter focusin', 'a[data-title]', function() {
+				var $link = $( this );
+				var title = $link.attr( 'data-title' );
 
+				if ( ! title || $link.next( '.tooltip' ).length ) {
+					return;
+				}
 
+				$link.after( '<span class="tooltip" role="tooltip"></span>' );
 
-    //Tooltip
-    $("a").mouseover(function(){
+				var $tooltip = $link.next( '.tooltip' );
+				$tooltip.text( title );
 
-        var attr_title = $(this).attr("data-title");
+				var tipWidth = $tooltip.outerWidth();
+				var linkWidth = $link.width();
+				var linkHeight = $link.height() + 7;
 
-        if( attr_title == undefined || attr_title == "") return false;
-        
-        $(this).after('<span class="tooltip"></span>');
+				if ( tipWidth < linkWidth ) {
+					tipWidth = linkWidth;
+					$tooltip.outerWidth( tipWidth );
+				}
 
-        var tooltip = $(".tooltip");
-        tooltip.append($(this).data('title'));
+				$tooltip.css( {
+					left: '-' + ( ( tipWidth - linkWidth ) / 2 ) + 'px',
+					bottom: linkHeight + 'px'
+				} ).stop().animate( { opacity: 1 }, 200 );
+			} )
+			.on( 'mouseleave focusout', 'a[data-title]', function() {
+				$( this ).next( '.tooltip' ).remove();
+			} );
 
-         
-        var tipwidth = tooltip.outerWidth();
-        var a_width = $(this).width();
-        var a_hegiht = $(this).height() + 3 + 4;
-
-        //if the tooltip width is smaller than the a/link/parent width
-        if(tipwidth < a_width){
-            tipwidth = a_width;
-            $('.tooltip').outerWidth(tipwidth);
-        }
-
-        var tipwidth = '-' + (tipwidth - a_width)/2;
-        $('.tooltip').css({
-            'left' : tipwidth + 'px',
-            'bottom' : a_hegiht + 'px'
-        }).stop().animate({
-            opacity : 1
-        }, 200);
-       
-
-    });
-
-    $("a").mouseout(function(){
-        var tooltip = $(".tooltip");       
-        tooltip.remove();
-    });
-
-
-});
-
-// Dictionary List
-
-(function(){
-  $('dl').on('click', 'dt', function() {
-      $(this).next().toggleClass('expand');
-      $(this).toggleClass('expand');
-  });
-})();
-
-
-
+		// Dictionary list interaction.
+		$( 'dl' ).on( 'click', 'dt', function() {
+			$( this ).next().toggleClass( 'expand' );
+			$( this ).toggleClass( 'expand' );
+		} );
+	} );
+}( jQuery ) );

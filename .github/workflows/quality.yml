@@ -1,0 +1,323 @@
+name: Quality Gate
+
+on:
+  pull_request:
+    branches:
+      - master
+  push:
+    branches:
+      - master
+      - 'modernize/**'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: quality-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  php-syntax:
+    name: PHP ${{ matrix.php }} syntax
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        php:
+          - '7.4'
+          - '8.1'
+          - '8.3'
+          - '8.5'
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # v2
+        with:
+          php-version: ${{ matrix.php }}
+          coverage: none
+
+      - name: Lint PHP files
+        shell: bash
+        run: |
+          set -euo pipefail
+          while IFS= read -r -d '' file; do
+            php -l "$file"
+          done < <(find . -path './vendor' -prune -o -name '*.php' -print0)
+
+  javascript-syntax:
+    name: JavaScript syntax
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+
+      - name: Check theme JavaScript
+        run: node --check js/theme.js
+
+  php-compatibility:
+    name: PHP 7.4-8.5 compatibility
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # v2
+        with:
+          php-version: '8.3'
+          coverage: none
+          tools: composer:v2
+
+      - name: Validate Composer metadata
+        run: composer validate --strict --no-check-lock
+
+      - name: Install development tools
+        run: composer install --no-interaction --no-progress --prefer-dist
+
+      - name: Run PHPCompatibilityWP
+        run: composer phpcompat
+
+  wordpress-runtime:
+    name: WordPress 7.1.1 runtime smoke
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.4
+        env:
+          MYSQL_DATABASE: wordpress_test
+          MYSQL_USER: wordpress
+          MYSQL_PASSWORD: wordpress
+          MYSQL_ROOT_PASSWORD: root
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -u root --password=root"
+          --health-interval=5s
+          --health-timeout=5s
+          --health-retries=20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+
+      - name: Set up PHP and WP-CLI
+        uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # v2
+        with:
+          php-version: '8.3'
+          extensions: mysqli
+          coverage: none
+          tools: wp-cli
+
+      - name: Install WordPress 7.1.1
+        shell: bash
+        run: |
+          set -euo pipefail
+          wp core download --version=7.1.1 --path=/tmp/wordpress --force
+          wp config create \
+            --path=/tmp/wordpress \
+            --dbname=wordpress_test \
+            --dbuser=wordpress \
+            --dbpass=wordpress \
+            --dbhost=127.0.0.1:3306 \
+            --skip-check
+          wp core install \
+            --path=/tmp/wordpress \
+            --url=http://127.0.0.1:8080 \
+            --title='Briite CI' \
+            --admin_user=admin \
+            --admin_password='briite-ci-password' \
+            --admin_email=ci@example.com \
+            --skip-email
+          wp config set WP_DEBUG true --raw --path=/tmp/wordpress
+          wp config set WP_DEBUG_LOG true --raw --path=/tmp/wordpress
+          wp config set WP_DEBUG_DISPLAY false --raw --path=/tmp/wordpress
+
+      - name: Install and activate Briite
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/wordpress/wp-content/themes/briite
+          rsync -a \
+            --exclude='.git' \
+            --exclude='vendor' \
+            ./ /tmp/wordpress/wp-content/themes/briite/
+          wp theme activate briite --path=/tmp/wordpress
+
+      - name: Verify preserved theme contracts
+        shell: bash
+        run: |
+          set -euo pipefail
+          wp eval --path=/tmp/wordpress '
+            if ( "Briite" !== wp_get_theme()->get( "Name" ) ) {
+              fwrite( STDERR, "Unexpected active theme name.\n" );
+              exit( 1 );
+            }
+            if ( ! current_theme_supports( "title-tag" ) || ! current_theme_supports( "post-thumbnails" ) ) {
+              fwrite( STDERR, "Required theme support is missing.\n" );
+              exit( 1 );
+            }
+            $menus = get_registered_nav_menus();
+            if ( ! isset( $menus["primary"] ) ) {
+              fwrite( STDERR, "Primary menu location is missing.\n" );
+              exit( 1 );
+            }
+            global $wp_registered_sidebars;
+            foreach ( array( "bottom-widget-1", "bottom-widget-2", "bottom-widget-3", "bottom-widget-4" ) as $sidebar_id ) {
+              if ( ! isset( $wp_registered_sidebars[ $sidebar_id ] ) ) {
+                fwrite( STDERR, "Historical widget area missing: {$sidebar_id}\n" );
+                exit( 1 );
+              }
+            }
+          '
+
+      - name: Seed representative content
+        id: seed
+        shell: bash
+        run: |
+          set -euo pipefail
+          POST_ID=$(wp post create \
+            --path=/tmp/wordpress \
+            --post_type=post \
+            --post_status=publish \
+            --post_title='Briite Smoke Post' \
+            --post_content='Briite compatibility runtime smoke content.' \
+            --porcelain)
+          PAGE_ID=$(wp post create \
+            --path=/tmp/wordpress \
+            --post_type=page \
+            --post_status=publish \
+            --post_title='Briite Smoke Page' \
+            --post_content='Briite page compatibility smoke content.' \
+            --porcelain)
+          CATEGORY_ID=$(wp term create category 'Briite Smoke Category' \
+            --path=/tmp/wordpress \
+            --porcelain)
+          wp post term add "$POST_ID" category "$CATEGORY_ID" --path=/tmp/wordpress
+          printf 'post_id=%s\npage_id=%s\ncategory_id=%s\n' \
+            "$POST_ID" "$PAGE_ID" "$CATEGORY_ID" >> "$GITHUB_OUTPUT"
+
+      - name: Render representative front-end routes
+        shell: bash
+        env:
+          POST_ID: ${{ steps.seed.outputs.post_id }}
+          PAGE_ID: ${{ steps.seed.outputs.page_id }}
+          CATEGORY_ID: ${{ steps.seed.outputs.category_id }}
+        run: |
+          set -euo pipefail
+          php -S 127.0.0.1:8080 -t /tmp/wordpress >/tmp/briite-php-server.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill "$SERVER_PID" 2>/dev/null || true' EXIT
+
+          for attempt in $(seq 1 20); do
+            if curl --fail --silent http://127.0.0.1:8080/ >/dev/null; then
+              break
+            fi
+            if [ "$attempt" -eq 20 ]; then
+              cat /tmp/briite-php-server.log
+              exit 1
+            fi
+            sleep 1
+          done
+
+          routes=(
+            "/"
+            "/?p=${POST_ID}"
+            "/?page_id=${PAGE_ID}"
+            "/?s=Briite"
+            "/?cat=${CATEGORY_ID}"
+          )
+
+          index=0
+          for route in "${routes[@]}"; do
+            output="/tmp/briite-route-${index}.html"
+            curl --fail --silent --show-error "http://127.0.0.1:8080${route}" > "$output"
+            grep -q '</html>' "$output"
+            grep -q '/js/theme.js' "$output"
+            index=$(( index + 1 ))
+          done
+
+          not_found_output=/tmp/briite-route-404.html
+          not_found_status=$(curl \
+            --silent \
+            --show-error \
+            --output "$not_found_output" \
+            --write-out '%{http_code}' \
+            'http://127.0.0.1:8080/?p=999999')
+          test "$not_found_status" = '404'
+          grep -q '</html>' "$not_found_output"
+          grep -q '/js/theme.js' "$not_found_output"
+
+      - name: Fail on WordPress runtime diagnostics
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ -f /tmp/wordpress/wp-content/debug.log ] && [ -s /tmp/wordpress/wp-content/debug.log ]; then
+            echo 'WordPress debug.log is not empty:'
+            cat /tmp/wordpress/wp-content/debug.log
+            exit 1
+          fi
+
+          if [ -f /tmp/briite-php-server.log ] && grep -Eqi 'PHP (Warning|Notice|Deprecated|Fatal error|Parse error)|Uncaught (Error|Exception)' /tmp/briite-php-server.log; then
+            echo 'PHP runtime diagnostics detected:'
+            cat /tmp/briite-php-server.log
+            exit 1
+          fi
+
+  wordpress-standards-modernized:
+    name: WordPress standards - modernized surface
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # v2
+        with:
+          php-version: '8.3'
+          coverage: none
+          tools: composer:v2
+
+      - name: Install development tools
+        run: composer install --no-interaction --no-progress --prefer-dist
+
+      - name: Enforce WPCS on compatibility slice
+        run: >-
+          vendor/bin/phpcs --standard=phpcs.xml.dist
+          archive.php
+          content-search.php
+          footer.php
+          functions.php
+          header.php
+          inc/profile.php
+          search.php
+          sidebar.php
+          single.php
+
+  wordpress-standards-audit:
+    name: WordPress standards - legacy backlog audit
+    runs-on: ubuntu-latest
+    continue-on-error: true
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # v2
+        with:
+          php-version: '8.3'
+          coverage: none
+          tools: composer:v2
+
+      - name: Install development tools
+        run: composer install --no-interaction --no-progress --prefer-dist
+
+      - name: Run full-repository WPCS audit
+        run: composer lint

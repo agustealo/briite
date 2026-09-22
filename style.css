@@ -1,24 +1,27 @@
 /*
 Theme Name: Briite
-Theme URI: http://kriate.agustealo.com/
+Theme URI: https://github.com/agustealo/briite
 Author: Agustealo Johnson
-Author URI: http://agustealo.com/
-Description: Description
-Version: 1.01
+Author URI: https://agustealo.com/
+Description: A lightweight classic WordPress portfolio theme with a fixed navigation rail and image-forward project grid.
+Version: 1.1.0
+Requires at least: 5.9
+Tested up to: 7.1
+Requires PHP: 7.4
 License: GNU General Public License v2 or later
-License URI: http://www.gnu.org/licenses/gpl-2.0.html
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: kriate
 Domain Path: /languages/
-Tags:
+Tags: portfolio, custom-background, custom-header, custom-menu, featured-images, threaded-comments, translation-ready
 
-This theme, like WordPress, is licensed under the GPL.
+Briite is licensed under the GPL.
 Use it to make something cool, have fun, and share what you've learned with others.
 
-Briite is part of the Kriate project and is based on Underscores http://underscores.me/, (C) 2012-2014 Automattic, Inc.
+Briite is part of the Kriate project and is based on Underscores, (C) 2012-2014 Automattic, Inc.
 */
 
 /* RESET ***********************************
-   http://meyerweb.com/eric/tools/css/reset/ 
+   http://meyerweb.com/eric/tools/css/reset/
    v2.0 | 20110126
    License: none (public domain)
 */
@@ -32,8 +35,8 @@ b, u, i, center,
 dl, dt, dd, ol, ul, li,
 fieldset, form, label, legend,
 table, caption, tbody, tfoot, thead, tr, th, td,
-article, aside, canvas, details, embed, 
-figure, figcaption, footer, header, hgroup, 
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
 menu, nav, output, ruby, section, summary,
 time, mark, audio, video {
 	margin: 0;
@@ -44,7 +47,7 @@ time, mark, audio, video {
 	vertical-align: baseline;
 }
 /* HTML5 display-role reset for older browsers */
-article, aside, details, figcaption, figure, 
+article, aside, details, figcaption, figure,
 footer, header, hgroup, menu, nav, section {
 	display: block;
 }
