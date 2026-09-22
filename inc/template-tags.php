@@ -54,14 +54,16 @@ if ( ! function_exists( 'kriate_post_nav' ) ) :
 			<div class="nav-links">
 				<?php
 				/* translators: %title: previous post title. */
+				$kriate_previous_label = _x( '<span class="meta-nav">&larr;</span>&nbsp;%title', 'Previous post link', 'kriate' );
 				previous_post_link(
 					'<div class="nav-previous">%link</div>',
-					wp_kses_post( _x( '<span class="meta-nav">&larr;</span>&nbsp;%title', 'Previous post link', 'kriate' ) )
+					wp_kses_post( $kriate_previous_label )
 				);
 				/* translators: %title: next post title. */
+				$kriate_next_label = _x( '%title&nbsp;<span class="meta-nav">&rarr;</span>', 'Next post link', 'kriate' );
 				next_post_link(
 					'<div class="nav-next">%link</div>',
-					wp_kses_post( _x( '%title&nbsp;<span class="meta-nav">&rarr;</span>', 'Next post link', 'kriate' ) )
+					wp_kses_post( $kriate_next_label )
 				);
 				?>
 			</div><!-- .nav-links -->
@@ -92,14 +94,16 @@ if ( ! function_exists( 'kriate_posted_on' ) ) :
 		);
 
 		/* translators: %s: linked post date. */
-		$kriate_posted_on = sprintf(
-			_x( 'Posted on %s', 'post date', 'kriate' ),
+		$kriate_posted_on_format = _x( 'Posted on %s', 'post date', 'kriate' );
+		$kriate_posted_on        = sprintf(
+			$kriate_posted_on_format,
 			'<a href="' . esc_url( get_permalink() ) . '" rel="bookmark">' . $kriate_time_string . '</a>'
 		);
 
 		/* translators: %s: linked post author. */
-		$kriate_byline = sprintf(
-			_x( 'by %s', 'post author', 'kriate' ),
+		$kriate_byline_format = _x( 'by %s', 'post author', 'kriate' );
+		$kriate_byline        = sprintf(
+			$kriate_byline_format,
 			'<span class="author vcard"><a class="url fn n" href="' . esc_url( get_author_posts_url( get_the_author_meta( 'ID' ) ) ) . '">' . esc_html( get_the_author() ) . '</a></span>'
 		);
 

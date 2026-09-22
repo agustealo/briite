@@ -4,6 +4,7 @@
  *
  * @package kriate
  */
+
 ?>
 
 <section class="work no-results not-found">
@@ -16,12 +17,8 @@
 			<p>
 				<?php
 				/* translators: %1$s: URL to create a new post. */
-				echo wp_kses_post(
-					sprintf(
-						__( 'Ready to publish your first post? <a href="%1$s">Get started here</a>.', 'kriate' ),
-						esc_url( admin_url( 'post-new.php' ) )
-					)
-				);
+				$kriate_publish_prompt = __( 'Ready to publish your first post? <a href="%1$s">Get started here</a>.', 'kriate' );
+				echo wp_kses_post( sprintf( $kriate_publish_prompt, esc_url( admin_url( 'post-new.php' ) ) ) );
 				?>
 			</p>
 		<?php elseif ( is_search() ) : ?>
