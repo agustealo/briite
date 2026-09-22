@@ -5,6 +5,10 @@
 		var $menuToggle = $( '#menu_icon' );
 		var $primaryMenu = $( '#primary-menu' );
 
+		if ( ! $primaryMenu.length ) {
+			$primaryMenu = $( '#site-navigation ul' ).first();
+		}
+
 		// Mobile menu toggling. The existing CSS classes are preserved.
 		$menuToggle.on( 'click', function() {
 			var expanded = 'true' === $menuToggle.attr( 'aria-expanded' );
