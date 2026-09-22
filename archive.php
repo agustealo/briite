@@ -17,12 +17,16 @@ get_header(); ?>
 				elseif ( is_tag() ) :
 					single_tag_title();
 				elseif ( is_author() ) :
+					/* translators: %s: author name. */
 					printf( esc_html__( 'Author: %s', 'kriate' ), '<span class="vcard">' . esc_html( get_the_author() ) . '</span>' );
 				elseif ( is_day() ) :
+					/* translators: %s: archive date. */
 					printf( esc_html__( 'Day: %s', 'kriate' ), '<span>' . esc_html( get_the_date() ) . '</span>' );
 				elseif ( is_month() ) :
+					/* translators: %s: archive month. */
 					printf( esc_html__( 'Month: %s', 'kriate' ), '<span>' . esc_html( get_the_date( _x( 'F Y', 'monthly archives date format', 'kriate' ) ) ) . '</span>' );
 				elseif ( is_year() ) :
+					/* translators: %s: archive year. */
 					printf( esc_html__( 'Year: %s', 'kriate' ), '<span>' . esc_html( get_the_date( _x( 'Y', 'yearly archives date format', 'kriate' ) ) ) . '</span>' );
 				elseif ( is_tax( 'post_format', 'post-format-aside' ) ) :
 					esc_html_e( 'Asides', 'kriate' );
@@ -48,16 +52,19 @@ get_header(); ?>
 				?>
 			</h1>
 			<?php
-			$term_description = term_description();
-			if ( ! empty( $term_description ) ) :
+			$kriate_term_description = term_description();
+			if ( ! empty( $kriate_term_description ) ) :
 				?>
-				<div class="taxonomy-description"><?php echo wp_kses_post( $term_description ); ?></div>
+				<div class="taxonomy-description"><?php echo wp_kses_post( $kriate_term_description ); ?></div>
 			<?php endif; ?>
 		</header><!-- .page-header -->
 
-		<?php while ( have_posts() ) : the_post(); ?>
-			<?php get_template_part( 'content', get_post_format() ); ?>
-		<?php endwhile; ?>
+		<?php
+		while ( have_posts() ) :
+			the_post();
+			get_template_part( 'content', get_post_format() );
+		endwhile;
+		?>
 
 		<?php kriate_paging_nav(); ?>
 
