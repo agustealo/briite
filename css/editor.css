@@ -1,0 +1,236 @@
+/*
+ * Briite editor styles.
+ *
+ * Keep the editing canvas visually aligned with Briite's published content
+ * without importing front-end resets, navigation, layout chrome, or Bootstrap.
+ */
+
+body {
+	background: #fff;
+	color: #414d61;
+	font-family: "Raleway", sans-serif, Arial;
+	font-size: 14px;
+	letter-spacing: 1px;
+	line-height: 22px;
+	overflow-wrap: break-word;
+}
+
+.wp-block {
+	max-width: 640px;
+}
+
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
+img {
+	height: auto;
+	max-width: 100%;
+}
+
+a {
+	background: transparent;
+	color: #414d61;
+	font-weight: 700;
+	text-decoration: none;
+	transition: color 0.3s ease-out;
+}
+
+a:hover,
+a:focus {
+	color: #7b8ba7;
+}
+
+.entry-content a {
+	border-bottom: 1px dashed;
+}
+
+.entry-content a:hover,
+.entry-content a:focus {
+	border-bottom-style: solid;
+}
+
+p {
+	margin: 1em 0 2em;
+}
+
+b,
+strong {
+	font-weight: 600;
+}
+
+em,
+cite {
+	font-size: 0.9em;
+	font-style: italic;
+	font-weight: 600;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	font-family: "Raleway", sans-serif, Arial;
+	font-weight: 700;
+	letter-spacing: 1px;
+	line-height: 28px;
+}
+
+h1 {
+	font-size: 2em;
+	margin: 0.67em 0;
+}
+
+h2 {
+	font-size: 1.5em;
+	margin: 0.75em 0;
+}
+
+h3 {
+	font-size: 1.17em;
+	margin: 0.83em 0;
+}
+
+h4 {
+	font-size: 18px;
+	margin: 10px 0;
+}
+
+h5 {
+	font-size: 0.83em;
+	margin: 1.5em 0;
+}
+
+h6 {
+	font-size: 0.75em;
+	margin: 1.67em 0;
+}
+
+ul,
+ol {
+	list-style-position: inside;
+	margin-bottom: 10px;
+	margin-top: 0;
+	padding-left: 1em;
+}
+
+ul {
+	list-style-type: square;
+}
+
+ol {
+	list-style-type: decimal;
+}
+
+li {
+	line-height: 1.5em;
+}
+
+blockquote {
+	background: #fff url("../images/square-bg.png");
+	border: 1px solid #414d61;
+	color: #414d61;
+	font-size: 14px;
+	line-height: 1.2;
+	margin: 3em;
+	padding: 20px;
+	position: relative;
+}
+
+blockquote p {
+	line-height: 1.8em;
+	margin: 0;
+	padding: 0 3em;
+}
+
+blockquote a,
+blockquote a code {
+	color: #ff7f50;
+	text-decoration: underline;
+}
+
+ins {
+	background-color: #414d61;
+	border-bottom: 1px dotted;
+	color: #fff;
+	font-size: 0.8em;
+	margin: 0.2em;
+	padding: 0.2em;
+}
+
+mark {
+	background-color: #ff9;
+	color: #000;
+	font-style: italic;
+	font-weight: 700;
+}
+
+code,
+samp,
+kbd {
+	background: #414d61;
+	color: #fff;
+}
+
+code,
+samp,
+kbd,
+pre,
+tt,
+var {
+	font-family: Pragmata, Menlo, "DejaVu LGC Sans Mono", "DejaVu Sans Mono", Consolas, "Everson Mono", "Lucida Console", "Andale Mono", "Nimbus Mono L", "Liberation Mono", FreeMono, "Osaka Monospaced", Courier, "New Courier", monospace;
+	font-size: 0.8em;
+	line-height: 2em;
+}
+
+pre {
+	background: #fff;
+	border: 1px solid #414d61;
+	border-top-width: 10px;
+	color: #414d61;
+	margin: 1.7em 0 1.7em 0.3em;
+	overflow: auto;
+	padding: 0.1em 0.5em 0.3em 0.7em;
+	white-space: pre-wrap;
+	width: 100%;
+}
+
+pre code {
+	font-size: 11px;
+	line-height: 1.6em;
+}
+
+dl {
+	background: #fff url("../images/square-bg.png");
+	border: 1px solid #414d61;
+	color: #414d61;
+	font-size: 12px;
+	line-height: 1.2;
+	margin: 3em;
+	padding: 20px;
+}
+
+dt {
+	font-size: 1.1em;
+	font-weight: 700;
+}
+
+dd {
+	margin: 0.5em;
+	padding: 0 0 0.5em;
+}
+
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+hr {
+	border: 0;
+	border-top: 1px solid #7b8ba7;
+	clear: both;
+}

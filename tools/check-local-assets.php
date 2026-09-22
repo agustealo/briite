@@ -1,6 +1,6 @@
 <?php
 /**
- * Verify Briite's required local front-end assets and reject retired remote hosts.
+ * Verify Briite's required local theme assets and reject retired remote hosts.
  *
  * This script is development tooling and runs from Composer/CI, not WordPress.
  *
@@ -12,6 +12,7 @@ $kriate_failed = false;
 
 $kriate_required_assets = array(
 	'css/bootstrap-3.3.7.min.css',
+	'css/editor.css',
 	'fonts/glyphicons-halflings-regular.eot',
 	'fonts/glyphicons-halflings-regular.svg',
 	'fonts/glyphicons-halflings-regular.ttf',
