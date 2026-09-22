@@ -11,14 +11,17 @@ $kriate_root   = dirname( __DIR__ );
 $kriate_failed = false;
 
 $kriate_files = array(
-	'header.php'         => $kriate_root . '/header.php',
-	'inc/customizer.php' => $kriate_root . '/inc/customizer.php',
-	'inc/jetpack.php'    => $kriate_root . '/inc/jetpack.php',
+	'header.php',
+	'inc/custom-header.php',
+	'inc/customizer.php',
+	'inc/jetpack.php',
 );
 
 $kriate_sources = array();
 
-foreach ( $kriate_files as $kriate_relative_path => $kriate_absolute_path ) {
+foreach ( $kriate_files as $kriate_relative_path ) {
+	$kriate_absolute_path = $kriate_root . '/' . $kriate_relative_path;
+
 	if ( ! is_file( $kriate_absolute_path ) ) {
 		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fwrite -- Development-only CLI output; WordPress is not bootstrapped.
 		fwrite( STDERR, "Missing Briite integration contract file: {$kriate_relative_path}\n" );
@@ -43,6 +46,22 @@ if ( isset( $kriate_sources['header.php'] ) && false === strpos( $kriate_sources
 	// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fwrite -- Development-only CLI output; WordPress is not bootstrapped.
 	fwrite( STDERR, "Briite's Infinite Scroll container markup is missing #content.\n" );
 	$kriate_failed = true;
+}
+
+if ( isset( $kriate_sources['inc/custom-header.php'] ) ) {
+	$kriate_custom_header_source = $kriate_sources['inc/custom-header.php'];
+
+	if ( false === strpos( $kriate_custom_header_source, "'header-text'        => false" ) ) {
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fwrite -- Development-only CLI output; WordPress is not bootstrapped.
+		fwrite( STDERR, "Briite custom-header support must disable unused header-text controls.\n" );
+		$kriate_failed = true;
+	}
+
+	if ( false !== strpos( $kriate_custom_header_source, "'header-text'        => true" ) ) {
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fwrite -- Development-only CLI output; WordPress is not bootstrapped.
+		fwrite( STDERR, "Retired Briite custom-header text support remains enabled.\n" );
+		$kriate_failed = true;
+	}
 }
 
 if ( isset( $kriate_sources['inc/customizer.php'] ) ) {

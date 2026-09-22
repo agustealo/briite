@@ -9,7 +9,8 @@
  * Register the WordPress core custom-header feature.
  *
  * The dimensions and default image are unchanged from the historical theme so
- * existing installations retain the same logo/header behavior.
+ * existing installations retain the same logo/header behavior. Briite renders
+ * the custom header image only, so WordPress header-text controls are disabled.
  *
  * @return void
  */
@@ -26,7 +27,7 @@ function kriate_custom_header_setup() {
 				'flex-width'         => false,
 				'default-image'      => get_template_directory_uri() . '/images/logo.png',
 				'default-text-color' => '000',
-				'header-text'        => true,
+				'header-text'        => false,
 				'uploads'            => true,
 			)
 		)
