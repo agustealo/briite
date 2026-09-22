@@ -5,22 +5,22 @@
  * @package kriate
  */
 
-$widget_areas = array(
+$kriate_widget_areas = array(
 	'bottom-widget-1',
 	'bottom-widget-2',
 	'bottom-widget-3',
 	'bottom-widget-4',
 );
 
-$has_active_widget_area = false;
-foreach ( $widget_areas as $widget_area ) {
-	if ( is_active_sidebar( $widget_area ) ) {
-		$has_active_widget_area = true;
+$kriate_has_active_widget_area = false;
+foreach ( $kriate_widget_areas as $kriate_widget_area ) {
+	if ( is_active_sidebar( $kriate_widget_area ) ) {
+		$kriate_has_active_widget_area = true;
 		break;
 	}
 }
 
-if ( ! $has_active_widget_area ) {
+if ( ! $kriate_has_active_widget_area ) {
 	return;
 }
 ?>
