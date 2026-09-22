@@ -55,7 +55,7 @@
 				<?php endif; ?>
 			<?php endif; ?>
 
-			<?php if ( ! post_password_required() && ( comments_open() || '0' !== get_comments_number() ) ) : ?>
+			<?php if ( ! post_password_required() && ( comments_open() || 0 < (int) get_comments_number() ) ) : ?>
 				<span class="comments-link">
 					<?php comments_popup_link( esc_html__( 'Leave a comment', 'kriate' ), esc_html__( '1 Comment', 'kriate' ), esc_html__( '% Comments', 'kriate' ) ); ?>
 				</span>
