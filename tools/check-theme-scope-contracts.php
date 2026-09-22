@@ -15,10 +15,18 @@ $kriate_contracts = array(
 		'required'  => array(
 			'function complete_version_removal',
 			'return $generator;',
+			'function kriate_Thumbnail_Column',
+			'function kriate_render_thumbnail_column',
+			'function fb_AddThumbValue',
+			'function kriate_AddThumbValue',
 		),
 		'forbidden' => array(
 			"add_filter( 'the_generator', 'complete_version_removal' )",
 			"remove_action( 'wp_head', 'wp_generator' )",
+			"add_filter( 'manage_posts_columns', 'kriate_Thumbnail_Column' )",
+			"add_action( 'manage_posts_custom_column', 'fb_AddThumbValue'",
+			"add_filter( 'manage_pages_columns', 'kriate_Thumbnail_Column' )",
+			"add_action( 'manage_pages_custom_column', 'kriate_AddThumbValue'",
 		),
 	),
 	'inc/profile.php' => array(
