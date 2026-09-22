@@ -8,6 +8,7 @@ on:
     branches:
       - master
       - 'modernize/**'
+      - 'fix/**'
 
 permissions:
   contents: read
@@ -211,7 +212,7 @@ jobs:
             }
           '
 
-      - name: Seed representative content
+      - name: Seed representative content and navigation
         id: seed
         shell: bash
         run: |
@@ -230,10 +231,30 @@ jobs:
             --post_title='Briite Smoke Page' \
             --post_content='Briite page compatibility smoke content.' \
             --porcelain)
+          CHILD_PAGE_ID=$(wp post create \
+            --path=/tmp/wordpress \
+            --post_type=page \
+            --post_status=publish \
+            --post_title='Briite Child Page' \
+            --post_content='Briite child menu compatibility smoke content.' \
+            --porcelain)
           CATEGORY_ID=$(wp term create category 'Briite Smoke Category' \
             --path=/tmp/wordpress \
             --porcelain)
           wp post term add "$POST_ID" category "$CATEGORY_ID" --path=/tmp/wordpress
+
+          MENU_ID=$(wp menu create 'Briite Smoke Menu' --path=/tmp/wordpress --porcelain)
+          PARENT_ITEM_ID=$(wp menu item add-post "$MENU_ID" "$PAGE_ID" \
+            --path=/tmp/wordpress \
+            --title='Briite Parent Menu Item' \
+            --porcelain)
+          wp menu item add-post "$MENU_ID" "$CHILD_PAGE_ID" \
+            --path=/tmp/wordpress \
+            --title='Briite Child Menu Item' \
+            --parent-id="$PARENT_ITEM_ID" \
+            --porcelain >/dev/null
+          wp menu location assign "$MENU_ID" primary --path=/tmp/wordpress
+
           printf 'post_id=%s\npage_id=%s\ncategory_id=%s\n' \
             "$POST_ID" "$PAGE_ID" "$CATEGORY_ID" >> "$GITHUB_OUTPUT"
 
@@ -264,6 +285,13 @@ jobs:
             'http://127.0.0.1:8080/wp-content/themes/briite/css/bootstrap-3.3.7.min.css' \
             > /tmp/briite-bootstrap.css
           grep -q 'Bootstrap v3.3.7' /tmp/briite-bootstrap.css
+
+          curl --fail --silent --show-error \
+            'http://127.0.0.1:8080/wp-content/themes/briite/css/compat.css' \
+            > /tmp/briite-compat.css
+          grep -q 'menu-item-has-children:focus-within' /tmp/briite-compat.css
+          grep -q 'page_item_has_children:focus-within' /tmp/briite-compat.css
+
           curl --fail --silent --show-error \
             'http://127.0.0.1:8080/wp-content/themes/briite/fonts/glyphicons-halflings-regular.woff2' \
             > /dev/null
@@ -287,6 +315,10 @@ jobs:
             ! grep -q 'maxcdn.bootstrapcdn.com' "$output"
             index=$(( index + 1 ))
           done
+
+          grep -q 'menu-item-has-children' /tmp/briite-route-0.html
+          grep -q 'class="sub-menu"' /tmp/briite-route-0.html
+          grep -q 'Briite Child Menu Item' /tmp/briite-route-0.html
 
           not_found_output=/tmp/briite-route-404.html
           not_found_status=$(curl \
