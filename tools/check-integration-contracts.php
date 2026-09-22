@@ -42,10 +42,26 @@ foreach ( $kriate_files as $kriate_relative_path ) {
 	$kriate_sources[ $kriate_relative_path ] = $kriate_source;
 }
 
-if ( isset( $kriate_sources['header.php'] ) && false === strpos( $kriate_sources['header.php'], 'id="content"' ) ) {
-	// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fwrite -- Development-only CLI output; WordPress is not bootstrapped.
-	fwrite( STDERR, "Briite's Infinite Scroll container markup is missing #content.\n" );
-	$kriate_failed = true;
+if ( isset( $kriate_sources['header.php'] ) ) {
+	$kriate_header_source = $kriate_sources['header.php'];
+
+	if ( false === strpos( $kriate_header_source, 'id="content"' ) ) {
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fwrite -- Development-only CLI output; WordPress is not bootstrapped.
+		fwrite( STDERR, "Briite's Infinite Scroll container markup is missing #content.\n" );
+		$kriate_failed = true;
+	}
+
+	if ( false !== strpos( $kriate_header_source, 'href="#"' ) ) {
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fwrite -- Development-only CLI output; WordPress is not bootstrapped.
+		fwrite( STDERR, "Briite header contains a fake hash-only link.\n" );
+		$kriate_failed = true;
+	}
+
+	if ( false === strpos( $kriate_header_source, 'get_feed_link()' ) ) {
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fwrite -- Development-only CLI output; WordPress is not bootstrapped.
+		fwrite( STDERR, "Briite header RSS control is not wired to the canonical feed URL.\n" );
+		$kriate_failed = true;
+	}
 }
 
 if ( isset( $kriate_sources['inc/custom-header.php'] ) ) {
