@@ -4,8 +4,8 @@
  *
  * @package kriate
  */
-?>
 
+?>
 <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
 	<div class="entry-content">
 		<header class="entry-header">
@@ -25,30 +25,30 @@
 		<footer class="entry-footer">
 			<?php if ( 'post' === get_post_type() ) : ?>
 				<?php
-				$categories_list = get_the_category_list( esc_html__( ', ', 'kriate' ) );
-				if ( $categories_list && kriate_categorized_blog() ) :
+				$kriate_categories_list = get_the_category_list( esc_html__( ', ', 'kriate' ) );
+				if ( $kriate_categories_list && kriate_categorized_blog() ) :
 					?>
 					<span class="cat-links">
 						<?php
 						printf(
 							/* translators: %s: post categories. */
 							wp_kses_post( __( 'Posted in %1$s', 'kriate' ) ),
-							wp_kses_post( $categories_list )
+							wp_kses_post( $kriate_categories_list )
 						);
 						?>
 					</span>
 				<?php endif; ?>
 
 				<?php
-				$tags_list = get_the_tag_list( '', esc_html__( ', ', 'kriate' ) );
-				if ( $tags_list ) :
+				$kriate_tags_list = get_the_tag_list( '', esc_html__( ', ', 'kriate' ) );
+				if ( $kriate_tags_list ) :
 					?>
 					<span class="tags-links">
 						<?php
 						printf(
 							/* translators: %s: post tags. */
 							wp_kses_post( __( 'Tagged %1$s', 'kriate' ) ),
-							wp_kses_post( $tags_list )
+							wp_kses_post( $kriate_tags_list )
 						);
 						?>
 					</span>
