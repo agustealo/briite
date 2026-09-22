@@ -63,9 +63,9 @@ $strip_glyphicons = static function ( string $path, string $start_marker, string
 
 	$sanitized = substr( $css, 0, $start ) . substr( $css, $end );
 
-	foreach ( array( 'Glyphicons Halflings', 'glyphicons-halflings-regular', '.glyphicon' ) as $forbidden ) {
+	foreach ( array( 'Glyphicons Halflings', 'glyphicons-halflings-regular' ) as $forbidden ) {
 		if ( false !== strpos( $sanitized, $forbidden ) ) {
-			fwrite( STDERR, "Glyphicon residue remains in {$path}: {$forbidden}\n" );
+			fwrite( STDERR, "Glyphicon font residue remains in {$path}: {$forbidden}\n" );
 			exit( 1 );
 		}
 	}
@@ -122,7 +122,7 @@ TEXT;
 
 $replacement = <<<'TEXT'
 WordPress.org release profile note:
-The WordPress.org package omits Bootstrap 3.3.7 Glyphicons Halflings font files and removes the matching Glyphicon CSS block. Briite's own templates do not use Glyphicon classes. The normal Briite consumer package retains that historical Bootstrap compatibility surface for downstream child themes.
+The WordPress.org package omits Bootstrap 3.3.7 Glyphicons Halflings font files and removes the matching font-face and core icon-definition block. Briite's own templates do not use Glyphicon classes. The normal Briite consumer package retains that historical Bootstrap compatibility surface for downstream child themes.
 TEXT;
 
 if ( false === strpos( $content, $resource_block ) ) {
@@ -146,8 +146,8 @@ fi
 for stylesheet in \
 	"${STAGE_DIR}/css/bootstrap-3.3.7.css" \
 	"${STAGE_DIR}/css/bootstrap-3.3.7.min.css"; do
-	if grep -Eq 'Glyphicons Halflings|glyphicons-halflings-regular|\.glyphicon' "${stylesheet}"; then
-		echo "WordPress.org Bootstrap stylesheet still contains Glyphicon CSS: ${stylesheet}" >&2
+	if grep -Eq 'Glyphicons Halflings|glyphicons-halflings-regular' "${stylesheet}"; then
+		echo "WordPress.org Bootstrap stylesheet still contains Glyphicon font references: ${stylesheet}" >&2
 		exit 1
 	fi
 done
@@ -185,13 +185,13 @@ if grep -Eq 'glyphicons-halflings-regular\.(eot|svg|ttf|woff|woff2)$' <<< "${PAC
 	exit 1
 fi
 
-if unzip -p "${WORDPRESS_ORG_ARCHIVE}" briite/css/bootstrap-3.3.7.css | grep -Eq 'Glyphicons Halflings|glyphicons-halflings-regular|\.glyphicon'; then
-	echo "WordPress.org unminified Bootstrap CSS contains Glyphicon residue." >&2
+if unzip -p "${WORDPRESS_ORG_ARCHIVE}" briite/css/bootstrap-3.3.7.css | grep -Eq 'Glyphicons Halflings|glyphicons-halflings-regular'; then
+	echo "WordPress.org unminified Bootstrap CSS contains Glyphicon font references." >&2
 	exit 1
 fi
 
-if unzip -p "${WORDPRESS_ORG_ARCHIVE}" briite/css/bootstrap-3.3.7.min.css | grep -Eq 'Glyphicons Halflings|glyphicons-halflings-regular|\.glyphicon'; then
-	echo "WordPress.org minified Bootstrap CSS contains Glyphicon residue." >&2
+if unzip -p "${WORDPRESS_ORG_ARCHIVE}" briite/css/bootstrap-3.3.7.min.css | grep -Eq 'Glyphicons Halflings|glyphicons-halflings-regular'; then
+	echo "WordPress.org minified Bootstrap CSS contains Glyphicon font references." >&2
 	exit 1
 fi
 
