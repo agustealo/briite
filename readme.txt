@@ -34,6 +34,10 @@ No. Briite serves its required front-end assets from the theme package and uses 
 
 Existing media files are not rewritten. WordPress core controls compression for future generated image derivatives unless site code deliberately installs a custom image-quality filter.
 
+= What happens to the old Twitter, Facebook, and LinkedIn user-profile fields? =
+
+Briite no longer adds or saves custom user-profile fields because persistent profile data is outside a theme's presentation responsibility. Existing `twitter`, `facebook`, and `linkedin` user-meta values are not deleted or rewritten during the upgrade. The historical PHP callback names remain available as inert compatibility shims.
+
 == Changelog ==
 
 = 1.1.1 =
@@ -44,7 +48,8 @@ Existing media files are not rewritten. WordPress core controls compression for 
 * Repaired keyboard navigation, skip-link behavior, responsive navigation semantics, and reduced-motion support.
 * Removed inactive legacy template and Customizer wiring that duplicated live behavior.
 * Returned future JPEG compression policy to WordPress core while preserving the historical callback symbol.
-* Added automated coding-standard, compatibility, contract, JavaScript, and WordPress runtime gates.
+* Returned generator output policy to WordPress core and retired theme-owned social-profile persistence without deleting stored user metadata.
+* Added automated coding-standard, compatibility, contract, JavaScript, package, and WordPress runtime gates.
 
 = 1.0 =
 * Original Briite classic portfolio theme release.
@@ -52,7 +57,7 @@ Existing media files are not rewritten. WordPress core controls compression for 
 == Upgrade Notice ==
 
 = 1.1.1 =
-Compatibility-focused maintenance release for current WordPress and PHP versions. Existing Briite layout, navigation, widget IDs, and visual identity are preserved.
+Compatibility-focused maintenance release for current WordPress and PHP versions. Existing Briite layout, navigation, widget IDs, Customizer data, and stored user metadata are preserved.
 
 == Copyright ==
 

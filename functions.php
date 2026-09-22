@@ -6,14 +6,18 @@
  */
 
 /**
- * Remove WordPress version generator output from document heads and feeds.
+ * Historical generator callback retained as an inert compatibility shim.
  *
+ * Briite no longer suppresses WordPress generator output. Themes should not
+ * own non-presentational generator policy, so core or site-level code remains
+ * authoritative.
+ *
+ * @param string $generator Generator output supplied by WordPress.
  * @return string
  */
-function complete_version_removal() {
-	return '';
+function complete_version_removal( $generator = '' ) {
+	return $generator;
 }
-add_filter( 'the_generator', 'complete_version_removal' );
 
 /**
  * Set the content width based on the theme design.
