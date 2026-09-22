@@ -4,8 +4,8 @@
  *
  * @package kriate
  */
-?>
 
+?>
 	</section><!-- #content -->
 
 <?php wp_footer(); ?>
