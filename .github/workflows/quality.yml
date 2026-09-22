@@ -245,6 +245,14 @@ jobs:
             sleep 1
           done
 
+          curl --fail --silent --show-error \
+            'http://127.0.0.1:8080/wp-content/themes/briite/css/bootstrap-3.3.7.min.css' \
+            > /tmp/briite-bootstrap.css
+          grep -q 'Bootstrap v3.3.7' /tmp/briite-bootstrap.css
+          curl --fail --silent --show-error \
+            'http://127.0.0.1:8080/wp-content/themes/briite/fonts/glyphicons-halflings-regular.woff2' \
+            > /dev/null
+
           routes=(
             "/"
             "/?p=${POST_ID}"
@@ -259,6 +267,8 @@ jobs:
             curl --fail --silent --show-error "http://127.0.0.1:8080${route}" > "$output"
             grep -q '</html>' "$output"
             grep -q '/js/theme.js' "$output"
+            grep -q '/css/bootstrap-3.3.7.min.css' "$output"
+            ! grep -q 'maxcdn.bootstrapcdn.com' "$output"
             index=$(( index + 1 ))
           done
 
@@ -272,6 +282,8 @@ jobs:
           test "$not_found_status" = '404'
           grep -q '</html>' "$not_found_output"
           grep -q '/js/theme.js' "$not_found_output"
+          grep -q '/css/bootstrap-3.3.7.min.css' "$not_found_output"
+          ! grep -q 'maxcdn.bootstrapcdn.com' "$not_found_output"
 
       - name: Fail on WordPress runtime diagnostics
         if: always()
