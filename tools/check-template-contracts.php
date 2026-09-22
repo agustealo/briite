@@ -18,6 +18,11 @@ $kriate_contracts = array(
 	'content-grid.php' => array(
 		"get_template_part( 'content', 'home' )",
 	),
+	'single.php'       => array(
+		'kriate_post_nav()',
+		'comments_template()',
+		'get_sidebar()',
+	),
 );
 
 foreach ( $kriate_contracts as $kriate_relative_path => $kriate_expected_sources ) {
@@ -46,6 +51,20 @@ foreach ( $kriate_contracts as $kriate_relative_path => $kriate_expected_sources
 			fwrite( STDERR, "Broken Briite template contract in {$kriate_relative_path}: {$kriate_expected_source}\n" );
 			$kriate_failed = true;
 		}
+	}
+}
+
+$kriate_retired_templates = array(
+	'content-single.php',
+);
+
+foreach ( $kriate_retired_templates as $kriate_retired_template ) {
+	$kriate_retired_path = $kriate_root . DIRECTORY_SEPARATOR . $kriate_retired_template;
+
+	if ( is_file( $kriate_retired_path ) ) {
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fwrite -- Development-only CLI output; WordPress is not bootstrapped.
+		fwrite( STDERR, "Retired duplicate Briite template remains: {$kriate_retired_template}\n" );
+		$kriate_failed = true;
 	}
 }
 
