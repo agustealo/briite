@@ -11,8 +11,9 @@ $kriate_root   = dirname( __DIR__ );
 $kriate_failed = false;
 
 $kriate_files = array(
-	'header.php'      => $kriate_root . '/header.php',
-	'inc/jetpack.php' => $kriate_root . '/inc/jetpack.php',
+	'header.php'         => $kriate_root . '/header.php',
+	'inc/customizer.php' => $kriate_root . '/inc/customizer.php',
+	'inc/jetpack.php'    => $kriate_root . '/inc/jetpack.php',
 );
 
 $kriate_sources = array();
@@ -42,6 +43,39 @@ if ( isset( $kriate_sources['header.php'] ) && false === strpos( $kriate_sources
 	// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fwrite -- Development-only CLI output; WordPress is not bootstrapped.
 	fwrite( STDERR, "Briite's Infinite Scroll container markup is missing #content.\n" );
 	$kriate_failed = true;
+}
+
+if ( isset( $kriate_sources['inc/customizer.php'] ) ) {
+	$kriate_customizer_source = $kriate_sources['inc/customizer.php'];
+
+	$kriate_required_callbacks = array(
+		'function kriate_customize_register',
+		'function kriate_customize_preview_js',
+	);
+
+	foreach ( $kriate_required_callbacks as $kriate_required_callback ) {
+		if ( false === strpos( $kriate_customizer_source, $kriate_required_callback ) ) {
+			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fwrite -- Development-only CLI output; WordPress is not bootstrapped.
+			fwrite( STDERR, "Missing Briite Customizer compatibility callback: {$kriate_required_callback}\n" );
+			$kriate_failed = true;
+		}
+	}
+
+	$kriate_retired_customizer_patterns = array(
+		"->transport         = 'postMessage'",
+		"->transport  = 'postMessage'",
+		"->transport = 'postMessage'",
+		"add_action( 'customize_preview_init'",
+		"wp_enqueue_script( 'kriate_customizer'",
+	);
+
+	foreach ( $kriate_retired_customizer_patterns as $kriate_retired_customizer_pattern ) {
+		if ( false !== strpos( $kriate_customizer_source, $kriate_retired_customizer_pattern ) ) {
+			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fwrite -- Development-only CLI output; WordPress is not bootstrapped.
+			fwrite( STDERR, "Retired Briite Customizer preview wiring remains: {$kriate_retired_customizer_pattern}\n" );
+			$kriate_failed = true;
+		}
+	}
 }
 
 if ( isset( $kriate_sources['inc/jetpack.php'] ) ) {

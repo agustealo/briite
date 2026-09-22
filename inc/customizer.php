@@ -1,29 +1,33 @@
 <?php
 /**
- * Briite Theme Customizer integration.
+ * Briite Theme Customizer compatibility callbacks.
  *
  * @package kriate
  */
 
 /**
- * Add postMessage support for site title and description.
+ * Historical Customizer callback retained for child-theme compatibility.
+ *
+ * Briite does not render the site-title, site-description, or header-text
+ * targets that its legacy asynchronous preview code expected. WordPress core
+ * therefore keeps ownership of those settings and their normal refresh
+ * transport instead of Briite forcing a broken postMessage transport.
  *
  * @param WP_Customize_Manager $wp_customize Theme Customizer object.
  * @return void
  */
 function kriate_customize_register( $wp_customize ) {
-	$wp_customize->get_setting( 'blogname' )->transport         = 'postMessage';
-	$wp_customize->get_setting( 'blogdescription' )->transport  = 'postMessage';
-	$wp_customize->get_setting( 'header_textcolor' )->transport = 'postMessage';
+	// Intentionally left empty for backwards compatibility with public callbacks.
 }
-add_action( 'customize_register', 'kriate_customize_register' );
 
 /**
- * Bind JavaScript handlers for asynchronous Customizer previews.
+ * Historical Customizer preview callback retained for child-theme compatibility.
+ *
+ * The legacy preview script is intentionally not enqueued because its DOM
+ * targets do not exist in Briite's header markup.
  *
  * @return void
  */
 function kriate_customize_preview_js() {
-	wp_enqueue_script( 'kriate_customizer', get_template_directory_uri() . '/js/customizer.js', array( 'customize-preview' ), '20130508', true );
+	// Intentionally left empty for backwards compatibility with public callbacks.
 }
-add_action( 'customize_preview_init', 'kriate_customize_preview_js' );
