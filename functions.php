@@ -90,7 +90,10 @@ endif;
 add_action( 'after_setup_theme', 'kriate_setup' );
 
 /**
- * Preserve Briite's historical JPEG quality preference using the current image-editor filter.
+ * Historical JPEG quality callback retained for child-theme compatibility.
+ *
+ * Briite no longer registers this callback globally. WordPress core now owns
+ * image-editor quality defaults and can apply MIME- and size-aware policy.
  *
  * @param int    $quality   Image quality.
  * @param string $mime_type Image MIME type.
@@ -103,7 +106,6 @@ function smashing_jpeg_quality( $quality, $mime_type = '' ) {
 
 	return $quality;
 }
-add_filter( 'wp_editor_set_quality', 'smashing_jpeg_quality', 10, 2 );
 
 /**
  * Add the existing Thumbnail column to post and page list tables.
