@@ -82,6 +82,27 @@ jobs:
       - name: Run PHPCompatibilityWP
         run: composer phpcompat
 
+  wordpress-standards:
+    name: WordPress coding standards
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # v2
+        with:
+          php-version: '8.3'
+          coverage: none
+          tools: composer:v2
+
+      - name: Install development tools
+        run: composer install --no-interaction --no-progress --prefer-dist
+
+      - name: Enforce WPCS on the full repository
+        run: composer lint
+
   wordpress-runtime:
     name: WordPress 7.1.1 runtime smoke
     runs-on: ubuntu-latest
@@ -268,56 +289,3 @@ jobs:
             cat /tmp/briite-php-server.log
             exit 1
           fi
-
-  wordpress-standards-modernized:
-    name: WordPress standards - modernized surface
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
-
-      - name: Set up PHP
-        uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # v2
-        with:
-          php-version: '8.3'
-          coverage: none
-          tools: composer:v2
-
-      - name: Install development tools
-        run: composer install --no-interaction --no-progress --prefer-dist
-
-      - name: Enforce WPCS on compatibility slice
-        run: >-
-          vendor/bin/phpcs --standard=phpcs.xml.dist
-          archive.php
-          content-search.php
-          footer.php
-          functions.php
-          header.php
-          inc/profile.php
-          search.php
-          sidebar.php
-          single.php
-
-  wordpress-standards-audit:
-    name: WordPress standards - legacy backlog audit
-    runs-on: ubuntu-latest
-    continue-on-error: true
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
-
-      - name: Set up PHP
-        uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # v2
-        with:
-          php-version: '8.3'
-          coverage: none
-          tools: composer:v2
-
-      - name: Install development tools
-        run: composer install --no-interaction --no-progress --prefer-dist
-
-      - name: Run full-repository WPCS audit
-        run: composer lint

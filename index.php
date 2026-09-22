@@ -2,41 +2,26 @@
 /**
  * The main template file.
  *
- * This is the most generic template file in a WordPress theme
- * and one of the two required files for a theme (the other being style.css).
- * It is used to display a page when nothing more specific matches a query.
- * E.g., it puts together the home page when no home.php file exists.
- * Learn more: http://codex.wordpress.org/Template_Hierarchy
+ * Displays the blog index or the most appropriate content template when no
+ * more-specific template matches the current request.
  *
  * @package kriate
  */
 
-get_header(); ?>
-		<?php if ( have_posts() ) : ?>
+get_header();
 
-			<?php /* Start the Loop */ ?>
-			<?php while ( have_posts() ) : the_post(); ?>
+if ( have_posts() ) {
+	while ( have_posts() ) {
+		the_post();
 
-				<?php
-					/* Include the Post-Format-specific template for the content.
-					 * If you want to override this in a child theme, then include a file
-					 * called content-___.php (where ___ is the Post Format name) and that will be used instead.
-					 */
-					 
-						if ( is_home() ) {
-							// This is the blog posts index
-							get_template_part( 'content', 'home' );
-						} else {
-							// This is not the blog posts index
-							get_template_part( 'content', get_post_format() );
-						}		
-				?>
+		if ( is_home() ) {
+			get_template_part( 'content', 'home' );
+		} else {
+			get_template_part( 'content', get_post_format() );
+		}
+	}
+} else {
+	get_template_part( 'content', 'none' );
+}
 
-			<?php endwhile; ?>
-
-		<?php else : ?>
-
-			<?php get_template_part( 'content', 'none' ); ?>
-
-		<?php endif; ?>
-<?php get_footer(); ?>
+get_footer();
