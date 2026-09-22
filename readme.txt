@@ -30,6 +30,10 @@ No. The modernization work intentionally preserves Briite's familiar front-end s
 
 No. Briite serves its required front-end assets from the theme package and uses the copy of jQuery registered by WordPress.
 
+= Why does Briite have consumer and WordPress.org release profiles? =
+
+They are the same Briite theme and share the same PHP templates, JavaScript, settings, content model, and visual identity. The normal consumer package preserves the historical Bootstrap 3.3.7 compatibility surface for existing downstream child themes. The WordPress.org package removes only the unused Glyphicons Halflings font payload and its font-definition/icon-definition CSS block so the directory artifact can use a stricter bundled-font boundary without changing Briite's own templates.
+
 = What happens to existing media when image quality behavior changes? =
 
 Existing media files are not rewritten. WordPress core controls compression for future generated image derivatives unless site code deliberately installs a custom image-quality filter.
@@ -49,6 +53,7 @@ Briite no longer registers custom WordPress admin list-table columns because tha
 * Preserved existing menus, widget IDs, Customizer data, template hierarchy, and visual identity.
 * Moved required front-end framework and font assets to local theme files.
 * Added the exact upstream Bootstrap 3.3.7 unminified CSS source alongside the minified runtime stylesheet and pinned both files by upstream Git blob identity.
+* Added a deterministic WordPress.org release profile that omits the unused Glyphicons font payload without changing Briite's templates or normal consumer package.
 * Added modern editor styles without opting the front end into a redesigned block-layout model.
 * Repaired keyboard navigation, skip-link behavior, responsive navigation semantics, and reduced-motion support.
 * Removed inactive legacy template and Customizer wiring that duplicated live behavior.
@@ -86,10 +91,10 @@ normalize.css 3.0.3, Copyright Nicolas Gallagher and Jonathan Neal.
 License: MIT
 Source: https://github.com/necolas/normalize.css
 
-Glyphicons Halflings font files are bundled as part of the Bootstrap 3.3.7 distribution.
+Glyphicons Halflings font files are bundled as part of the Bootstrap 3.3.7 distribution in the normal Briite consumer package.
 Copyright: Jan Kovarik.
 Source: https://getbootstrap.com/docs/3.3/components/#glyphicons
-Bootstrap documents the Halflings set as made available for Bootstrap use without cost, with attribution requested when practical. Briite preserves the files for compatibility with existing Bootstrap-based child-theme markup.
+Bootstrap documents the Halflings set as made available for Bootstrap use without cost, with attribution requested when practical. Briite preserves the files in the normal consumer package for compatibility with existing Bootstrap-based child-theme markup. The WordPress.org release profile omits these font files and their primary font/icon-definition block because Briite's own templates do not use Glyphicon classes.
 
 Raleway font files, Copyright 2010-2012 Matt McInerney, Pablo Impallari, and Rodrigo Fuenzalida, with later contributors to the Raleway project.
 License: SIL Open Font License 1.1
