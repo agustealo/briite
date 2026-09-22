@@ -1,11 +1,26 @@
 <?php
 /**
- * The sidebar containing the main widget area.
+ * The sidebar containing the footer widget areas.
  *
  * @package kriate
  */
 
-if ( ! is_active_sidebar( 'bottom-widget-1' ) ) {
+$widget_areas = array(
+	'bottom-widget-1',
+	'bottom-widget-2',
+	'bottom-widget-3',
+	'bottom-widget-4',
+);
+
+$has_active_widget_area = false;
+foreach ( $widget_areas as $widget_area ) {
+	if ( is_active_sidebar( $widget_area ) ) {
+		$has_active_widget_area = true;
+		break;
+	}
+}
+
+if ( ! $has_active_widget_area ) {
 	return;
 }
 ?>
@@ -15,7 +30,4 @@ if ( ! is_active_sidebar( 'bottom-widget-1' ) ) {
 	<div id="widget_col-2" class="widget-col col-6 col-sm-3"><?php dynamic_sidebar( 'bottom-widget-2' ); ?></div>
 	<div id="widget_col-3" class="widget-col col-6 col-sm-3"><?php dynamic_sidebar( 'bottom-widget-3' ); ?></div>
 	<div id="widget_col-4" class="widget-col col-6 col-sm-3"><?php dynamic_sidebar( 'bottom-widget-4' ); ?></div>
-	
-	
-	
 </div><!-- #secondary -->
