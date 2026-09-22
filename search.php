@@ -24,9 +24,12 @@ get_header(); ?>
 				</h1>
 			</header><!-- .page-header -->
 
-			<?php while ( have_posts() ) : the_post(); ?>
-				<?php get_template_part( 'content', 'search' ); ?>
-			<?php endwhile; ?>
+			<?php
+			while ( have_posts() ) :
+				the_post();
+				get_template_part( 'content', 'search' );
+			endwhile;
+			?>
 
 			<?php kriate_paging_nav(); ?>
 
