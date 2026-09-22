@@ -25,6 +25,7 @@ REQUIRED_FILES=(
 	content-page.php
 	content-search.php
 	content.php
+	css/bootstrap-3.3.7.css
 	css/bootstrap-3.3.7.min.css
 	css/compat.css
 	css/editor.css
@@ -67,8 +68,13 @@ for relative_path in "${REQUIRED_DIRECTORIES[@]}"; do
 	fi
 done
 
+if ! grep -q 'Bootstrap v3.3.7' "${ROOT_DIR}/css/bootstrap-3.3.7.css"; then
+	echo "Bundled unminified Bootstrap CSS does not identify itself as version 3.3.7." >&2
+	exit 1
+fi
+
 if ! grep -q 'Bootstrap v3.3.7' "${ROOT_DIR}/css/bootstrap-3.3.7.min.css"; then
-	echo "Bundled Bootstrap CSS does not identify itself as version 3.3.7." >&2
+	echo "Bundled minified Bootstrap CSS does not identify itself as version 3.3.7." >&2
 	exit 1
 fi
 
@@ -168,6 +174,7 @@ for required_path in \
 	'briite/readme.txt' \
 	'briite/LICENSE.txt' \
 	'briite/screenshot.png' \
+	'briite/css/bootstrap-3.3.7.css' \
 	'briite/css/bootstrap-3.3.7.min.css' \
 	'briite/css/theme.css' \
 	'briite/js/theme.js'; do

@@ -48,6 +48,7 @@ Briite no longer registers custom WordPress admin list-table columns because tha
 * Hardened compatibility for WordPress 7.1 and PHP 7.4 through 8.5.
 * Preserved existing menus, widget IDs, Customizer data, template hierarchy, and visual identity.
 * Moved required front-end framework and font assets to local theme files.
+* Added the exact upstream Bootstrap 3.3.7 unminified CSS source alongside the minified runtime stylesheet and pinned both files by upstream Git blob identity.
 * Added modern editor styles without opting the front end into a redesigned block-layout model.
 * Repaired keyboard navigation, skip-link behavior, responsive navigation semantics, and reduced-motion support.
 * Removed inactive legacy template and Customizer wiring that duplicated live behavior.
@@ -79,6 +80,7 @@ Source: https://underscores.me/
 Bootstrap 3.3.7 CSS, Copyright 2011-2016 Twitter, Inc.
 License: MIT
 Source: https://github.com/twbs/bootstrap/tree/v3.3.7
+Briite includes the official `dist/css/bootstrap.css` source as `css/bootstrap-3.3.7.css` and the official `dist/css/bootstrap.min.css` distribution as `css/bootstrap-3.3.7.min.css`.
 
 normalize.css 3.0.3, Copyright Nicolas Gallagher and Jonathan Neal.
 License: MIT
