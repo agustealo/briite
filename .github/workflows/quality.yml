@@ -191,6 +191,14 @@ jobs:
               fwrite( STDERR, "Unexpected front-end block-layout opt-in detected.\n" );
               exit( 1 );
             }
+            if ( ! function_exists( "smashing_jpeg_quality" ) ) {
+              fwrite( STDERR, "Historical JPEG quality compatibility callback is missing.\n" );
+              exit( 1 );
+            }
+            if ( false !== has_filter( "wp_editor_set_quality", "smashing_jpeg_quality" ) || false !== has_filter( "jpeg_quality", "smashing_jpeg_quality" ) ) {
+              fwrite( STDERR, "Retired Briite global JPEG quality override is still registered.\n" );
+              exit( 1 );
+            }
             global $editor_styles;
             foreach ( array( "css/fonts.css", "css/editor.css" ) as $editor_style ) {
               if ( ! is_array( $editor_styles ) || ! in_array( $editor_style, $editor_styles, true ) ) {
