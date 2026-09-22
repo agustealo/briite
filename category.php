@@ -12,6 +12,8 @@ if ( have_posts() ) {
 		the_post();
 		get_template_part( 'content', 'grid' );
 	}
+
+	kriate_paging_nav();
 }
 
 get_footer();

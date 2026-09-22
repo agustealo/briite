@@ -11,11 +11,16 @@ $kriate_root   = dirname( __DIR__ );
 $kriate_failed = false;
 
 $kriate_contracts = array(
-	'category.php'     => "get_template_part( 'content', 'grid' )",
-	'content-grid.php' => "get_template_part( 'content', 'home' )",
+	'category.php' => array(
+		"get_template_part( 'content', 'grid' )",
+		'kriate_paging_nav()',
+	),
+	'content-grid.php' => array(
+		"get_template_part( 'content', 'home' )",
+	),
 );
 
-foreach ( $kriate_contracts as $kriate_relative_path => $kriate_expected_source ) {
+foreach ( $kriate_contracts as $kriate_relative_path => $kriate_expected_sources ) {
 	$kriate_absolute_path = $kriate_root . DIRECTORY_SEPARATOR . $kriate_relative_path;
 
 	if ( ! is_file( $kriate_absolute_path ) ) {
@@ -35,10 +40,12 @@ foreach ( $kriate_contracts as $kriate_relative_path => $kriate_expected_source 
 		continue;
 	}
 
-	if ( false === strpos( $kriate_source, $kriate_expected_source ) ) {
-		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fwrite -- Development-only CLI output; WordPress is not bootstrapped.
-		fwrite( STDERR, "Broken Briite template contract in {$kriate_relative_path}.\n" );
-		$kriate_failed = true;
+	foreach ( $kriate_expected_sources as $kriate_expected_source ) {
+		if ( false === strpos( $kriate_source, $kriate_expected_source ) ) {
+			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fwrite -- Development-only CLI output; WordPress is not bootstrapped.
+			fwrite( STDERR, "Broken Briite template contract in {$kriate_relative_path}: {$kriate_expected_source}\n" );
+			$kriate_failed = true;
+		}
 	}
 }
 
