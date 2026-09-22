@@ -5,44 +5,44 @@
  * @package kriate
  */
 
-get_header(); ?>
+get_header();
 
-<?php while ( have_posts() ) : the_post(); ?>
-	<?php
-	$background_color = sprintf(
+while ( have_posts() ) :
+	the_post();
+	$kriate_background_color = sprintf(
 		'%02x%02x%02x',
-		mt_rand( 0, 75 ),
-		mt_rand( 0, 75 ),
-		mt_rand( 0, 75 )
+		wp_rand( 0, 75 ),
+		wp_rand( 0, 75 ),
+		wp_rand( 0, 75 )
 	);
-	$background_style = 'background-color: #' . $background_color . ';';
-	$featured_image   = get_the_post_thumbnail_url( get_the_ID(), 'single-banner' );
+	$kriate_background_style = 'background-color: #' . $kriate_background_color . ';';
+	$kriate_featured_image   = get_the_post_thumbnail_url( get_the_ID(), 'single-banner' );
 
-	if ( $featured_image ) {
-		$background_style .= " background-image: url('" . esc_url_raw( $featured_image ) . "');";
+	if ( $kriate_featured_image ) {
+		$kriate_background_style .= " background-image: url('" . esc_url_raw( $kriate_featured_image ) . "');";
 	}
 	?>
 
-	<section class="top" style="<?php echo esc_attr( $background_style ); ?>">
+	<section class="top" style="<?php echo esc_attr( $kriate_background_style ); ?>">
 		<div class="wrapper content_header clearfix">
 			<div class="work_nav">
 				<ul class="btn clearfix">
 					<li>
-						<?php $next_post = get_next_post(); ?>
-						<?php if ( ! empty( $next_post ) ) : ?>
-							<a href="<?php echo esc_url( get_permalink( $next_post->ID ) ); ?>" class="previous" data-title="<?php esc_attr_e( 'Previous', 'kriate' ); ?>">
+						<?php $kriate_next_post = get_next_post(); ?>
+						<?php if ( ! empty( $kriate_next_post ) ) : ?>
+							<a href="<?php echo esc_url( get_permalink( $kriate_next_post->ID ) ); ?>" class="previous" data-title="<?php esc_attr_e( 'Previous', 'kriate' ); ?>">
 								<span class="screen-reader-text"><?php esc_html_e( 'Previous post', 'kriate' ); ?></span>
 							</a>
 						<?php endif; ?>
 					</li>
 					<li>
 						<?php
-						$categories = get_the_category();
-						foreach ( $categories as $category ) {
-							if ( 0 === (int) $category->category_parent && 1 !== (int) $category->term_id ) {
+						$kriate_categories = get_the_category();
+						foreach ( $kriate_categories as $kriate_category ) {
+							if ( 0 === (int) $kriate_category->category_parent && 1 !== (int) $kriate_category->term_id ) {
 								?>
-								<a href="<?php echo esc_url( get_category_link( $category->term_id ) ); ?>" class="grid" data-title="<?php esc_attr_e( 'Category', 'kriate' ); ?>">
-									<span class="screen-reader-text"><?php echo esc_html( $category->name ); ?></span>
+								<a href="<?php echo esc_url( get_category_link( $kriate_category->term_id ) ); ?>" class="grid" data-title="<?php esc_attr_e( 'Category', 'kriate' ); ?>">
+									<span class="screen-reader-text"><?php echo esc_html( $kriate_category->name ); ?></span>
 								</a>
 								<?php
 								break;
@@ -51,9 +51,9 @@ get_header(); ?>
 						?>
 					</li>
 					<li>
-						<?php $previous_post = get_previous_post(); ?>
-						<?php if ( ! empty( $previous_post ) ) : ?>
-							<a href="<?php echo esc_url( get_permalink( $previous_post->ID ) ); ?>" class="next" data-title="<?php esc_attr_e( 'Next', 'kriate' ); ?>">
+						<?php $kriate_previous_post = get_previous_post(); ?>
+						<?php if ( ! empty( $kriate_previous_post ) ) : ?>
+							<a href="<?php echo esc_url( get_permalink( $kriate_previous_post->ID ) ); ?>" class="next" data-title="<?php esc_attr_e( 'Next', 'kriate' ); ?>">
 								<span class="screen-reader-text"><?php esc_html_e( 'Next post', 'kriate' ); ?></span>
 							</a>
 						<?php endif; ?>
@@ -80,25 +80,29 @@ get_header(); ?>
 
 			<footer class="entry-footer">
 				<?php
-				$category_list = get_the_category_list( esc_html__( ', ', 'kriate' ) );
-				$tag_list      = get_the_tag_list( '', esc_html__( ', ', 'kriate' ) );
+				$kriate_category_list = get_the_category_list( esc_html__( ', ', 'kriate' ) );
+				$kriate_tag_list      = get_the_tag_list( '', esc_html__( ', ', 'kriate' ) );
 
 				if ( ! kriate_categorized_blog() ) {
-					if ( '' !== $tag_list ) {
-						$meta_text = __( 'This entry was tagged %2$s. Bookmark the <a href="%3$s" rel="bookmark">permalink</a>.', 'kriate' );
+					if ( '' !== $kriate_tag_list ) {
+						/* translators: 2: post tags, 3: post permalink. */
+						$kriate_meta_text = __( 'This entry was tagged %2$s. Bookmark the <a href="%3$s" rel="bookmark">permalink</a>.', 'kriate' );
 					} else {
-						$meta_text = __( 'Bookmark the <a href="%3$s" rel="bookmark">permalink</a>.', 'kriate' );
+						/* translators: 3: post permalink. */
+						$kriate_meta_text = __( 'Bookmark the <a href="%3$s" rel="bookmark">permalink</a>.', 'kriate' );
 					}
-				} elseif ( '' !== $tag_list ) {
-					$meta_text = __( 'This entry was posted in %1$s and tagged %2$s. Bookmark the <a href="%3$s" rel="bookmark">permalink</a>.', 'kriate' );
+				} elseif ( '' !== $kriate_tag_list ) {
+					/* translators: 1: post categories, 2: post tags, 3: post permalink. */
+					$kriate_meta_text = __( 'This entry was posted in %1$s and tagged %2$s. Bookmark the <a href="%3$s" rel="bookmark">permalink</a>.', 'kriate' );
 				} else {
-					$meta_text = __( 'This entry was posted in %1$s. Bookmark the <a href="%3$s" rel="bookmark">permalink</a>.', 'kriate' );
+					/* translators: 1: post categories, 3: post permalink. */
+					$kriate_meta_text = __( 'This entry was posted in %1$s. Bookmark the <a href="%3$s" rel="bookmark">permalink</a>.', 'kriate' );
 				}
 
 				printf(
-					wp_kses_post( $meta_text ),
-					wp_kses_post( $category_list ),
-					wp_kses_post( $tag_list ),
+					wp_kses_post( $kriate_meta_text ),
+					wp_kses_post( $kriate_category_list ),
+					wp_kses_post( $kriate_tag_list ),
 					esc_url( get_permalink() )
 				);
 				?>
@@ -114,7 +118,9 @@ get_header(); ?>
 			}
 			?>
 
-		<?php endwhile; ?>
+		<?php
+endwhile;
+?>
 
 		<?php get_sidebar(); ?>
 		</div><!-- end content -->
