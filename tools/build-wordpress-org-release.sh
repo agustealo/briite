@@ -113,24 +113,28 @@ if ( false === $content ) {
 	exit( 1 );
 }
 
-$resource_block = <<<'TEXT'
-Glyphicons Halflings font files are bundled as part of the Bootstrap 3.3.7 distribution.
-Copyright: Jan Kovarik.
-Source: https://getbootstrap.com/docs/3.3/components/#glyphicons
-Bootstrap documents the Halflings set as made available for Bootstrap use without cost, with attribution requested when practical. Briite preserves the files for compatibility with existing Bootstrap-based child-theme markup.
-TEXT;
+$start_marker = 'Glyphicons Halflings font files are bundled';
+$end_marker   = 'Raleway font files,';
+$start        = strpos( $content, $start_marker );
 
-$replacement = <<<'TEXT'
-WordPress.org release profile note:
-The WordPress.org package omits Bootstrap 3.3.7 Glyphicons Halflings font files and removes the matching font-face and core icon-definition block. Briite's own templates do not use Glyphicon classes. The normal Briite consumer package retains that historical Bootstrap compatibility surface for downstream child themes.
-TEXT;
-
-if ( false === strpos( $content, $resource_block ) ) {
-	fwrite( STDERR, "Unable to locate the expected Glyphicons resource block in readme.txt.\n" );
+if ( false === $start ) {
+	fwrite( STDERR, "Unable to locate the Glyphicons resource section in readme.txt.\n" );
 	exit( 1 );
 }
 
-$content = str_replace( $resource_block, $replacement, $content );
+$end = strpos( $content, $end_marker, $start );
+if ( false === $end ) {
+	fwrite( STDERR, "Unable to locate the resource section following Glyphicons in readme.txt.\n" );
+	exit( 1 );
+}
+
+$replacement = <<<'TEXT'
+WordPress.org release profile note:
+The WordPress.org package does not bundle Bootstrap 3.3.7 Glyphicons Halflings font files. Briite's own templates do not use Glyphicon classes. The normal Briite consumer package retains that historical Bootstrap compatibility surface for downstream child themes.
+
+TEXT;
+
+$content = substr( $content, 0, $start ) . $replacement . substr( $content, $end );
 
 if ( false === file_put_contents( $readme, $content ) ) {
 	fwrite( STDERR, "Unable to write WordPress.org readme.txt.\n" );
@@ -192,6 +196,11 @@ fi
 
 if unzip -p "${WORDPRESS_ORG_ARCHIVE}" briite/css/bootstrap-3.3.7.min.css | grep -Eq 'Glyphicons Halflings|glyphicons-halflings-regular'; then
 	echo "WordPress.org minified Bootstrap CSS contains Glyphicon font references." >&2
+	exit 1
+fi
+
+if ! unzip -p "${WORDPRESS_ORG_ARCHIVE}" briite/readme.txt | grep -q 'WordPress.org package does not bundle Bootstrap 3.3.7 Glyphicons Halflings font files'; then
+	echo "WordPress.org release readme does not describe the package-specific font boundary." >&2
 	exit 1
 fi
 
