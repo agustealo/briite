@@ -30,7 +30,7 @@
 				<?php endif; ?>
 			</a>
 		</div><!-- end logo -->
-		<button id="menu_icon" class="menu-toggle" type="button" aria-controls="primary-menu" aria-expanded="false">
+		<button id="menu_icon" class="menu-toggle" type="button" aria-controls="site-navigation" aria-expanded="false">
 			<span class="screen-reader-text"><?php esc_html_e( 'Toggle navigation', 'kriate' ); ?></span>
 		</button>
 		<nav id="site-navigation" class="main-navigation" role="navigation" aria-label="<?php esc_attr_e( 'Primary Menu', 'kriate' ); ?>">
