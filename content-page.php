@@ -14,7 +14,7 @@
 			<?php
 			wp_link_pages(
 				array(
-					'before' => '<div class="page-links">' . esc_html__( 'Pages:', 'kriate' ),
+					'before' => '<div class="page-links">' . esc_html__( 'Pages:', 'briite' ),
 					'after'  => '</div>',
 				)
 			);
@@ -22,7 +22,7 @@
 		</article><!-- .entry-content -->
 
 		<footer class="entry-footer">
-			<?php edit_post_link( esc_html__( 'Edit', 'kriate' ), '<span class="edit-link">', '</span>' ); ?>
+			<?php edit_post_link( esc_html__( 'Edit', 'briite' ), '<span class="edit-link">', '</span>' ); ?>
 		</footer><!-- .entry-footer -->
 
 		<?php

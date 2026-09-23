@@ -59,7 +59,7 @@ function kriate_wp_title( $title, $sep ) {
 
 	if ( ( $paged >= 2 || $page >= 2 ) && ! is_404() ) {
 		/* translators: %s: current page number. */
-		$title .= " $sep " . sprintf( __( 'Page %s', 'kriate' ), max( $paged, $page ) );
+		$title .= " $sep " . sprintf( __( 'Page %s', 'briite' ), max( $paged, $page ) );
 	}
 
 	return $title;

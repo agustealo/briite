@@ -71,6 +71,18 @@ jobs:
           grep -qxF 'briite/css/bootstrap-3.3.7.css' <<< "${PACKAGE_LIST}"
           grep -qxF 'briite/css/bootstrap-3.3.7.min.css' <<< "${PACKAGE_LIST}"
           grep -qxF 'briite/fonts/raleway-regular.woff' <<< "${PACKAGE_LIST}"
+          grep -qxF 'briite/inc/i18n.php' <<< "${PACKAGE_LIST}"
+          grep -qxF 'briite/languages/briite.pot' <<< "${PACKAGE_LIST}"
+
+          if grep -qxF 'briite/languages/kriate.pot' <<< "${PACKAGE_LIST}"; then
+            echo 'WordPress.org artifact contains the stale Kriate POT template.' >&2
+            exit 1
+          fi
+
+          if ! unzip -p "${THEME_ZIP}" briite/style.css | grep -qxF 'Text Domain: briite'; then
+            echo 'WordPress.org artifact does not declare the canonical briite text domain.' >&2
+            exit 1
+          fi
 
           if grep -Eq 'glyphicons-halflings-regular\.(eot|svg|ttf|woff|woff2)$' <<< "${PACKAGE_LIST}"; then
             echo 'WordPress.org artifact contains Glyphicon font files.' >&2
@@ -131,6 +143,14 @@ jobs:
           wp eval --path=/tmp/wordpress '
             if ( "Briite" !== wp_get_theme()->get( "Name" ) ) {
               fwrite( STDERR, "Unexpected active theme name.\n" );
+              exit( 1 );
+            }
+            if ( "briite" !== wp_get_theme()->get( "TextDomain" ) ) {
+              fwrite( STDERR, "Unexpected active theme text domain.\n" );
+              exit( 1 );
+            }
+            if ( ! function_exists( "briite_load_legacy_translation_fallback" ) ) {
+              fwrite( STDERR, "Briite translation compatibility loader is missing.\n" );
               exit( 1 );
             }
             if ( ! current_theme_supports( "title-tag" ) || ! current_theme_supports( "post-thumbnails" ) || ! current_theme_supports( "editor-styles" ) ) {

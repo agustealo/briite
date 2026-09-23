@@ -30,8 +30,8 @@ while ( have_posts() ) :
 					<li>
 						<?php $kriate_next_post = get_next_post(); ?>
 						<?php if ( ! empty( $kriate_next_post ) ) : ?>
-							<a href="<?php echo esc_url( get_permalink( $kriate_next_post->ID ) ); ?>" class="previous" data-title="<?php esc_attr_e( 'Previous', 'kriate' ); ?>">
-								<span class="screen-reader-text"><?php esc_html_e( 'Previous post', 'kriate' ); ?></span>
+							<a href="<?php echo esc_url( get_permalink( $kriate_next_post->ID ) ); ?>" class="previous" data-title="<?php esc_attr_e( 'Previous', 'briite' ); ?>">
+								<span class="screen-reader-text"><?php esc_html_e( 'Previous post', 'briite' ); ?></span>
 							</a>
 						<?php endif; ?>
 					</li>
@@ -41,7 +41,7 @@ while ( have_posts() ) :
 						foreach ( $kriate_categories as $kriate_category ) {
 							if ( 0 === (int) $kriate_category->category_parent && 1 !== (int) $kriate_category->term_id ) {
 								?>
-								<a href="<?php echo esc_url( get_category_link( $kriate_category->term_id ) ); ?>" class="grid" data-title="<?php esc_attr_e( 'Category', 'kriate' ); ?>">
+								<a href="<?php echo esc_url( get_category_link( $kriate_category->term_id ) ); ?>" class="grid" data-title="<?php esc_attr_e( 'Category', 'briite' ); ?>">
 									<span class="screen-reader-text"><?php echo esc_html( $kriate_category->name ); ?></span>
 								</a>
 								<?php
@@ -53,8 +53,8 @@ while ( have_posts() ) :
 					<li>
 						<?php $kriate_previous_post = get_previous_post(); ?>
 						<?php if ( ! empty( $kriate_previous_post ) ) : ?>
-							<a href="<?php echo esc_url( get_permalink( $kriate_previous_post->ID ) ); ?>" class="next" data-title="<?php esc_attr_e( 'Next', 'kriate' ); ?>">
-								<span class="screen-reader-text"><?php esc_html_e( 'Next post', 'kriate' ); ?></span>
+							<a href="<?php echo esc_url( get_permalink( $kriate_previous_post->ID ) ); ?>" class="next" data-title="<?php esc_attr_e( 'Next', 'briite' ); ?>">
+								<span class="screen-reader-text"><?php esc_html_e( 'Next post', 'briite' ); ?></span>
 							</a>
 						<?php endif; ?>
 					</li>
@@ -71,7 +71,7 @@ while ( have_posts() ) :
 				<?php
 				wp_link_pages(
 					array(
-						'before' => '<div class="page-links">' . esc_html__( 'Pages:', 'kriate' ),
+						'before' => '<div class="page-links">' . esc_html__( 'Pages:', 'briite' ),
 						'after'  => '</div>',
 					)
 				);
@@ -80,23 +80,23 @@ while ( have_posts() ) :
 
 			<footer class="entry-footer">
 				<?php
-				$kriate_category_list = get_the_category_list( esc_html__( ', ', 'kriate' ) );
-				$kriate_tag_list      = get_the_tag_list( '', esc_html__( ', ', 'kriate' ) );
+				$kriate_category_list = get_the_category_list( esc_html__( ', ', 'briite' ) );
+				$kriate_tag_list      = get_the_tag_list( '', esc_html__( ', ', 'briite' ) );
 
 				if ( ! kriate_categorized_blog() ) {
 					if ( '' !== $kriate_tag_list ) {
 						/* translators: 2: post tags, 3: post permalink. */
-						$kriate_meta_text = __( 'This entry was tagged %2$s. Bookmark the <a href="%3$s" rel="bookmark">permalink</a>.', 'kriate' );
+						$kriate_meta_text = __( 'This entry was tagged %2$s. Bookmark the <a href="%3$s" rel="bookmark">permalink</a>.', 'briite' );
 					} else {
 						/* translators: 3: post permalink. */
-						$kriate_meta_text = __( 'Bookmark the <a href="%3$s" rel="bookmark">permalink</a>.', 'kriate' );
+						$kriate_meta_text = __( 'Bookmark the <a href="%3$s" rel="bookmark">permalink</a>.', 'briite' );
 					}
 				} elseif ( '' !== $kriate_tag_list ) {
 					/* translators: 1: post categories, 2: post tags, 3: post permalink. */
-					$kriate_meta_text = __( 'This entry was posted in %1$s and tagged %2$s. Bookmark the <a href="%3$s" rel="bookmark">permalink</a>.', 'kriate' );
+					$kriate_meta_text = __( 'This entry was posted in %1$s and tagged %2$s. Bookmark the <a href="%3$s" rel="bookmark">permalink</a>.', 'briite' );
 				} else {
 					/* translators: 1: post categories, 3: post permalink. */
-					$kriate_meta_text = __( 'This entry was posted in %1$s. Bookmark the <a href="%3$s" rel="bookmark">permalink</a>.', 'kriate' );
+					$kriate_meta_text = __( 'This entry was posted in %1$s. Bookmark the <a href="%3$s" rel="bookmark">permalink</a>.', 'briite' );
 				}
 
 				printf(
@@ -107,7 +107,7 @@ while ( have_posts() ) :
 				);
 				?>
 
-				<?php edit_post_link( esc_html__( 'Edit', 'kriate' ), '<span class="edit-link">', '</span>' ); ?>
+				<?php edit_post_link( esc_html__( 'Edit', 'briite' ), '<span class="edit-link">', '</span>' ); ?>
 			</footer><!-- .entry-footer -->
 
 			<?php kriate_post_nav(); ?>

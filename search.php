@@ -17,7 +17,7 @@ get_header(); ?>
 					<?php
 					printf(
 						/* translators: %s: search query. */
-						esc_html__( 'Search Results for: %s', 'kriate' ),
+						esc_html__( 'Search Results for: %s', 'briite' ),
 						'<span>' . esc_html( get_search_query() ) . '</span>'
 					);
 					?>

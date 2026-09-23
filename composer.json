@@ -22,12 +22,14 @@
       "@template-contracts",
       "@integration-contracts",
       "@theme-scope-contracts",
+      "@text-domain-contract",
       "@package:wordpress-org"
     ],
     "local-assets": "php tools/check-local-assets.php",
     "template-contracts": "php tools/check-template-contracts.php",
     "integration-contracts": "php tools/check-integration-contracts.php",
     "theme-scope-contracts": "php tools/check-theme-scope-contracts.php",
+    "text-domain-contract": "bash tools/check-text-domain-contract.sh",
     "phpcompat": "phpcs --standard=PHPCompatibilityWP --runtime-set testVersion 7.4-8.5 --extensions=php --ignore=vendor .",
     "package": "bash tools/build-release.sh",
     "package:wordpress-org": "bash tools/build-wordpress-org-release.sh"

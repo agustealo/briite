@@ -18,36 +18,36 @@ get_header(); ?>
 					single_tag_title();
 				elseif ( is_author() ) :
 					/* translators: %s: author name. */
-					printf( esc_html__( 'Author: %s', 'kriate' ), '<span class="vcard">' . esc_html( get_the_author() ) . '</span>' );
+					printf( esc_html__( 'Author: %s', 'briite' ), '<span class="vcard">' . esc_html( get_the_author() ) . '</span>' );
 				elseif ( is_day() ) :
 					/* translators: %s: archive date. */
-					printf( esc_html__( 'Day: %s', 'kriate' ), '<span>' . esc_html( get_the_date() ) . '</span>' );
+					printf( esc_html__( 'Day: %s', 'briite' ), '<span>' . esc_html( get_the_date() ) . '</span>' );
 				elseif ( is_month() ) :
 					/* translators: %s: archive month. */
-					printf( esc_html__( 'Month: %s', 'kriate' ), '<span>' . esc_html( get_the_date( _x( 'F Y', 'monthly archives date format', 'kriate' ) ) ) . '</span>' );
+					printf( esc_html__( 'Month: %s', 'briite' ), '<span>' . esc_html( get_the_date( _x( 'F Y', 'monthly archives date format', 'briite' ) ) ) . '</span>' );
 				elseif ( is_year() ) :
 					/* translators: %s: archive year. */
-					printf( esc_html__( 'Year: %s', 'kriate' ), '<span>' . esc_html( get_the_date( _x( 'Y', 'yearly archives date format', 'kriate' ) ) ) . '</span>' );
+					printf( esc_html__( 'Year: %s', 'briite' ), '<span>' . esc_html( get_the_date( _x( 'Y', 'yearly archives date format', 'briite' ) ) ) . '</span>' );
 				elseif ( is_tax( 'post_format', 'post-format-aside' ) ) :
-					esc_html_e( 'Asides', 'kriate' );
+					esc_html_e( 'Asides', 'briite' );
 				elseif ( is_tax( 'post_format', 'post-format-gallery' ) ) :
-					esc_html_e( 'Galleries', 'kriate' );
+					esc_html_e( 'Galleries', 'briite' );
 				elseif ( is_tax( 'post_format', 'post-format-image' ) ) :
-					esc_html_e( 'Images', 'kriate' );
+					esc_html_e( 'Images', 'briite' );
 				elseif ( is_tax( 'post_format', 'post-format-video' ) ) :
-					esc_html_e( 'Videos', 'kriate' );
+					esc_html_e( 'Videos', 'briite' );
 				elseif ( is_tax( 'post_format', 'post-format-quote' ) ) :
-					esc_html_e( 'Quotes', 'kriate' );
+					esc_html_e( 'Quotes', 'briite' );
 				elseif ( is_tax( 'post_format', 'post-format-link' ) ) :
-					esc_html_e( 'Links', 'kriate' );
+					esc_html_e( 'Links', 'briite' );
 				elseif ( is_tax( 'post_format', 'post-format-status' ) ) :
-					esc_html_e( 'Statuses', 'kriate' );
+					esc_html_e( 'Statuses', 'briite' );
 				elseif ( is_tax( 'post_format', 'post-format-audio' ) ) :
-					esc_html_e( 'Audios', 'kriate' );
+					esc_html_e( 'Audios', 'briite' );
 				elseif ( is_tax( 'post_format', 'post-format-chat' ) ) :
-					esc_html_e( 'Chats', 'kriate' );
+					esc_html_e( 'Chats', 'briite' );
 				else :
-					esc_html_e( 'Archives', 'kriate' );
+					esc_html_e( 'Archives', 'briite' );
 				endif;
 				?>
 			</h1>
