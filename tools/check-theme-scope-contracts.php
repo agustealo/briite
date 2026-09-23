@@ -11,7 +11,7 @@ $kriate_root   = dirname( __DIR__ );
 $kriate_failed = false;
 
 $kriate_contracts = array(
-	'functions.php'          => array(
+	'functions.php'         => array(
 		'required'  => array(
 			'function complete_version_removal',
 			'return $generator;',
