@@ -7,6 +7,7 @@
  * @package kriate
  */
 
+// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Development-only CLI arguments; WordPress is not bootstrapped.
 $kriate_cli_args = isset( $_SERVER['argv'] ) && is_array( $_SERVER['argv'] ) ? $_SERVER['argv'] : array();
 $kriate_profile  = isset( $kriate_cli_args[1] ) ? $kriate_cli_args[1] : 'consumer';
 $kriate_root     = isset( $kriate_cli_args[2] ) ? rtrim( $kriate_cli_args[2], DIRECTORY_SEPARATOR ) : dirname( __DIR__ );
