@@ -105,6 +105,11 @@ try {
     name: 'briite-home-desktop.png',
     route: '/',
     viewport: { width: 1440, height: 1000 },
+    beforeCapture: async (page) => {
+      const firstWork = page.locator('.work a').first();
+      await firstWork.waitFor({ state: 'visible' });
+      await firstWork.hover();
+    },
   });
 
   await capture({
