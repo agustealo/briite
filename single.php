@@ -16,7 +16,15 @@ while ( have_posts() ) :
 		wp_rand( 0, 75 )
 	);
 	$kriate_background_style = 'background-color: #' . $kriate_background_color . ';';
-	$kriate_featured_image   = get_the_post_thumbnail_url( get_the_ID(), 'single-banner' );
+	$kriate_thumbnail_id     = get_post_thumbnail_id();
+	$kriate_featured_image   = false;
+
+	if ( $kriate_thumbnail_id ) {
+		$kriate_featured_image = wp_get_attachment_image_url(
+			$kriate_thumbnail_id,
+			kriate_get_compatible_image_size( $kriate_thumbnail_id, 'kriate-single-banner', 'single-banner' )
+		);
+	}
 
 	if ( $kriate_featured_image ) {
 		$kriate_background_style .= " background-image: url('" . esc_url_raw( $kriate_featured_image ) . "');";
