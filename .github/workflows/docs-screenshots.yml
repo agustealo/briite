@@ -1,0 +1,184 @@
+name: Documentation Screenshots
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - 'fix/release-docs-screenshots'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: docs-screenshots-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  capture:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.4
+        env:
+          MYSQL_DATABASE: wordpress_docs
+          MYSQL_USER: wordpress
+          MYSQL_PASSWORD: wordpress
+          MYSQL_ROOT_PASSWORD: root
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -u root --password=root"
+          --health-interval=5s
+          --health-timeout=5s
+          --health-retries=20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          fetch-depth: 0
+
+      - name: Set up PHP and WP-CLI
+        uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # v2
+        with:
+          php-version: '8.3'
+          extensions: mysqli
+          coverage: none
+          tools: wp-cli
+
+      - name: Install screenshot dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y imagemagick
+          npm install --no-save --no-package-lock playwright@1.55.0
+          npx playwright install --with-deps chromium
+
+      - name: Build packaged Briite theme
+        run: bash tools/build-release.sh
+
+      - name: Install WordPress 7.1.1
+        shell: bash
+        run: |
+          set -euo pipefail
+          wp core download --version=7.1.1 --path=/tmp/wordpress --force
+          wp config create \
+            --path=/tmp/wordpress \
+            --dbname=wordpress_docs \
+            --dbuser=wordpress \
+            --dbpass=wordpress \
+            --dbhost=127.0.0.1:3306 \
+            --skip-check
+          wp core install \
+            --path=/tmp/wordpress \
+            --url=http://127.0.0.1:8080 \
+            --title='Briite Studio' \
+            --admin_user=admin \
+            --admin_password='briite-docs-password' \
+            --admin_email=docs@example.com \
+            --skip-email
+          wp config set WP_DEBUG true --raw --path=/tmp/wordpress
+          wp config set WP_DEBUG_LOG true --raw --path=/tmp/wordpress
+          wp config set WP_DEBUG_DISPLAY false --raw --path=/tmp/wordpress
+
+      - name: Install and activate packaged Briite
+        shell: bash
+        run: |
+          set -euo pipefail
+          THEME_ZIP="$(find dist -maxdepth 1 -type f -name 'briite-*.zip' -print -quit)"
+          test -n "${THEME_ZIP}"
+          wp theme install "${THEME_ZIP}" --force --activate --path=/tmp/wordpress
+
+      - name: Seed representative documentation content
+        shell: bash
+        run: |
+          set -euo pipefail
+          chmod +x tools/seed-documentation-site.sh
+          WP_PATH=/tmp/wordpress \
+          BRIITE_BASE_URL=http://127.0.0.1:8080 \
+          bash tools/seed-documentation-site.sh
+
+      - name: Start WordPress runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          php -S 127.0.0.1:8080 -t /tmp/wordpress >/tmp/briite-doc-server.log 2>&1 &
+          echo $! > /tmp/briite-doc-server.pid
+
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent http://127.0.0.1:8080/ >/dev/null; then
+              exit 0
+            fi
+            if [ "${attempt}" -eq 30 ]; then
+              cat /tmp/briite-doc-server.log
+              exit 1
+            fi
+            sleep 1
+          done
+
+      - name: Capture real runtime screenshots
+        shell: bash
+        run: |
+          set -euo pipefail
+          source /tmp/briite-doc-routes.env
+          export BRIITE_BASE_URL BRIITE_FEATURED_POST_ID BRIITE_ABOUT_PAGE_ID BRIITE_PORTFOLIO_CATEGORY_ID
+          node tools/capture-doc-screenshots.mjs
+
+      - name: Verify screenshot outputs
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s screenshot.png
+          test -s docs/screenshots/briite-home-desktop.png
+          test -s docs/screenshots/briite-single-project.png
+          test -s docs/screenshots/briite-mobile-navigation.png
+          test -s docs/screenshots/briite-404-recovery.png
+
+          php -r '
+          $image = getimagesize("screenshot.png");
+          if (false === $image || 1200 !== $image[0] || 900 !== $image[1]) {
+              fwrite(STDERR, "screenshot.png must be exactly 1200x900.\n");
+              exit(1);
+          }
+          '
+
+          if [ -f /tmp/wordpress/wp-content/debug.log ] && [ -s /tmp/wordpress/wp-content/debug.log ]; then
+            echo 'WordPress debug.log is not empty:'
+            cat /tmp/wordpress/wp-content/debug.log
+            exit 1
+          fi
+
+          if grep -Eqi 'PHP (Warning|Notice|Deprecated|Fatal error|Parse error)|Uncaught (Error|Exception)' /tmp/briite-doc-server.log; then
+            echo 'Runtime diagnostics detected during screenshot capture:'
+            cat /tmp/briite-doc-server.log
+            exit 1
+          fi
+
+      - name: Upload screenshot evidence
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: briite-real-runtime-screenshots-${{ github.sha }}
+          path: |
+            screenshot.png
+            docs/screenshots/*.png
+          if-no-files-found: error
+          compression-level: 0
+
+      - name: Commit generated screenshots to the documentation branch
+        if: github.ref_name == 'fix/release-docs-screenshots'
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add screenshot.png docs/screenshots/*.png
+
+          if git diff --cached --quiet; then
+            echo 'Screenshots are already current.'
+            exit 0
+          fi
+
+          git commit -m 'Capture Briite real runtime screenshots'
+          git push origin "HEAD:${GITHUB_REF_NAME}"
