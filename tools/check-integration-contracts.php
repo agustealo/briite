@@ -17,6 +17,7 @@ $kriate_files = array(
 	'inc/custom-header.php',
 	'inc/customizer.php',
 	'inc/jetpack.php',
+	'inc/legacy-compat.php',
 );
 
 $kriate_sources = array();
@@ -47,9 +48,19 @@ foreach ( $kriate_files as $kriate_relative_path ) {
 if ( isset( $kriate_sources['functions.php'] ) ) {
 	$kriate_functions_source = $kriate_sources['functions.php'];
 
-	if ( false === strpos( $kriate_functions_source, 'function smashing_jpeg_quality' ) ) {
+	if ( false !== strpos( $kriate_functions_source, 'function smashing_jpeg_quality' ) ) {
 		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fwrite -- Development-only CLI output; WordPress is not bootstrapped.
-		fwrite( STDERR, "Missing Briite JPEG quality compatibility callback.\n" );
+		fwrite( STDERR, "Consumer-only JPEG quality compatibility callback escaped into active functions.php.\n" );
+		$kriate_failed = true;
+	}
+}
+
+if ( isset( $kriate_sources['inc/legacy-compat.php'] ) ) {
+	$kriate_legacy_compat_source = $kriate_sources['inc/legacy-compat.php'];
+
+	if ( false === strpos( $kriate_legacy_compat_source, 'function smashing_jpeg_quality' ) ) {
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fwrite -- Development-only CLI output; WordPress is not bootstrapped.
+		fwrite( STDERR, "Missing consumer-package JPEG quality compatibility callback.\n" );
 		$kriate_failed = true;
 	}
 
@@ -59,10 +70,12 @@ if ( isset( $kriate_sources['functions.php'] ) ) {
 	);
 
 	foreach ( $kriate_retired_quality_hooks as $kriate_retired_quality_hook ) {
-		if ( false !== strpos( $kriate_functions_source, $kriate_retired_quality_hook ) ) {
-			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fwrite -- Development-only CLI output; WordPress is not bootstrapped.
-			fwrite( STDERR, "Retired Briite global JPEG quality override remains: {$kriate_retired_quality_hook}\n" );
-			$kriate_failed = true;
+		foreach ( $kriate_sources as $kriate_relative_path => $kriate_source ) {
+			if ( false !== strpos( $kriate_source, $kriate_retired_quality_hook ) ) {
+				// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fwrite -- Development-only CLI output; WordPress is not bootstrapped.
+				fwrite( STDERR, "Retired Briite global JPEG quality override remains in {$kriate_relative_path}: {$kriate_retired_quality_hook}\n" );
+				$kriate_failed = true;
+			}
 		}
 	}
 }
