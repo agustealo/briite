@@ -11,7 +11,7 @@ $kriate_root   = dirname( __DIR__ );
 $kriate_failed = false;
 
 $kriate_contracts = array(
-	'functions.php'                => array(
+	'functions.php'                 => array(
 		'required'  => array(
 			'function kriate_Thumbnail_Column',
 			'function kriate_render_thumbnail_column',
@@ -30,7 +30,7 @@ $kriate_contracts = array(
 			"add_action( 'manage_pages_custom_column', 'kriate_AddThumbValue'",
 		),
 	),
-	'inc/profile.php'             => array(
+	'inc/profile.php'              => array(
 		'required'  => array(
 			"require_once __DIR__ . '/legacy-global-compat.php';",
 		),
