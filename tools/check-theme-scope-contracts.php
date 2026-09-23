@@ -87,6 +87,7 @@ $kriate_contracts = array(
 			"add_action( 'edit_user_profile_update'",
 			'update_user_meta(',
 			'delete_user_meta(',
+		),
 	),
 	'inc/template-tags.php'  => array(
 		'required'  => array(
