@@ -29,7 +29,7 @@ function briite_load_legacy_translation_fallback() {
 	}
 
 	$theme_language_directory = get_template_directory() . '/languages';
-	$canonical_files           = array(
+	$canonical_files          = array(
 		WP_LANG_DIR . '/themes/briite-' . $locale . '.mo',
 		$theme_language_directory . '/' . $locale . '.mo',
 	);
