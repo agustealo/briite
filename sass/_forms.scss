@@ -343,8 +343,8 @@ label {
 }
 
 .comment-awaiting-moderation:before {
-	content: "\f071";
-	font-family: FontAwesome;
+	content: "!";
+	font-family: Arial, sans-serif;
 	margin-right: 5px;
 	position: relative;
 	top: 1px;
@@ -352,8 +352,8 @@ label {
 
 .comment-reply-link:before,
 .comment-reply-login:before {
-	content: "\f112";
-	font-family: FontAwesome;
+	content: "\21A9";
+	font-family: Arial, sans-serif;
 	margin-right: 3px;
 }
 /* Comment form */
@@ -382,8 +382,8 @@ label {
 }
 
 .comment-reply-title small a:before {
-	content: "\f057";
-	font-family: FontAwesome;
+	content: "\00D7";
+	font-family: Arial, sans-serif;
 	font-size: 20px;
 	margin-right: 10px;
 	vertical-align: top;
