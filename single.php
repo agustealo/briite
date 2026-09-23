@@ -28,9 +28,9 @@ while ( have_posts() ) :
 			<div class="work_nav">
 				<ul class="btn clearfix">
 					<li>
-						<?php $kriate_next_post = get_next_post(); ?>
-						<?php if ( ! empty( $kriate_next_post ) ) : ?>
-							<a href="<?php echo esc_url( get_permalink( $kriate_next_post->ID ) ); ?>" class="previous" data-title="<?php esc_attr_e( 'Previous', 'briite' ); ?>">
+						<?php $kriate_previous_post = get_previous_post(); ?>
+						<?php if ( ! empty( $kriate_previous_post ) ) : ?>
+							<a href="<?php echo esc_url( get_permalink( $kriate_previous_post->ID ) ); ?>" class="previous" data-title="<?php esc_attr_e( 'Previous', 'briite' ); ?>">
 								<span class="screen-reader-text"><?php esc_html_e( 'Previous post', 'briite' ); ?></span>
 							</a>
 						<?php endif; ?>
@@ -51,9 +51,9 @@ while ( have_posts() ) :
 						?>
 					</li>
 					<li>
-						<?php $kriate_previous_post = get_previous_post(); ?>
-						<?php if ( ! empty( $kriate_previous_post ) ) : ?>
-							<a href="<?php echo esc_url( get_permalink( $kriate_previous_post->ID ) ); ?>" class="next" data-title="<?php esc_attr_e( 'Next', 'briite' ); ?>">
+						<?php $kriate_next_post = get_next_post(); ?>
+						<?php if ( ! empty( $kriate_next_post ) ) : ?>
+							<a href="<?php echo esc_url( get_permalink( $kriate_next_post->ID ) ); ?>" class="next" data-title="<?php esc_attr_e( 'Next', 'briite' ); ?>">
 								<span class="screen-reader-text"><?php esc_html_e( 'Next post', 'briite' ); ?></span>
 							</a>
 						<?php endif; ?>
