@@ -18,7 +18,13 @@ $kriate_contracts = array(
 	'content-grid.php' => array(
 		"get_template_part( 'content', 'home' )",
 	),
+	'content-home.php' => array(
+		'id="post-<?php the_ID(); ?>"',
+		"post_class( 'work' )",
+	),
 	'single.php'       => array(
+		'id="post-<?php the_ID(); ?>"',
+		"post_class( 'entry-content' )",
 		'kriate_post_nav()',
 		'comments_template()',
 		'get_sidebar()',
