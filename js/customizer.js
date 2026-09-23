@@ -1,36 +1,14 @@
 /**
- * Theme Customizer enhancements for a better user experience.
+ * Historical Briite Customizer asset path.
  *
- * Contains handlers to make Theme Customizer preview reload changes asynchronously.
+ * This file is intentionally inert. It remains in the theme so existing child
+ * themes, caches, or integrations that reference `js/customizer.js` continue
+ * to receive a valid asset instead of a 404.
+ *
+ * Briite no longer renders the site-title, site-description, or header-text
+ * targets used by its legacy postMessage preview implementation. WordPress
+ * core therefore owns those settings and their normal refresh behavior.
  */
-
-( function( $ ) {
-	// Site title and description.
-	wp.customize( 'blogname', function( value ) {
-		value.bind( function( to ) {
-			$( '.site-title a' ).text( to );
-		} );
-	} );
-	wp.customize( 'blogdescription', function( value ) {
-		value.bind( function( to ) {
-			$( '.site-description' ).text( to );
-		} );
-	} );
-	// Header text color.
-	wp.customize( 'header_textcolor', function( value ) {
-		value.bind( function( to ) {
-			if ( 'blank' === to ) {
-				$( '.site-title, .site-description' ).css( {
-					'clip': 'rect(1px, 1px, 1px, 1px)',
-					'position': 'absolute'
-				} );
-			} else {
-				$( '.site-title, .site-description' ).css( {
-					'clip': 'auto',
-					'color': to,
-					'position': 'relative'
-				} );
-			}
-		} );
-	} );
-} )( jQuery );
+( function() {
+	'use strict';
+}() );
