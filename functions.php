@@ -258,6 +258,7 @@ function kriate_scripts() {
 }
 add_action( 'wp_enqueue_scripts', 'kriate_scripts' );
 
+require get_template_directory() . '/inc/i18n.php';
 require get_template_directory() . '/inc/custom-header.php';
 require get_template_directory() . '/inc/template-tags.php';
 require get_template_directory() . '/inc/extras.php';
