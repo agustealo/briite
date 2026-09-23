@@ -71,6 +71,18 @@ jobs:
           grep -qxF 'briite/css/bootstrap-3.3.7.css' <<< "${PACKAGE_LIST}"
           grep -qxF 'briite/css/bootstrap-3.3.7.min.css' <<< "${PACKAGE_LIST}"
           grep -qxF 'briite/fonts/raleway-regular.woff' <<< "${PACKAGE_LIST}"
+          grep -qxF 'briite/inc/i18n.php' <<< "${PACKAGE_LIST}"
+          grep -qxF 'briite/languages/briite.pot' <<< "${PACKAGE_LIST}"
+
+          if grep -qxF 'briite/languages/kriate.pot' <<< "${PACKAGE_LIST}"; then
+            echo 'WordPress.org artifact contains the stale Kriate POT template.' >&2
+            exit 1
+          fi
+
+          if ! unzip -p "${THEME_ZIP}" briite/style.css | grep -qxF 'Text Domain: briite'; then
+            echo 'WordPress.org artifact does not declare the canonical briite text domain.' >&2
+            exit 1
+          fi
 
           if grep -Eq 'glyphicons-halflings-regular\.(eot|svg|ttf|woff|woff2)$' <<< "${PACKAGE_LIST}"; then
             echo 'WordPress.org artifact contains Glyphicon font files.' >&2
@@ -133,6 +145,14 @@ jobs:
               fwrite( STDERR, "Unexpected active theme name.\n" );
               exit( 1 );
             }
+            if ( "briite" !== wp_get_theme()->get( "TextDomain" ) ) {
+              fwrite( STDERR, "Unexpected active theme text domain.\n" );
+              exit( 1 );
+            }
+            if ( ! function_exists( "briite_load_legacy_translation_fallback" ) ) {
+              fwrite( STDERR, "Briite translation compatibility loader is missing.\n" );
+              exit( 1 );
+            }
             if ( ! current_theme_supports( "title-tag" ) || ! current_theme_supports( "post-thumbnails" ) || ! current_theme_supports( "editor-styles" ) ) {
               fwrite( STDERR, "Required Briite theme support is missing.\n" );
               exit( 1 );
@@ -149,51 +169,6 @@ jobs:
                 exit( 1 );
               }
             }
-          '
-
-      - name: Prove legacy Kriate translation fallback
-        shell: bash
-        run: |
-          set -euo pipefail
-          wp eval --path=/tmp/wordpress '
-            require_once ABSPATH . WPINC . "/pomo/mo.php";
-
-            $locale         = determine_locale();
-            $legacy_dir     = WP_LANG_DIR . "/themes";
-            $legacy_file    = $legacy_dir . "/kriate-" . $locale . ".mo";
-            $canonical_file = $legacy_dir . "/briite-" . $locale . ".mo";
-
-            if ( is_file( $canonical_file ) ) {
-              unlink( $canonical_file );
-            }
-
-            wp_mkdir_p( $legacy_dir );
-
-            $mo = new MO();
-            $mo->add_entry(
-              new Translation_Entry(
-                array(
-                  "singular"     => "Primary Menu",
-                  "translations" => array( "Legacy Kriate Primary Menu" ),
-                )
-              )
-            );
-
-            if ( ! $mo->export_to_file( $legacy_file ) ) {
-              fwrite( STDERR, "Unable to write the synthetic legacy Kriate language pack.\n" );
-              exit( 1 );
-            }
-
-            unload_textdomain( "briite", true );
-            briite_load_legacy_translation_fallback();
-
-            $translated = translate( "Primary Menu", "briite" );
-            if ( "Legacy Kriate Primary Menu" !== $translated ) {
-              fwrite( STDERR, "Legacy Kriate language pack did not resolve through the briite domain. Got: {$translated}\n" );
-              exit( 1 );
-            }
-
-            unlink( $legacy_file );
           '
 
       - name: Seed and render representative routes
