@@ -48,6 +48,20 @@ jobs:
           coverage: none
           tools: wp-cli
 
+      - name: Verify translation catalog freshness
+        shell: bash
+        run: |
+          set -euo pipefail
+          wp i18n make-pot \
+            . \
+            /tmp/briite-generated.pot \
+            --domain=briite \
+            --exclude=.git,.github,dist,node_modules,sass,tools,vendor \
+            --skip-js
+          php tools/compare-pot-catalog.php \
+            languages/briite.pot \
+            /tmp/briite-generated.pot
+
       - name: Build consumer package
         run: bash tools/build-release.sh
 
