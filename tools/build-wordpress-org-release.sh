@@ -44,6 +44,49 @@ if [[ -f "${LEGACY_COMPAT_FILE}" ]]; then
 	exit 1
 fi
 
+STAGE_FUNCTIONS_FILE="${STAGE_DIR}/functions.php"
+STAGE_FUNCTIONS_FILE="${STAGE_FUNCTIONS_FILE}" php <<'PHP'
+<?php
+$functions_path = getenv( 'STAGE_FUNCTIONS_FILE' );
+
+if ( false === $functions_path || '' === $functions_path ) {
+	fwrite( STDERR, "Missing staged functions.php path.\n" );
+	exit( 1 );
+}
+
+$content = file_get_contents( $functions_path );
+
+if ( false === $content ) {
+	fwrite( STDERR, "Unable to read staged functions.php.\n" );
+	exit( 1 );
+}
+
+$legacy_loader = <<<'PHP_CODE'
+$kriate_legacy_compatibility_file = get_template_directory() . '/inc/legacy-compat.php';
+if ( is_readable( $kriate_legacy_compatibility_file ) ) {
+	require $kriate_legacy_compatibility_file;
+}
+unset( $kriate_legacy_compatibility_file );
+PHP_CODE;
+
+if ( 1 !== substr_count( $content, $legacy_loader ) ) {
+	fwrite( STDERR, "Unable to locate exactly one consumer-only legacy compatibility loader in staged functions.php.\n" );
+	exit( 1 );
+}
+
+$content = str_replace( "\n" . $legacy_loader . "\n", "\n", $content, $replacement_count );
+
+if ( 1 !== $replacement_count || false !== strpos( $content, 'legacy-compat.php' ) ) {
+	fwrite( STDERR, "WordPress.org staged functions.php still references the consumer-only legacy compatibility module.\n" );
+	exit( 1 );
+}
+
+if ( false === file_put_contents( $functions_path, $content ) ) {
+	fwrite( STDERR, "Unable to write filtered staged functions.php.\n" );
+	exit( 1 );
+}
+PHP
+
 if [[ -f "${STAGE_DIR}/inc/profile.php" ]]; then
 	echo "WordPress.org staging contains retired inc/profile.php." >&2
 	exit 1
@@ -220,6 +263,11 @@ for forbidden_path in \
 		exit 1
 	fi
 done
+
+if unzip -p "${WORDPRESS_ORG_ARCHIVE}" briite/functions.php | grep -qF 'legacy-compat.php'; then
+	echo "WordPress.org release functions.php still references the excluded consumer-only legacy compatibility module." >&2
+	exit 1
+fi
 
 if grep -Eq 'glyphicons-halflings-regular\.(eot|svg|ttf|woff|woff2)$' <<< "${PACKAGE_LIST}"; then
 	echo "WordPress.org release archive contains a Glyphicon font file." >&2
