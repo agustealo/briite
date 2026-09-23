@@ -130,6 +130,12 @@ if ( isset( $kriate_sources['css/compat.css'] ) ) {
 
 	$kriate_required_accessibility_styles = array(
 		'.screen-reader-text:focus',
+		'a:not(.screen-reader-text):focus-visible',
+		'button:focus-visible',
+		'input:focus-visible',
+		'select:focus-visible',
+		'textarea:focus-visible',
+		'outline: 2px solid currentColor;',
 		'.main .work a:focus .caption',
 		'.main .work a:focus-visible .caption',
 		'.main-navigation li:focus-within > ul',
