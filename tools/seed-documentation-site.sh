@@ -47,21 +47,24 @@ create_artwork() {
 	local start_color="$2"
 	local end_color="$3"
 	local accent_color="$4"
-	local eyebrow="$5"
-	local title="$6"
 
+	# Keep fixture artwork intentionally typeless. Briite's real HTML/CSS owns
+	# project titles and captions, and the abstract composition survives both
+	# the square grid crop and the wide single-post hero crop without clipping.
 	convert \
 		-size 1600x1000 \
 		gradient:"${start_color}-${end_color}" \
 		-fill "${accent_color}" \
-		-draw 'rectangle 0,735 1600,1000' \
-		-fill '#ffffff' \
-		-font DejaVu-Sans \
-		-pointsize 30 \
-		-gravity southwest \
-		-annotate +96+210 "${eyebrow}" \
-		-pointsize 76 \
-		-annotate +96+105 "${title}" \
+		-draw 'polygon 1100,0 1600,0 1600,1000 1280,1000 980,540' \
+		-fill 'rgba(255,255,255,0.10)' \
+		-draw 'circle 800,500 1130,500' \
+		-stroke 'rgba(255,255,255,0.68)' \
+		-strokewidth 4 \
+		-fill none \
+		-draw 'rectangle 610,310 990,690' \
+		-strokewidth 2 \
+		-draw 'line 800,180 800,820' \
+		-draw 'line 480,500 1120,500' \
 		"${output}"
 }
 
@@ -77,7 +80,7 @@ create_project() {
 	local category_id="$9"
 
 	local image_path="${FIXTURE_DIR}/${slug}.png"
-	create_artwork "${image_path}" "${start_color}" "${end_color}" "${accent_color}" 'BRIITE / SELECTED WORK' "${title}"
+	create_artwork "${image_path}" "${start_color}" "${end_color}" "${accent_color}"
 
 	local post_id
 	post_id="$(wp post create \
