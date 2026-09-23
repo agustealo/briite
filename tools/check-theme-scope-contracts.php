@@ -7,8 +7,22 @@
  * @package kriate
  */
 
-$kriate_root   = dirname( __DIR__ );
-$kriate_failed = false;
+$kriate_cli_args = isset( $_SERVER['argv'] ) && is_array( $_SERVER['argv'] ) ? $_SERVER['argv'] : array();
+$kriate_profile  = isset( $kriate_cli_args[1] ) ? $kriate_cli_args[1] : 'consumer';
+$kriate_root     = isset( $kriate_cli_args[2] ) ? rtrim( $kriate_cli_args[2], DIRECTORY_SEPARATOR ) : dirname( __DIR__ );
+$kriate_failed   = false;
+
+if ( ! in_array( $kriate_profile, array( 'consumer', 'wordpress-org' ), true ) ) {
+	// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fwrite -- Development-only CLI output; WordPress is not bootstrapped.
+	fwrite( STDERR, "Unknown Briite release profile: {$kriate_profile}\n" );
+	exit( 1 );
+}
+
+if ( ! is_dir( $kriate_root ) ) {
+	// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fwrite -- Development-only CLI output; WordPress is not bootstrapped.
+	fwrite( STDERR, "Briite contract root does not exist: {$kriate_root}\n" );
+	exit( 1 );
+}
 
 $kriate_contracts = array(
 	'functions.php'         => array(
@@ -32,7 +46,23 @@ $kriate_contracts = array(
 			"'/inc/profile.php'",
 		),
 	),
-	'inc/legacy-compat.php' => array(
+	'inc/template-tags.php' => array(
+		'required'  => array(
+			'function kriate_categorized_blog',
+			'function kriate_category_transient_flusher',
+		),
+		'forbidden' => array(
+			'get_transient(',
+			'set_transient(',
+			'delete_transient(',
+			"add_action( 'edit_category', 'kriate_category_transient_flusher' )",
+			"add_action( 'save_post', 'kriate_category_transient_flusher' )",
+		),
+	),
+);
+
+if ( 'consumer' === $kriate_profile ) {
+	$kriate_contracts['inc/legacy-compat.php'] = array(
 		'required'  => array(
 			"function_exists( 'complete_version_removal' )",
 			'function complete_version_removal',
@@ -57,21 +87,8 @@ $kriate_contracts = array(
 			'update_user_meta(',
 			'delete_user_meta(',
 		),
-	),
-	'inc/template-tags.php' => array(
-		'required'  => array(
-			'function kriate_categorized_blog',
-			'function kriate_category_transient_flusher',
-		),
-		'forbidden' => array(
-			'get_transient(',
-			'set_transient(',
-			'delete_transient(',
-			"add_action( 'edit_category', 'kriate_category_transient_flusher' )",
-			"add_action( 'save_post', 'kriate_category_transient_flusher' )",
-		),
-	),
-);
+	);
+}
 
 foreach ( $kriate_contracts as $kriate_relative_path => $kriate_contract ) {
 	$kriate_absolute_path = $kriate_root . DIRECTORY_SEPARATOR . $kriate_relative_path;
@@ -114,10 +131,14 @@ $kriate_retired_runtime_files = array(
 	'inc/profile.php',
 );
 
+if ( 'wordpress-org' === $kriate_profile ) {
+	$kriate_retired_runtime_files[] = 'inc/legacy-compat.php';
+}
+
 foreach ( $kriate_retired_runtime_files as $kriate_retired_runtime_file ) {
 	if ( is_file( $kriate_root . DIRECTORY_SEPARATOR . $kriate_retired_runtime_file ) ) {
 		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fwrite -- Development-only CLI output; WordPress is not bootstrapped.
-		fwrite( STDERR, "Retired Briite runtime file remains: {$kriate_retired_runtime_file}\n" );
+		fwrite( STDERR, "Retired Briite runtime file remains for {$kriate_profile}: {$kriate_retired_runtime_file}\n" );
 		$kriate_failed = true;
 	}
 }
@@ -274,7 +295,7 @@ foreach ( $kriate_runtime_paths as $kriate_relative_path ) {
 		}
 	}
 
-	if ( 'inc/legacy-compat.php' === $kriate_relative_path ) {
+	if ( 'consumer' === $kriate_profile && 'inc/legacy-compat.php' === $kriate_relative_path ) {
 		continue;
 	}
 
@@ -324,4 +345,4 @@ if ( $kriate_failed ) {
 }
 
 // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fwrite -- Development-only CLI output; WordPress is not bootstrapped.
-fwrite( STDOUT, "Briite theme-scope and namespace contract checks passed.\n" );
+fwrite( STDOUT, "Briite {$kriate_profile} theme-scope and namespace contract checks passed.\n" );
