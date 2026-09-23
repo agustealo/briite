@@ -11,7 +11,7 @@ $kriate_root   = dirname( __DIR__ );
 $kriate_failed = false;
 
 $kriate_contracts = array(
-	'functions.php'          => array(
+	'functions.php'         => array(
 		'required'  => array(
 			"add_image_size( 'kriate-single-banner'",
 			"add_image_size( 'kriate-grid-thumb'",
@@ -40,7 +40,7 @@ $kriate_contracts = array(
 			"add_action( 'manage_pages_custom_column', 'kriate_AddThumbValue'",
 		),
 	),
-	'inc/profile.php'        => array(
+	'inc/profile.php'       => array(
 		'required'  => array(
 			"__DIR__ . '/legacy-compat.php'",
 			'is_readable( $kriate_legacy_compat_file )',
@@ -58,7 +58,7 @@ $kriate_contracts = array(
 			'wp_nonce_field(',
 		),
 	),
-	'inc/legacy-compat.php'  => array(
+	'inc/legacy-compat.php' => array(
 		'required'  => array(
 			'function complete_version_removal',
 			'function smashing_jpeg_quality',
@@ -89,7 +89,7 @@ $kriate_contracts = array(
 			'delete_user_meta(',
 		),
 	),
-	'inc/template-tags.php'  => array(
+	'inc/template-tags.php' => array(
 		'required'  => array(
 			'function kriate_categorized_blog',
 			'function kriate_category_transient_flusher',
