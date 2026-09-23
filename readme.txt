@@ -32,19 +32,19 @@ No. Briite serves its required front-end assets from the theme package and uses 
 
 = Why does Briite have consumer and WordPress.org release profiles? =
 
-They are the same Briite theme and share the same PHP templates, JavaScript, settings, content model, and visual identity. The normal consumer package preserves the historical Bootstrap 3.3.7 compatibility surface for existing downstream child themes. The WordPress.org package removes only the unused Glyphicons Halflings font payload and its font-definition/icon-definition CSS block so the directory artifact can use a stricter bundled-font boundary without changing Briite's own templates.
+They are the same Briite theme and share the same active templates, settings, content model, JavaScript behavior, and visual identity. Briite's active image-size names and first-party asset handles are prefixed in both profiles. The normal consumer package additionally preserves a small compatibility membrane for historical unprefixed PHP callbacks, image-size names, asset handles, and the Bootstrap 3.3.7 Glyphicons payload used by older downstream child themes. The WordPress.org package omits those inactive legacy aliases and unused Glyphicon fonts so the directory artifact satisfies the current public-identifier and bundled-font boundaries without redesigning the theme.
 
-= What happens to existing media when image quality behavior changes? =
+= What happens to existing media when image quality or image-size behavior changes? =
 
-Existing media files are not rewritten. WordPress core controls compression for future generated image derivatives unless site code deliberately installs a custom image-quality filter.
+Existing media files are not rewritten. WordPress core controls compression for future generated image derivatives unless site code deliberately installs a custom image-quality filter. Briite now registers prefixed active image sizes and automatically reuses an already-generated historical `single-banner` or `grid-thumb` derivative when an older attachment does not yet have the new prefixed derivative.
 
 = What happens to the old Twitter, Facebook, and LinkedIn user-profile fields? =
 
-Briite no longer adds or saves custom user-profile fields because persistent profile data is outside a theme's presentation responsibility. Existing `twitter`, `facebook`, and `linkedin` user-meta values are not deleted or rewritten during the upgrade. The historical PHP callback names remain available as inert compatibility shims.
+Briite no longer adds or saves custom user-profile fields because persistent profile data is outside a theme's presentation responsibility. Existing `twitter`, `facebook`, and `linkedin` user-meta values are not deleted or rewritten during the upgrade. The normal consumer package keeps the historical PHP callback names as inert compatibility shims for existing integrations; the WordPress.org release profile omits those unprefixed aliases.
 
 = What happened to the Thumbnail column in the Posts and Pages admin lists? =
 
-Briite no longer registers custom WordPress admin list-table columns because that behavior is separate from the theme's front-end presentation. This does not remove featured images or attachment data. The historical thumbnail-column PHP callbacks remain available for a child theme or plugin that deliberately registers them.
+Briite no longer registers custom WordPress admin list-table columns because that behavior is separate from the theme's front-end presentation. This does not remove featured images or attachment data. Prefixed historical helpers remain available, and the normal consumer package also keeps the old unprefixed post-column alias for downstream compatibility. The WordPress.org release profile omits that unprefixed alias.
 
 == Changelog ==
 
@@ -57,9 +57,10 @@ Briite no longer registers custom WordPress admin list-table columns because tha
 * Added modern editor styles without opting the front end into a redesigned block-layout model.
 * Repaired keyboard navigation, skip-link behavior, responsive navigation semantics, and reduced-motion support.
 * Removed inactive legacy template and Customizer wiring that duplicated live behavior.
-* Returned future JPEG compression policy to WordPress core while preserving the historical callback symbol.
+* Returned future JPEG compression policy to WordPress core while preserving the historical callback symbol in the normal consumer package.
 * Returned generator output policy to WordPress core and retired theme-owned social-profile persistence without deleting stored user metadata.
-* Retired automatic admin post/page Thumbnail columns while preserving the historical callbacks for explicit downstream opt-in.
+* Retired automatic admin post/page Thumbnail columns while preserving compatibility helpers for explicit downstream opt-in.
+* Prefixed active Briite image-size names and first-party asset handles while preserving historical media derivatives and consumer-only aliases for existing child themes.
 * Added automated coding-standard, compatibility, contract, JavaScript, package, and WordPress runtime gates.
 
 = 1.0 =
@@ -68,7 +69,7 @@ Briite no longer registers custom WordPress admin list-table columns because tha
 == Upgrade Notice ==
 
 = 1.1.1 =
-Compatibility-focused maintenance release for current WordPress and PHP versions. Existing Briite front-end layout, navigation, widget IDs, Customizer data, featured images, attachment data, and stored user metadata are preserved.
+Compatibility-focused maintenance release for current WordPress and PHP versions. Existing Briite front-end layout, navigation, widget IDs, Customizer data, featured images, attachment data, stored user metadata, and historical consumer-package integration aliases are preserved.
 
 == Copyright ==
 
