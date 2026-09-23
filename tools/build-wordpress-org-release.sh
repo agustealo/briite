@@ -87,6 +87,27 @@ $strip_glyphicons(
 	"@font-face{font-family:'Glyphicons Halflings';",
 	'*{-webkit-box-sizing:border-box'
 );
+
+$functions_path = $stage_dir . '/functions.php';
+$functions      = file_get_contents( $functions_path );
+$legacy_loader  = "require get_template_directory() . '/inc/profile.php';";
+
+if ( false === $functions ) {
+	fwrite( STDERR, "Unable to read staged functions.php.\n" );
+	exit( 1 );
+}
+
+if ( 1 !== substr_count( $functions, $legacy_loader ) ) {
+	fwrite( STDERR, "Unable to identify exactly one consumer legacy-global loader in staged functions.php.\n" );
+	exit( 1 );
+}
+
+$functions = str_replace( $legacy_loader . "\n", '', $functions );
+
+if ( false === file_put_contents( $functions_path, $functions ) ) {
+	fwrite( STDERR, "Unable to write WordPress.org functions.php.\n" );
+	exit( 1 );
+}
 PHP
 
 for glyphicons_file in \
@@ -100,6 +121,16 @@ for glyphicons_file in \
 		exit 1
 	fi
 	rm "${STAGE_DIR}/fonts/${glyphicons_file}"
+done
+
+for legacy_file in \
+	inc/profile.php \
+	inc/legacy-global-compat.php; do
+	if [[ ! -f "${STAGE_DIR}/${legacy_file}" ]]; then
+		echo "Expected consumer compatibility file is missing before WordPress.org filtering: ${legacy_file}" >&2
+		exit 1
+	fi
+	rm "${STAGE_DIR}/${legacy_file}"
 done
 
 STAGE_DIR="${STAGE_DIR}" php <<'PHP'
@@ -132,6 +163,8 @@ $replacement = <<<'TEXT'
 WordPress.org release profile note:
 The WordPress.org package does not bundle Bootstrap 3.3.7 Glyphicons Halflings font files. Briite's own templates do not use Glyphicon classes. The normal Briite consumer package retains that historical Bootstrap compatibility surface for downstream child themes.
 
+The WordPress.org package also omits Briite's inert legacy generic global callback compatibility module. Those historical 2014/2017 callback symbols remain only in the normal consumer package for existing child-theme and integration compatibility; Briite's current runtime does not register them.
+
 TEXT;
 
 $content = substr( $content, 0, $start ) . $replacement . substr( $content, $end );
@@ -161,6 +194,17 @@ if ! grep -q 'Raleway' "${STAGE_DIR}/css/fonts.css"; then
 	exit 1
 fi
 
+if grep -q "inc/profile.php" "${STAGE_DIR}/functions.php"; then
+	echo "WordPress.org staged functions.php still loads the consumer legacy-global compatibility entrypoint." >&2
+	exit 1
+fi
+
+LEGACY_GLOBAL_PATTERN='function[[:space:]]+(complete_version_removal|smashing_jpeg_quality|fb_AddThumbValue|social_profile_fields|social_save_profile_fields)[[:space:]]*\('
+if find "${STAGE_DIR}" -type f -name '*.php' -print0 | xargs -0 grep -En "${LEGACY_GLOBAL_PATTERN}"; then
+	echo "WordPress.org staged theme still defines a generic historical global callback." >&2
+	exit 1
+fi
+
 rm -f "${WORDPRESS_ORG_ARCHIVE}" "${WORDPRESS_ORG_CHECKSUM}"
 (
 	cd "${STAGE_ROOT}"
@@ -184,6 +228,15 @@ for required_path in \
 	fi
 done
 
+for forbidden_path in \
+	'briite/inc/profile.php' \
+	'briite/inc/legacy-global-compat.php'; do
+	if grep -qxF "${forbidden_path}" <<< "${PACKAGE_LIST}"; then
+		echo "WordPress.org release archive contains consumer-only compatibility file: ${forbidden_path}" >&2
+		exit 1
+	fi
+done
+
 if grep -Eq 'glyphicons-halflings-regular\.(eot|svg|ttf|woff|woff2)$' <<< "${PACKAGE_LIST}"; then
 	echo "WordPress.org release archive contains a Glyphicon font file." >&2
 	exit 1
@@ -199,8 +252,25 @@ if unzip -p "${WORDPRESS_ORG_ARCHIVE}" briite/css/bootstrap-3.3.7.min.css | grep
 	exit 1
 fi
 
+while IFS= read -r php_path; do
+	if unzip -p "${WORDPRESS_ORG_ARCHIVE}" "${php_path}" | grep -Eq "${LEGACY_GLOBAL_PATTERN}"; then
+		echo "WordPress.org release archive defines a generic historical global callback in ${php_path}." >&2
+		exit 1
+	fi
+done < <( grep -E '^briite/.*\.php$' <<< "${PACKAGE_LIST}" )
+
+if unzip -p "${WORDPRESS_ORG_ARCHIVE}" briite/functions.php | grep -q 'inc/profile.php'; then
+	echo "WordPress.org release functions.php contains the consumer legacy-global loader." >&2
+	exit 1
+fi
+
 if ! unzip -p "${WORDPRESS_ORG_ARCHIVE}" briite/readme.txt | grep -q 'WordPress.org package does not bundle Bootstrap 3.3.7 Glyphicons Halflings font files'; then
 	echo "WordPress.org release readme does not describe the package-specific font boundary." >&2
+	exit 1
+fi
+
+if ! unzip -p "${WORDPRESS_ORG_ARCHIVE}" briite/readme.txt | grep -q "omits Briite's inert legacy generic global callback compatibility module"; then
+	echo "WordPress.org release readme does not describe the package-specific legacy-global boundary." >&2
 	exit 1
 fi
 
