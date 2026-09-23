@@ -11,16 +11,17 @@ $kriate_root   = dirname( __DIR__ );
 $kriate_failed = false;
 
 $kriate_contracts = array(
-	'functions.php'         => array(
+	'functions.php'                  => array(
 		'required'  => array(
-			'function complete_version_removal',
-			'return $generator;',
 			'function kriate_Thumbnail_Column',
 			'function kriate_render_thumbnail_column',
-			'function fb_AddThumbValue',
 			'function kriate_AddThumbValue',
+			"require get_template_directory() . '/inc/profile.php';",
 		),
 		'forbidden' => array(
+			'function complete_version_removal',
+			'function smashing_jpeg_quality',
+			'function fb_AddThumbValue',
 			"add_filter( 'the_generator', 'complete_version_removal' )",
 			"remove_action( 'wp_head', 'wp_generator' )",
 			"add_filter( 'manage_posts_columns', 'kriate_Thumbnail_Column' )",
@@ -29,12 +30,13 @@ $kriate_contracts = array(
 			"add_action( 'manage_pages_custom_column', 'kriate_AddThumbValue'",
 		),
 	),
-	'inc/profile.php'       => array(
+	'inc/profile.php'                => array(
 		'required'  => array(
-			'function social_profile_fields',
-			'function social_save_profile_fields',
+			"require_once __DIR__ . '/legacy-global-compat.php';",
 		),
 		'forbidden' => array(
+			'function social_profile_fields',
+			'function social_save_profile_fields',
 			"add_action( 'show_user_profile'",
 			"add_action( 'edit_user_profile'",
 			"add_action( 'personal_options_update'",
@@ -44,7 +46,31 @@ $kriate_contracts = array(
 			'wp_nonce_field(',
 		),
 	),
-	'inc/template-tags.php' => array(
+	'inc/legacy-global-compat.php'   => array(
+		'required'  => array(
+			'function complete_version_removal',
+			'return $generator;',
+			'function smashing_jpeg_quality',
+			'function fb_AddThumbValue',
+			'function social_profile_fields',
+			'function social_save_profile_fields',
+		),
+		'forbidden' => array(
+			"add_filter( 'the_generator'",
+			"add_filter( 'jpeg_quality'",
+			"add_filter( 'wp_editor_set_quality'",
+			"add_filter( 'manage_posts_columns'",
+			"add_action( 'manage_posts_custom_column'",
+			"add_filter( 'manage_pages_columns'",
+			"add_action( 'manage_pages_custom_column'",
+			"add_action( 'show_user_profile'",
+			"add_action( 'edit_user_profile'",
+			"add_action( 'personal_options_update'",
+			"add_action( 'edit_user_profile_update'",
+			'update_user_meta(',
+			'delete_user_meta(',
+	),
+	'inc/template-tags.php'          => array(
 		'required'  => array(
 			'function kriate_categorized_blog',
 			'function kriate_category_transient_flusher',
@@ -90,7 +116,7 @@ foreach ( $kriate_contracts as $kriate_relative_path => $kriate_contract ) {
 	foreach ( $kriate_contract['forbidden'] as $kriate_forbidden_source ) {
 		if ( false !== strpos( $kriate_source, $kriate_forbidden_source ) ) {
 			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fwrite -- Development-only CLI output; WordPress is not bootstrapped.
-			fwrite( STDERR, "Plugin-territory Briite behavior remains in {$kriate_relative_path}: {$kriate_forbidden_source}\n" );
+			fwrite( STDERR, "Plugin-territory or misplaced Briite behavior remains in {$kriate_relative_path}: {$kriate_forbidden_source}\n" );
 			$kriate_failed = true;
 		}
 	}
