@@ -10,8 +10,13 @@
 <div class="work">
 	<a href="<?php echo esc_url( get_permalink() ); ?>" title="<?php echo esc_attr( the_title_attribute( array( 'echo' => false ) ) ); ?>">
 		<?php
-		if ( has_post_thumbnail() ) {
-			the_post_thumbnail( 'grid-thumb', array( 'class' => 'media' ) );
+		$kriate_thumbnail_id = get_post_thumbnail_id();
+
+		if ( $kriate_thumbnail_id ) {
+			the_post_thumbnail(
+				kriate_get_compatible_image_size( $kriate_thumbnail_id, 'kriate-grid-thumb', 'grid-thumb' ),
+				array( 'class' => 'media' )
+			);
 		}
 		?>
 		<div class="caption">
