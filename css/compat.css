@@ -69,6 +69,25 @@ textarea:focus-visible {
 	opacity: 1;
 }
 
+header ul.social li .social-icon {
+	display: block;
+	width: 30px;
+	height: 30px;
+	background: url("../images/sm.png") no-repeat 0 0;
+}
+
+header ul.social li .social-icon.fb {
+	background-position: 0 0;
+}
+
+header ul.social li .social-icon.google {
+	background-position: -31px 0;
+}
+
+header ul.social li .social-icon.behance {
+	background-position: -62px 0;
+}
+
 .main-navigation li:focus-within > ul {
 	visibility: visible;
 }

@@ -120,6 +120,34 @@ if ( isset( $kriate_sources['header.php'] ) ) {
 		$kriate_failed = true;
 	}
 
+	$kriate_retired_social_anchors = array(
+		'<a class="fb"',
+		'<a class="google"',
+		'<a class="behance"',
+	);
+
+	foreach ( $kriate_retired_social_anchors as $kriate_retired_social_anchor ) {
+		if ( false !== strpos( $kriate_header_source, $kriate_retired_social_anchor ) ) {
+			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fwrite -- Development-only CLI output; WordPress is not bootstrapped.
+			fwrite( STDERR, "Briite header contains a dead legacy social anchor: {$kriate_retired_social_anchor}\n" );
+			$kriate_failed = true;
+		}
+	}
+
+	$kriate_required_decorative_social_glyphs = array(
+		'<span class="social-icon fb" aria-hidden="true"></span>',
+		'<span class="social-icon google" aria-hidden="true"></span>',
+		'<span class="social-icon behance" aria-hidden="true"></span>',
+	);
+
+	foreach ( $kriate_required_decorative_social_glyphs as $kriate_required_decorative_social_glyph ) {
+		if ( false === strpos( $kriate_header_source, $kriate_required_decorative_social_glyph ) ) {
+			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fwrite -- Development-only CLI output; WordPress is not bootstrapped.
+			fwrite( STDERR, "Missing Briite decorative social glyph compatibility markup: {$kriate_required_decorative_social_glyph}\n" );
+			$kriate_failed = true;
+		}
+	}
+
 	if ( false === strpos( $kriate_header_source, 'get_feed_link()' ) ) {
 		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fwrite -- Development-only CLI output; WordPress is not bootstrapped.
 		fwrite( STDERR, "Briite header RSS control is not wired to the canonical feed URL.\n" );
@@ -140,6 +168,7 @@ if ( isset( $kriate_sources['css/compat.css'] ) ) {
 		'outline: 2px solid currentColor;',
 		'.main .work a:focus .caption',
 		'.main .work a:focus-visible .caption',
+		'header ul.social li .social-icon',
 		'.main-navigation li:focus-within > ul',
 	);
 
