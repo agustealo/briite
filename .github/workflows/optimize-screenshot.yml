@@ -1,0 +1,65 @@
+name: Optimize Briite screenshot
+
+on:
+  push:
+    branches:
+      - fix/theme-check-gate
+    paths:
+      - .github/workflows/optimize-screenshot.yml
+
+permissions:
+  contents: write
+
+jobs:
+  optimize:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: fix/theme-check-gate
+          fetch-depth: 0
+
+      - name: Optimize screenshot without changing pixels
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          ORIGINAL_SIZE="$(stat -c '%s' screenshot.png)"
+          DIMENSIONS="$(identify -format '%wx%h' screenshot.png)"
+          test "${DIMENSIONS}" = '880x660'
+
+          cp screenshot.png /tmp/briite-screenshot-original.png
+          convert \
+            /tmp/briite-screenshot-original.png \
+            -strip \
+            -define png:compression-level=9 \
+            -define png:compression-filter=5 \
+            /tmp/briite-screenshot-optimized.png
+
+          PIXEL_DELTA="$(compare -metric AE /tmp/briite-screenshot-original.png /tmp/briite-screenshot-optimized.png null: 2>&1 || true)"
+          test "${PIXEL_DELTA}" = '0'
+
+          OPTIMIZED_DIMENSIONS="$(identify -format '%wx%h' /tmp/briite-screenshot-optimized.png)"
+          OPTIMIZED_SIZE="$(stat -c '%s' /tmp/briite-screenshot-optimized.png)"
+          test "${OPTIMIZED_DIMENSIONS}" = '880x660'
+          test "${OPTIMIZED_SIZE}" -lt "${ORIGINAL_SIZE}"
+          test "${OPTIMIZED_SIZE}" -lt 500000
+
+          mv /tmp/briite-screenshot-optimized.png screenshot.png
+
+          echo "Original screenshot: ${ORIGINAL_SIZE} bytes"
+          echo "Optimized screenshot: ${OPTIMIZED_SIZE} bytes"
+          echo "Dimensions: ${OPTIMIZED_DIMENSIONS}"
+          echo "Pixel delta: ${PIXEL_DELTA}"
+
+      - name: Commit optimized screenshot and remove one-shot workflow
+        shell: bash
+        run: |
+          set -euo pipefail
+          git rm .github/workflows/optimize-screenshot.yml
+          git add screenshot.png
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'Optimize directory screenshot losslessly'
+          git push origin HEAD:fix/theme-check-gate
