@@ -6,20 +6,6 @@
  */
 
 /**
- * Historical generator callback retained as an inert compatibility shim.
- *
- * Briite no longer suppresses WordPress generator output. Themes should not
- * own non-presentational generator policy, so core or site-level code remains
- * authoritative.
- *
- * @param string $generator Generator output supplied by WordPress.
- * @return string
- */
-function complete_version_removal( $generator = '' ) {
-	return $generator;
-}
-
-/**
  * Set the content width based on the theme design.
  */
 if ( ! isset( $content_width ) ) {
@@ -141,24 +127,6 @@ function briite_legacy_image_size_fallback( $downsize, $attachment_id, $size ) {
 add_filter( 'image_downsize', 'briite_legacy_image_size_fallback', 10, 3 );
 
 /**
- * Historical JPEG quality callback retained for child-theme compatibility.
- *
- * Briite no longer registers this callback globally. WordPress core now owns
- * image-editor quality defaults and can apply MIME- and size-aware policy.
- *
- * @param int    $quality   Image quality.
- * @param string $mime_type Image MIME type.
- * @return int
- */
-function smashing_jpeg_quality( $quality, $mime_type = '' ) {
-	if ( 'image/jpeg' === $mime_type || '' === $mime_type ) {
-		return 100;
-	}
-
-	return $quality;
-}
-
-/**
  * Historical admin-column callback retained for compatibility.
  *
  * Briite no longer registers custom post or page list-table columns. A child
@@ -213,19 +181,6 @@ function kriate_render_thumbnail_column( $column_name, $post_id ) {
 
 	echo esc_html__( 'None', 'briite' );
 }
-
-// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedFunctionFound -- Public callback retained for backwards compatibility.
-/**
- * Historical post-column callback retained for compatibility.
- *
- * @param string $column_name Current column name.
- * @param int    $post_id     Current post ID.
- * @return void
- */
-function fb_AddThumbValue( $column_name, $post_id ) {
-	kriate_render_thumbnail_column( $column_name, $post_id );
-}
-// phpcs:enable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedFunctionFound
 
 /**
  * Historical page-column callback retained for compatibility.
