@@ -47,9 +47,9 @@
 		</nav><!-- #site-navigation -->
 		<div class="footer clearfix">
 			<ul class="social clearfix">
-				<li><a class="fb" aria-hidden="true" tabindex="-1"></a></li>
-				<li><a class="google" aria-hidden="true" tabindex="-1"></a></li>
-				<li><a class="behance" aria-hidden="true" tabindex="-1"></a></li>
+				<li><span class="social-icon fb" aria-hidden="true"></span></li>
+				<li><span class="social-icon google" aria-hidden="true"></span></li>
+				<li><span class="social-icon behance" aria-hidden="true"></span></li>
 				<li><a href="<?php echo esc_url( get_feed_link() ); ?>" class="rss" data-title="RSS"><span class="screen-reader-text"><?php esc_html_e( 'RSS', 'briite' ); ?></span></a></li>
 			</ul><!-- end social -->
 			<div class="rights">
