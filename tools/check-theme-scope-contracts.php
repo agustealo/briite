@@ -1,6 +1,7 @@
 <?php
 /**
- * Verify Briite does not automatically own plugin-territory behavior.
+ * Verify Briite does not automatically own plugin-territory behavior and that
+ * theme-owned public identifiers stay inside the Briite/Kriate namespace.
  *
  * This script is development tooling and runs from Composer/CI, not WordPress.
  *
@@ -11,37 +12,32 @@ $kriate_root   = dirname( __DIR__ );
 $kriate_failed = false;
 
 $kriate_contracts = array(
-	'functions.php'         => array(
+	'functions.php'          => array(
 		'required'  => array(
-			'function complete_version_removal',
-			'return $generator;',
+			'function kriate_legacy_image_downsize',
+			"add_image_size( 'kriate-single-banner'",
+			"add_image_size( 'kriate-grid-thumb'",
+			"wp_enqueue_style( 'kriate-style'",
+			"wp_enqueue_style( 'kriate-theme-style'",
+			"'kriate-theme-script',",
 			'function kriate_Thumbnail_Column',
 			'function kriate_render_thumbnail_column',
-			'function fb_AddThumbValue',
 			'function kriate_AddThumbValue',
 		),
 		'forbidden' => array(
-			"add_filter( 'the_generator', 'complete_version_removal' )",
+			'function complete_version_removal',
+			'function smashing_jpeg_quality',
+			'function fb_AddThumbValue',
+			"add_image_size( 'single-banner'",
+			"add_image_size( 'grid-thumb'",
+			"wp_enqueue_style( 'wp-style'",
+			"wp_enqueue_style( 'theme-style'",
+			"'theme-js',",
 			"remove_action( 'wp_head', 'wp_generator' )",
 			"add_filter( 'manage_posts_columns', 'kriate_Thumbnail_Column' )",
-			"add_action( 'manage_posts_custom_column', 'fb_AddThumbValue'",
+			"add_action( 'manage_posts_custom_column',",
 			"add_filter( 'manage_pages_columns', 'kriate_Thumbnail_Column' )",
 			"add_action( 'manage_pages_custom_column', 'kriate_AddThumbValue'",
-		),
-	),
-	'inc/profile.php'       => array(
-		'required'  => array(
-			'function social_profile_fields',
-			'function social_save_profile_fields',
-		),
-		'forbidden' => array(
-			"add_action( 'show_user_profile'",
-			"add_action( 'edit_user_profile'",
-			"add_action( 'personal_options_update'",
-			"add_action( 'edit_user_profile_update'",
-			'update_user_meta(',
-			'delete_user_meta(',
-			'wp_nonce_field(',
 		),
 	),
 	'inc/template-tags.php' => array(
@@ -82,7 +78,7 @@ foreach ( $kriate_contracts as $kriate_relative_path => $kriate_contract ) {
 	foreach ( $kriate_contract['required'] as $kriate_required_source ) {
 		if ( false === strpos( $kriate_source, $kriate_required_source ) ) {
 			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fwrite -- Development-only CLI output; WordPress is not bootstrapped.
-			fwrite( STDERR, "Missing Briite compatibility shim in {$kriate_relative_path}: {$kriate_required_source}\n" );
+			fwrite( STDERR, "Missing Briite theme/public-namespace contract in {$kriate_relative_path}: {$kriate_required_source}\n" );
 			$kriate_failed = true;
 		}
 	}
@@ -90,10 +86,17 @@ foreach ( $kriate_contracts as $kriate_relative_path => $kriate_contract ) {
 	foreach ( $kriate_contract['forbidden'] as $kriate_forbidden_source ) {
 		if ( false !== strpos( $kriate_source, $kriate_forbidden_source ) ) {
 			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fwrite -- Development-only CLI output; WordPress is not bootstrapped.
-			fwrite( STDERR, "Plugin-territory Briite behavior remains in {$kriate_relative_path}: {$kriate_forbidden_source}\n" );
+			fwrite( STDERR, "Forbidden Briite theme/public-namespace behavior remains in {$kriate_relative_path}: {$kriate_forbidden_source}\n" );
 			$kriate_failed = true;
 		}
 	}
+}
+
+$kriate_removed_profile_path = $kriate_root . DIRECTORY_SEPARATOR . 'inc' . DIRECTORY_SEPARATOR . 'profile.php';
+if ( is_file( $kriate_removed_profile_path ) ) {
+	// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fwrite -- Development-only CLI output; WordPress is not bootstrapped.
+	fwrite( STDERR, "Obsolete unprefixed social-profile compatibility file still exists: inc/profile.php\n" );
+	$kriate_failed = true;
 }
 
 $kriate_forbidden_runtime_calls = array(
@@ -174,4 +177,4 @@ if ( $kriate_failed ) {
 }
 
 // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fwrite -- Development-only CLI output; WordPress is not bootstrapped.
-fwrite( STDOUT, "Briite theme-scope contract checks passed.\n" );
+fwrite( STDOUT, "Briite theme-scope and public-namespace contract checks passed.\n" );
