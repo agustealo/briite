@@ -6,20 +6,6 @@
  */
 
 /**
- * Historical generator callback retained as an inert compatibility shim.
- *
- * Briite no longer suppresses WordPress generator output. Themes should not
- * own non-presentational generator policy, so core or site-level code remains
- * authoritative.
- *
- * @param string $generator Generator output supplied by WordPress.
- * @return string
- */
-function complete_version_removal( $generator = '' ) {
-	return $generator;
-}
-
-/**
  * Set the content width based on the theme design.
  */
 if ( ! isset( $content_width ) ) {
@@ -46,8 +32,8 @@ if ( ! function_exists( 'kriate_setup' ) ) :
 			)
 		);
 
-		add_image_size( 'single-banner', 1300, 500, array( 'center', 'center' ) );
-		add_image_size( 'grid-thumb', 450, 450, array( 'center', 'center' ) );
+		add_image_size( 'kriate-single-banner', 1300, 500, array( 'center', 'center' ) );
+		add_image_size( 'kriate-grid-thumb', 450, 450, array( 'center', 'center' ) );
 
 		register_nav_menus(
 			array(
@@ -94,22 +80,63 @@ endif;
 add_action( 'after_setup_theme', 'kriate_setup' );
 
 /**
- * Historical JPEG quality callback retained for child-theme compatibility.
+ * Use an already-generated historical Briite image derivative when an upgraded
+ * site has not yet generated the newly prefixed image-size name.
  *
- * Briite no longer registers this callback globally. WordPress core now owns
- * image-editor quality defaults and can apply MIME- and size-aware policy.
+ * Existing media metadata may contain `grid-thumb` or `single-banner` files
+ * created by earlier Briite releases. New uploads use only the prefixed image
+ * sizes, while this read-only fallback keeps those existing derivatives useful
+ * after upgrade without requiring a media regeneration pass.
  *
- * @param int    $quality   Image quality.
- * @param string $mime_type Image MIME type.
- * @return int
+ * @param bool|array       $downsize      Existing image-downsize result.
+ * @param int              $attachment_id Attachment ID.
+ * @param string|int[]     $size          Requested image size.
+ * @return bool|array
  */
-function smashing_jpeg_quality( $quality, $mime_type = '' ) {
-	if ( 'image/jpeg' === $mime_type || '' === $mime_type ) {
-		return 100;
+function kriate_legacy_image_downsize( $downsize, $attachment_id, $size ) {
+	if ( false !== $downsize || ! is_string( $size ) ) {
+		return $downsize;
 	}
 
-	return $quality;
+	$legacy_sizes = array(
+		'kriate-grid-thumb'    => 'grid-thumb',
+		'kriate-single-banner' => 'single-banner',
+	);
+
+	if ( ! isset( $legacy_sizes[ $size ] ) ) {
+		return $downsize;
+	}
+
+	$metadata = wp_get_attachment_metadata( $attachment_id );
+	if ( ! is_array( $metadata ) || ! empty( $metadata['sizes'][ $size ] ) ) {
+		return $downsize;
+	}
+
+	$legacy_size_name = $legacy_sizes[ $size ];
+	if ( empty( $metadata['sizes'][ $legacy_size_name ] ) || ! is_array( $metadata['sizes'][ $legacy_size_name ] ) ) {
+		return $downsize;
+	}
+
+	$legacy_size = $metadata['sizes'][ $legacy_size_name ];
+	if ( empty( $legacy_size['file'] ) || empty( $legacy_size['width'] ) || empty( $legacy_size['height'] ) ) {
+		return $downsize;
+	}
+
+	$attachment_url = wp_get_attachment_url( $attachment_id );
+	if ( ! $attachment_url ) {
+		return $downsize;
+	}
+
+	$legacy_url = trailingslashit( dirname( $attachment_url ) ) . rawurlencode( wp_basename( $legacy_size['file'] ) );
+
+	return array(
+		$legacy_url,
+		(int) $legacy_size['width'],
+		(int) $legacy_size['height'],
+		true,
+	);
 }
+add_filter( 'image_downsize', 'kriate_legacy_image_downsize', 10, 3 );
 
 /**
  * Historical admin-column callback retained for compatibility.
@@ -166,19 +193,6 @@ function kriate_render_thumbnail_column( $column_name, $post_id ) {
 
 	echo esc_html__( 'None', 'briite' );
 }
-
-// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedFunctionFound -- Public callback retained for backwards compatibility.
-/**
- * Historical post-column callback retained for compatibility.
- *
- * @param string $column_name Current column name.
- * @param int    $post_id     Current post ID.
- * @return void
- */
-function fb_AddThumbValue( $column_name, $post_id ) {
-	kriate_render_thumbnail_column( $column_name, $post_id );
-}
-// phpcs:enable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedFunctionFound
 
 /**
  * Historical page-column callback retained for compatibility.
@@ -238,14 +252,14 @@ add_action( 'widgets_init', 'kriate_widgets_init' );
 function kriate_scripts() {
 	$theme_version = wp_get_theme()->get( 'Version' );
 
-	wp_enqueue_style( 'wp-style', get_stylesheet_uri(), array(), $theme_version );
+	wp_enqueue_style( 'kriate-style', get_stylesheet_uri(), array(), $theme_version );
 	wp_enqueue_style( 'bootstrap', get_template_directory_uri() . '/css/bootstrap-3.3.7.min.css', array(), '3.3.7' );
 	wp_enqueue_style( 'kriate-fonts', get_template_directory_uri() . '/css/fonts.css', array(), $theme_version );
-	wp_enqueue_style( 'theme-style', get_template_directory_uri() . '/css/theme.css', array( 'bootstrap', 'wp-style', 'kriate-fonts' ), $theme_version );
-	wp_enqueue_style( 'kriate-compat', get_template_directory_uri() . '/css/compat.css', array( 'theme-style' ), $theme_version );
+	wp_enqueue_style( 'kriate-theme-style', get_template_directory_uri() . '/css/theme.css', array( 'bootstrap', 'kriate-style', 'kriate-fonts' ), $theme_version );
+	wp_enqueue_style( 'kriate-compat', get_template_directory_uri() . '/css/compat.css', array( 'kriate-theme-style' ), $theme_version );
 
 	wp_enqueue_script(
-		'theme-js',
+		'kriate-theme-script',
 		get_template_directory_uri() . '/js/theme.js',
 		array( 'jquery' ),
 		$theme_version,
@@ -264,4 +278,3 @@ require get_template_directory() . '/inc/template-tags.php';
 require get_template_directory() . '/inc/extras.php';
 require get_template_directory() . '/inc/customizer.php';
 require get_template_directory() . '/inc/jetpack.php';
-require get_template_directory() . '/inc/profile.php';
