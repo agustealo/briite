@@ -401,8 +401,8 @@ dl {
   background-color: #fff;
   margin: 3em; }
   dl:before {
-    font-family: 'Glyphicons Halflings';
-    content: "\e043";
+    content: "";
+    background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Cpath d='M24 13c-4-3-9-4-15-3v25c6-1 11 0 15 3V13zm0 0c4-3 9-4 15-3v25c-6-1-11 0-15 3V13z' fill='none' stroke='%23414d61' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 42px 42px no-repeat;
     background-color: #fff;
     border: solid 1px;
     border-radius: 50%;
@@ -608,12 +608,12 @@ blockquote::after {
   .main-navigation ul .page_item_has_children:hover:nth-child(2n+1):after,
   .main-navigation ul .menu-item-has-children:hover:nth-child(2n+1):after {
     background: #fff;
-    content: "\e178";
+    content: "\203A";
     display: hidden; }
   .main-navigation ul .page_item_has_children:nth-child(1n+1):after,
   .main-navigation ul .menu-item-has-children:nth-child(1n+1):after {
-    font-family: 'Glyphicons Halflings';
-    content: "\e178";
+    font-family: Arial, sans-serif;
+    content: "\203A";
     float: right;
     height: 40px;
     animation: arrow .5s infinite ease;
@@ -1108,16 +1108,16 @@ label {
   line-height: 2; }
 
 .comment-awaiting-moderation:before {
-  content: "\f071";
-  font-family: FontAwesome;
+  content: "!";
+  font-family: Arial, sans-serif;
   margin-right: 5px;
   position: relative;
   top: 1px; }
 
 .comment-reply-link:before,
 .comment-reply-login:before {
-  content: "\f112";
-  font-family: FontAwesome;
+  content: "\21A9";
+  font-family: Arial, sans-serif;
   margin-right: 3px; }
 
 /* Comment form */
@@ -1141,8 +1141,8 @@ label {
   text-decoration: none; }
 
 .comment-reply-title small a:before {
-  content: "\f057";
-  font-family: FontAwesome;
+  content: "\00D7";
+  font-family: Arial, sans-serif;
   font-size: 20px;
   margin-right: 10px;
   vertical-align: top; }
