@@ -66,4 +66,4 @@
 			</div><!-- end rights -->
 		</div><!-- end footer -->
 	</header><!-- #masthead -->
-	<section id="content" class="main">
+	<section id="content" class="main" tabindex="-1">
