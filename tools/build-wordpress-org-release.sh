@@ -32,6 +32,13 @@ if [[ ! -d "${STAGE_DIR}" ]]; then
 	exit 1
 fi
 
+LEGACY_COMPAT_FILE="${STAGE_DIR}/inc/legacy-compat.php"
+if [[ ! -f "${LEGACY_COMPAT_FILE}" ]]; then
+	echo "Consumer release is missing the expected legacy compatibility membrane." >&2
+	exit 1
+fi
+rm "${LEGACY_COMPAT_FILE}"
+
 STAGE_DIR="${STAGE_DIR}" php <<'PHP'
 <?php
 $stage_dir = getenv( 'STAGE_DIR' );
@@ -161,6 +168,27 @@ if ! grep -q 'Raleway' "${STAGE_DIR}/css/fonts.css"; then
 	exit 1
 fi
 
+LEGACY_FUNCTION_PATTERN='function[[:space:]]+(complete_version_removal|smashing_jpeg_quality|fb_AddThumbValue|social_profile_fields|social_save_profile_fields)[[:space:]]*\('
+if grep -R -nE --include='*.php' "${LEGACY_FUNCTION_PATTERN}" "${STAGE_DIR}"; then
+	echo "WordPress.org package contains an unprefixed historical Briite function." >&2
+	exit 1
+fi
+
+for forbidden_source in \
+	"add_image_size( 'single-banner'" \
+	"add_image_size( 'grid-thumb'" \
+	"wp_enqueue_style( 'wp-style'" \
+	"wp_enqueue_style( 'theme-style'" \
+	"wp_enqueue_script( 'theme-js'" \
+	"wp_register_style( 'wp-style'" \
+	"wp_register_style( 'theme-style'" \
+	"wp_register_script( 'theme-js'"; do
+	if grep -R -nF --include='*.php' "${forbidden_source}" "${STAGE_DIR}"; then
+		echo "WordPress.org package contains an unprefixed Briite runtime identifier: ${forbidden_source}" >&2
+		exit 1
+	fi
+done
+
 rm -f "${WORDPRESS_ORG_ARCHIVE}" "${WORDPRESS_ORG_CHECKSUM}"
 (
 	cd "${STAGE_ROOT}"
@@ -183,6 +211,11 @@ for required_path in \
 		exit 1
 	fi
 done
+
+if grep -qxF 'briite/inc/legacy-compat.php' <<< "${PACKAGE_LIST}"; then
+	echo "WordPress.org release archive contains the consumer-only legacy compatibility membrane." >&2
+	exit 1
+fi
 
 if grep -Eq 'glyphicons-halflings-regular\.(eot|svg|ttf|woff|woff2)$' <<< "${PACKAGE_LIST}"; then
 	echo "WordPress.org release archive contains a Glyphicon font file." >&2
