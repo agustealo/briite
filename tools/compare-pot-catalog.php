@@ -64,6 +64,7 @@ $kriate_parse_catalog = static function ( $kriate_path ) use ( $kriate_decode_po
 
 	$kriate_flush_entry = static function () use ( &$kriate_catalog, &$kriate_entry, &$kriate_field ) {
 		if ( null !== $kriate_entry['msgid'] && '' !== $kriate_entry['msgid'] ) {
+			// phpcs:ignore WordPress.WP.AlternativeFunctions.json_encode_json_encode -- Development-only standalone CLI; WordPress is not bootstrapped.
 			$kriate_key = json_encode(
 				array(
 					'context' => $kriate_entry['msgctxt'],
@@ -146,14 +147,20 @@ $kriate_parse_catalog = static function ( $kriate_path ) use ( $kriate_decode_po
 };
 
 $kriate_describe_entry = static function ( $kriate_entry ) {
-	$kriate_description = 'msgid ' . wp_json_encode( $kriate_entry['msgid'], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE );
+	// phpcs:ignore WordPress.WP.AlternativeFunctions.json_encode_json_encode -- Development-only standalone CLI; WordPress is not bootstrapped.
+	$kriate_encoded_msgid = json_encode( $kriate_entry['msgid'], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE );
+	$kriate_description   = 'msgid ' . ( false === $kriate_encoded_msgid ? '"<encoding-error>"' : $kriate_encoded_msgid );
 
 	if ( null !== $kriate_entry['msgctxt'] ) {
-		$kriate_description .= ' context ' . wp_json_encode( $kriate_entry['msgctxt'], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE );
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.json_encode_json_encode -- Development-only standalone CLI; WordPress is not bootstrapped.
+		$kriate_encoded_context = json_encode( $kriate_entry['msgctxt'], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE );
+		$kriate_description    .= ' context ' . ( false === $kriate_encoded_context ? '"<encoding-error>"' : $kriate_encoded_context );
 	}
 
 	if ( null !== $kriate_entry['msgid_plural'] ) {
-		$kriate_description .= ' plural ' . wp_json_encode( $kriate_entry['msgid_plural'], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE );
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.json_encode_json_encode -- Development-only standalone CLI; WordPress is not bootstrapped.
+		$kriate_encoded_plural = json_encode( $kriate_entry['msgid_plural'], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE );
+		$kriate_description   .= ' plural ' . ( false === $kriate_encoded_plural ? '"<encoding-error>"' : $kriate_encoded_plural );
 	}
 
 	return $kriate_description;
