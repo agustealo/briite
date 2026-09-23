@@ -20,7 +20,8 @@
 <a class="screen-reader-text skip-link" href="#content"><?php esc_html_e( 'Skip to content', 'briite' ); ?></a>
 	<header id="masthead" class="site-header" role="banner">
 		<div class="logo">
-			<a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home">
+			<?php $kriate_home_label = get_bloginfo( 'name' ) ? get_bloginfo( 'name' ) : __( 'Home', 'briite' ); ?>
+			<a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home" aria-label="<?php echo esc_attr( $kriate_home_label ); ?>">
 				<?php if ( get_header_image() ) : ?>
 					<img
 						src="<?php echo esc_url( get_header_image() ); ?>"
