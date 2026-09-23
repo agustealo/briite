@@ -62,7 +62,7 @@ $strip_glyphicons = static function ( string $path, string $start_marker, string
 	$css = file_get_contents( $path );
 
 	if ( false === $css ) {
-		fwrite( STDERR, "Unable to read Bootstrap stylesheet: {$path}\n" );
+		fwrite( STDERR, "Unable to read Bootstrap stylesheet: {$path}.\n" );
 		exit( 1 );
 	}
 
@@ -88,7 +88,7 @@ $strip_glyphicons = static function ( string $path, string $start_marker, string
 	}
 
 	if ( false === file_put_contents( $path, $sanitized ) ) {
-		fwrite( STDERR, "Unable to write sanitized Bootstrap stylesheet: {$path}\n" );
+		fwrite( STDERR, "Unable to write sanitized Bootstrap stylesheet: {$path}.\n" );
 		exit( 1 );
 	}
 };
@@ -227,8 +227,25 @@ if unzip -p "${WORDPRESS_ORG_ARCHIVE}" briite/css/bootstrap-3.3.7.min.css | grep
 	exit 1
 fi
 
-if ! unzip -p "${WORDPRESS_ORG_ARCHIVE}" briite/readme.txt | grep -q 'WordPress.org package does not bundle Bootstrap 3.3.7 Glyphicons Halflings font files'; then
+WORDPRESS_ORG_README="$(unzip -p "${WORDPRESS_ORG_ARCHIVE}" briite/readme.txt)"
+
+if ! grep -qF 'WordPress.org package does not bundle Bootstrap 3.3.7 Glyphicons Halflings font files' <<< "${WORDPRESS_ORG_README}"; then
 	echo "WordPress.org release readme does not describe the package-specific font boundary." >&2
+	exit 1
+fi
+
+if ! grep -qF 'The normal consumer package additionally preserves two historical downstream compatibility surfaces' <<< "${WORDPRESS_ORG_README}"; then
+	echo "WordPress.org release readme does not describe the consumer compatibility surfaces." >&2
+	exit 1
+fi
+
+if ! grep -qF 'The WordPress.org package excludes those two consumer-only compatibility surfaces' <<< "${WORDPRESS_ORG_README}"; then
+	echo "WordPress.org release readme does not describe the directory compatibility boundary." >&2
+	exit 1
+fi
+
+if ! grep -qF 'The WordPress.org package excludes those generic aliases to meet the directory public-namespace requirement' <<< "${WORDPRESS_ORG_README}"; then
+	echo "WordPress.org release readme does not describe the generic callback alias boundary." >&2
 	exit 1
 fi
 
