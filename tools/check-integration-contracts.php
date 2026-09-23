@@ -13,6 +13,7 @@ $kriate_failed = false;
 $kriate_files = array(
 	'functions.php',
 	'header.php',
+	'css/compat.css',
 	'inc/custom-header.php',
 	'inc/customizer.php',
 	'inc/jetpack.php',
@@ -75,6 +76,18 @@ if ( isset( $kriate_sources['header.php'] ) ) {
 		$kriate_failed = true;
 	}
 
+	if ( false === strpos( $kriate_header_source, 'class="screen-reader-text skip-link" href="#content"' ) ) {
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fwrite -- Development-only CLI output; WordPress is not bootstrapped.
+		fwrite( STDERR, "Briite's required skip-to-content link is missing or no longer targets #content.\n" );
+		$kriate_failed = true;
+	}
+
+	if ( false === strpos( $kriate_header_source, 'id="content" class="main" tabindex="-1"' ) ) {
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fwrite -- Development-only CLI output; WordPress is not bootstrapped.
+		fwrite( STDERR, "Briite's skip-link target is not programmatically focusable.\n" );
+		$kriate_failed = true;
+	}
+
 	if ( false !== strpos( $kriate_header_source, 'href="#"' ) ) {
 		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fwrite -- Development-only CLI output; WordPress is not bootstrapped.
 		fwrite( STDERR, "Briite header contains a fake hash-only link.\n" );
@@ -85,6 +98,25 @@ if ( isset( $kriate_sources['header.php'] ) ) {
 		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fwrite -- Development-only CLI output; WordPress is not bootstrapped.
 		fwrite( STDERR, "Briite header RSS control is not wired to the canonical feed URL.\n" );
 		$kriate_failed = true;
+	}
+}
+
+if ( isset( $kriate_sources['css/compat.css'] ) ) {
+	$kriate_compat_source = $kriate_sources['css/compat.css'];
+
+	$kriate_required_accessibility_styles = array(
+		'.screen-reader-text:focus',
+		'.main .work a:focus .caption',
+		'.main .work a:focus-visible .caption',
+		'.main-navigation li:focus-within > ul',
+	);
+
+	foreach ( $kriate_required_accessibility_styles as $kriate_required_accessibility_style ) {
+		if ( false === strpos( $kriate_compat_source, $kriate_required_accessibility_style ) ) {
+			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fwrite -- Development-only CLI output; WordPress is not bootstrapped.
+			fwrite( STDERR, "Missing Briite accessibility compatibility style: {$kriate_required_accessibility_style}\n" );
+			$kriate_failed = true;
+		}
 	}
 }
 

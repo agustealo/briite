@@ -48,6 +48,11 @@
 	color: inherit;
 }
 
+.main .work a:focus .caption,
+.main .work a:focus-visible .caption {
+	opacity: 1;
+}
+
 .main-navigation li:focus-within > ul {
 	visibility: visible;
 }
