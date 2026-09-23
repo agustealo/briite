@@ -136,6 +136,14 @@ jobs:
           test -n "${THEME_ZIP}"
           wp theme install "${THEME_ZIP}" --force --activate --path=/tmp/wordpress
 
+      - name: Run Theme Check 20260821 against packaged Briite
+        shell: bash
+        run: |
+          set -euo pipefail
+          wp plugin install theme-check --version=20260821 --activate --path=/tmp/wordpress
+          wp theme-check run briite --format=json --path=/tmp/wordpress | tee /tmp/briite-theme-check.json
+          test -s /tmp/briite-theme-check.json
+
       - name: Verify preserved Briite contracts
         shell: bash
         run: |
