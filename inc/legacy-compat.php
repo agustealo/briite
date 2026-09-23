@@ -102,7 +102,7 @@ add_action( 'after_setup_theme', 'kriate_register_legacy_image_sizes', 11 );
  *
  * Alias handles have no source of their own, so they do not duplicate network
  * requests. Existing child themes can continue to declare dependencies on the
- * old handles while Briite owns the actual assets through prefixed handles.
+ * old handles, attach inline assets to them, or inspect their enqueue state.
  *
  * @return void
  */
@@ -112,5 +112,9 @@ function kriate_register_legacy_asset_handles() {
 	wp_register_style( 'wp-style', false, array( 'kriate-style' ), $theme_version );
 	wp_register_style( 'theme-style', false, array( 'kriate-theme-style' ), $theme_version );
 	wp_register_script( 'theme-js', false, array( 'kriate-theme-script' ), $theme_version, true );
+
+	wp_enqueue_style( 'wp-style' );
+	wp_enqueue_style( 'theme-style' );
+	wp_enqueue_script( 'theme-js' );
 }
 add_action( 'wp_enqueue_scripts', 'kriate_register_legacy_asset_handles', 11 );
