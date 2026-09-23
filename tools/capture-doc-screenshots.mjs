@@ -32,7 +32,14 @@ async function waitForImages(page) {
   });
 }
 
-async function capture({ name, route, viewport, fullPage = true, beforeCapture }) {
+async function capture({
+  name,
+  route,
+  viewport,
+  expectedStatus = 200,
+  fullPage = true,
+  beforeCapture,
+}) {
   const context = await browser.newContext({
     viewport,
     deviceScaleFactor: 1,
@@ -44,8 +51,18 @@ async function capture({ name, route, viewport, fullPage = true, beforeCapture }
 
   page.on('pageerror', (error) => runtimeErrors.push(`pageerror: ${error.message}`));
   page.on('console', (message) => {
-    if (message.type() === 'error') {
-      runtimeErrors.push(`console: ${message.text()}`);
+    if (message.type() !== 'error') {
+      return;
+    }
+
+    const text = message.text();
+    const expectedNotFoundResourceMessage =
+      expectedStatus === 404 &&
+      text.includes('Failed to load resource') &&
+      text.includes('404');
+
+    if (!expectedNotFoundResourceMessage) {
+      runtimeErrors.push(`console: ${text}`);
     }
   });
 
@@ -58,8 +75,10 @@ async function capture({ name, route, viewport, fullPage = true, beforeCapture }
     throw new Error(`No HTTP response while capturing ${name}.`);
   }
 
-  if (response.status() >= 500) {
-    throw new Error(`HTTP ${response.status()} while capturing ${name}.`);
+  if (response.status() !== expectedStatus) {
+    throw new Error(
+      `${name} returned HTTP ${response.status()}, expected ${expectedStatus}.`,
+    );
   }
 
   await waitForImages(page);
@@ -110,6 +129,7 @@ try {
     name: 'briite-404-recovery.png',
     route: '/?p=999999',
     viewport: { width: 1440, height: 900 },
+    expectedStatus: 404,
   });
 
   const directoryContext = await browser.newContext({
@@ -119,12 +139,15 @@ try {
     reducedMotion: 'reduce',
   });
   const directoryPage = await directoryContext.newPage();
+  const directoryErrors = [];
+  directoryPage.on('pageerror', (error) => directoryErrors.push(error.message));
+
   const directoryResponse = await directoryPage.goto(`${baseUrl}/`, {
     waitUntil: 'networkidle',
     timeout: 60_000,
   });
 
-  if (!directoryResponse || directoryResponse.status() >= 400) {
+  if (!directoryResponse || directoryResponse.status() !== 200) {
     throw new Error('Unable to render the WordPress theme-directory screenshot surface.');
   }
 
@@ -133,6 +156,11 @@ try {
     path: path.resolve('screenshot.png'),
     fullPage: false,
   });
+
+  if (directoryErrors.length > 0) {
+    throw new Error(`Theme-directory screenshot produced page errors:\n${directoryErrors.join('\n')}`);
+  }
+
   await directoryContext.close();
 } finally {
   await browser.close();
