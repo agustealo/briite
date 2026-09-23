@@ -96,6 +96,81 @@ foreach ( $kriate_contracts as $kriate_relative_path => $kriate_contract ) {
 	}
 }
 
+$kriate_namespace_contracts = array(
+	'functions.php'    => array(
+		'required'  => array(
+			"add_image_size( 'briite-single-banner'",
+			"add_image_size( 'briite-grid-thumb'",
+			'function briite_legacy_image_size_fallback',
+			"add_filter( 'image_downsize', 'briite_legacy_image_size_fallback'",
+			"wp_enqueue_style( 'briite-style'",
+			"wp_enqueue_style( 'briite-theme-style'",
+			"'kriate-compat', get_template_directory_uri() . '/css/compat.css', array( 'briite-theme-style' )",
+			"'briite-theme-script',",
+		),
+		'forbidden' => array(
+			"add_image_size( 'single-banner'",
+			"add_image_size( 'grid-thumb'",
+			"wp_enqueue_style( 'wp-style'",
+			"wp_enqueue_style( 'theme-style'",
+			"'theme-style', get_template_directory_uri() . '/css/theme.css'",
+			"'theme-js',",
+		),
+	),
+	'content-home.php' => array(
+		'required'  => array(
+			"the_post_thumbnail( 'briite-grid-thumb'",
+		),
+		'forbidden' => array(
+			"the_post_thumbnail( 'grid-thumb'",
+		),
+	),
+	'single.php'       => array(
+		'required'  => array(
+			"get_the_post_thumbnail_url( get_the_ID(), 'briite-single-banner' )",
+		),
+		'forbidden' => array(
+			"get_the_post_thumbnail_url( get_the_ID(), 'single-banner' )",
+		),
+	),
+);
+
+foreach ( $kriate_namespace_contracts as $kriate_relative_path => $kriate_contract ) {
+	$kriate_absolute_path = $kriate_root . DIRECTORY_SEPARATOR . $kriate_relative_path;
+
+	if ( ! is_file( $kriate_absolute_path ) ) {
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fwrite -- Development-only CLI output; WordPress is not bootstrapped.
+		fwrite( STDERR, "Missing Briite namespace contract file: {$kriate_relative_path}\n" );
+		$kriate_failed = true;
+		continue;
+	}
+
+	// phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- Development-only local source read; WordPress is not bootstrapped.
+	$kriate_source = file_get_contents( $kriate_absolute_path );
+	if ( false === $kriate_source ) {
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fwrite -- Development-only CLI output; WordPress is not bootstrapped.
+		fwrite( STDERR, "Unable to read Briite namespace contract file: {$kriate_relative_path}\n" );
+		$kriate_failed = true;
+		continue;
+	}
+
+	foreach ( $kriate_contract['required'] as $kriate_required_source ) {
+		if ( false === strpos( $kriate_source, $kriate_required_source ) ) {
+			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fwrite -- Development-only CLI output; WordPress is not bootstrapped.
+			fwrite( STDERR, "Missing Briite public-namespace contract in {$kriate_relative_path}: {$kriate_required_source}\n" );
+			$kriate_failed = true;
+		}
+	}
+
+	foreach ( $kriate_contract['forbidden'] as $kriate_forbidden_source ) {
+		if ( false !== strpos( $kriate_source, $kriate_forbidden_source ) ) {
+			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fwrite -- Development-only CLI output; WordPress is not bootstrapped.
+			fwrite( STDERR, "Unprefixed Briite public identifier remains in {$kriate_relative_path}: {$kriate_forbidden_source}\n" );
+			$kriate_failed = true;
+		}
+	}
+}
+
 $kriate_forbidden_runtime_calls = array(
 	'add_role(',
 	'add_shortcode(',

@@ -46,8 +46,8 @@ if ( ! function_exists( 'kriate_setup' ) ) :
 			)
 		);
 
-		add_image_size( 'single-banner', 1300, 500, array( 'center', 'center' ) );
-		add_image_size( 'grid-thumb', 450, 450, array( 'center', 'center' ) );
+		add_image_size( 'briite-single-banner', 1300, 500, array( 'center', 'center' ) );
+		add_image_size( 'briite-grid-thumb', 450, 450, array( 'center', 'center' ) );
 
 		register_nav_menus(
 			array(
@@ -92,6 +92,53 @@ if ( ! function_exists( 'kriate_setup' ) ) :
 	}
 endif;
 add_action( 'after_setup_theme', 'kriate_setup' );
+
+/**
+ * Reuse historical generated image files for existing media after the public
+ * image-size identifiers moved into Briite's required unique namespace.
+ *
+ * New uploads generate only the canonical `briite-*` sizes. Existing
+ * attachments that already contain the old generated files can still serve
+ * those files until WordPress generates the canonical derivatives naturally.
+ *
+ * @param bool|array   $downsize      Existing image_downsize short-circuit value.
+ * @param int          $attachment_id Attachment ID.
+ * @param string|int[] $size          Requested image size.
+ * @return bool|array
+ */
+function briite_legacy_image_size_fallback( $downsize, $attachment_id, $size ) {
+	if ( false !== $downsize || ! is_string( $size ) ) {
+		return $downsize;
+	}
+
+	$legacy_sizes = array(
+		'briite-single-banner' => 'single-banner',
+		'briite-grid-thumb'    => 'grid-thumb',
+	);
+
+	if ( ! isset( $legacy_sizes[ $size ] ) ) {
+		return $downsize;
+	}
+
+	$metadata = wp_get_attachment_metadata( $attachment_id );
+	if ( ! is_array( $metadata ) || empty( $metadata['sizes'] ) || ! is_array( $metadata['sizes'] ) ) {
+		return $downsize;
+	}
+
+	if ( isset( $metadata['sizes'][ $size ] ) ) {
+		return $downsize;
+	}
+
+	$legacy_size = $legacy_sizes[ $size ];
+	if ( ! isset( $metadata['sizes'][ $legacy_size ] ) ) {
+		return $downsize;
+	}
+
+	$legacy_image = wp_get_attachment_image_src( $attachment_id, $legacy_size );
+
+	return false === $legacy_image ? $downsize : $legacy_image;
+}
+add_filter( 'image_downsize', 'briite_legacy_image_size_fallback', 10, 3 );
 
 /**
  * Historical JPEG quality callback retained for child-theme compatibility.
@@ -238,14 +285,14 @@ add_action( 'widgets_init', 'kriate_widgets_init' );
 function kriate_scripts() {
 	$theme_version = wp_get_theme()->get( 'Version' );
 
-	wp_enqueue_style( 'wp-style', get_stylesheet_uri(), array(), $theme_version );
+	wp_enqueue_style( 'briite-style', get_stylesheet_uri(), array(), $theme_version );
 	wp_enqueue_style( 'bootstrap', get_template_directory_uri() . '/css/bootstrap-3.3.7.min.css', array(), '3.3.7' );
 	wp_enqueue_style( 'kriate-fonts', get_template_directory_uri() . '/css/fonts.css', array(), $theme_version );
-	wp_enqueue_style( 'theme-style', get_template_directory_uri() . '/css/theme.css', array( 'bootstrap', 'wp-style', 'kriate-fonts' ), $theme_version );
-	wp_enqueue_style( 'kriate-compat', get_template_directory_uri() . '/css/compat.css', array( 'theme-style' ), $theme_version );
+	wp_enqueue_style( 'briite-theme-style', get_template_directory_uri() . '/css/theme.css', array( 'bootstrap', 'briite-style', 'kriate-fonts' ), $theme_version );
+	wp_enqueue_style( 'kriate-compat', get_template_directory_uri() . '/css/compat.css', array( 'briite-theme-style' ), $theme_version );
 
 	wp_enqueue_script(
-		'theme-js',
+		'briite-theme-script',
 		get_template_directory_uri() . '/js/theme.js',
 		array( 'jquery' ),
 		$theme_version,

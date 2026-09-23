@@ -16,7 +16,7 @@ while ( have_posts() ) :
 		wp_rand( 0, 75 )
 	);
 	$kriate_background_style = 'background-color: #' . $kriate_background_color . ';';
-	$kriate_featured_image   = get_the_post_thumbnail_url( get_the_ID(), 'single-banner' );
+	$kriate_featured_image   = get_the_post_thumbnail_url( get_the_ID(), 'briite-single-banner' );
 
 	if ( $kriate_featured_image ) {
 		$kriate_background_style .= " background-image: url('" . esc_url_raw( $kriate_featured_image ) . "');";
