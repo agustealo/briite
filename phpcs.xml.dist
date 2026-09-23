@@ -19,15 +19,12 @@
 		<exclude name="WordPress.NamingConventions.ValidFunctionName.FunctionNameInvalid"/>
 	</rule>
 
-	<!-- Canonical Briite code uses briite_; historical callbacks retain their existing public prefixes for compatibility. -->
+	<!-- Canonical Briite code uses only Briite's current and historical theme prefixes. Generic historical globals are narrowly suppressed in their isolated consumer-compatibility module. -->
 	<rule ref="WordPress.NamingConventions.PrefixAllGlobals">
 		<properties>
 			<property name="prefixes" type="array">
 				<element value="briite"/>
 				<element value="kriate"/>
-				<element value="complete"/>
-				<element value="smashing"/>
-				<element value="social"/>
 			</property>
 		</properties>
 	</rule>
