@@ -13,12 +13,32 @@ Briite is a lightweight classic WordPress portfolio theme built for image-forwar
 
 Briite uses the WordPress Customizer and classic theme APIs. It does not require a companion plugin, external font service, analytics service, or remote runtime asset CDN.
 
+== Features ==
+
+* Image-forward portfolio/blog grid using Briite's dedicated 450x450 featured-image crop.
+* Single-post/project hero treatment using a dedicated 1300x500 featured-image crop.
+* Fixed desktop navigation rail, responsive mobile menu, and nested-menu support.
+* Primary Menu location with upgrade-safe preservation of existing assignments.
+* WordPress Custom Header support with Briite's established logo dimensions and default artwork.
+* Four preserved bottom widget areas: Widget 1 through Widget 4.
+* Featured images, automatic feed links, responsive embeds, title-tag support, threaded comments, galleries, captions, and HTML5 markup.
+* Aside, image, video, quote, and link post formats.
+* Search, archive/category, pagination, page, single, and 404 recovery templates.
+* Custom background support and right-to-left layout support.
+* Editor styles for Briite typography and content presentation without forcing a front-end block-theme redesign.
+* Translation-ready strings under the briite text domain.
+* Jetpack Infinite Scroll compatibility using Briite's existing content stream.
+* Keyboard navigation, skip-link behavior, accessible navigation semantics, focus handling, and reduced-motion support.
+* Required Bootstrap, font, and theme assets served locally from the theme package.
+* Upgrade-safe reuse of historical single-banner and grid-thumb derivatives when newer briite-prefixed derivatives are not yet present.
+
 == Installation ==
 
 1. Upload the Briite theme ZIP from Appearance > Themes > Add New > Upload Theme, or copy the `briite` directory into `wp-content/themes/`.
 2. Activate Briite from Appearance > Themes.
 3. Assign an existing menu to the Primary Menu location if desired.
 4. Existing footer widget assignments continue to use the historical Widget 1 through Widget 4 areas.
+5. Set featured images on portfolio/posts to populate Briite's image-forward grid and single-item hero treatment.
 
 == Frequently Asked Questions ==
 
@@ -61,6 +81,7 @@ Briite no longer registers custom WordPress admin list-table columns because tha
 * Returned generator output policy to WordPress core and retired theme-owned social-profile persistence without deleting stored user metadata; generic historical aliases remain consumer-package compatibility only.
 * Retired automatic admin post/page Thumbnail columns while preserving prefixed callbacks for explicit downstream opt-in and the generic historical alias in the normal consumer compatibility module.
 * Added automated coding-standard, compatibility, contract, JavaScript, package, and WordPress runtime gates.
+* Added reproducible real-runtime documentation screenshots and a complete public feature reference without changing Briite's production templates or visual behavior.
 
 = 1.0 =
 * Original Briite classic portfolio theme release.

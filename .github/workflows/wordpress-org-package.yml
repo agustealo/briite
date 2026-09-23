@@ -229,6 +229,14 @@ jobs:
             --porcelain)
           wp post term add "${POST_ID}" category "${CATEGORY_ID}" --path=/tmp/wordpress
 
+          # Theme Check and WP-CLI run before the browser/server evidence window.
+          # Some tool dependencies can emit their own deprecations under
+          # WP_DEBUG. Keep those visible in their command output, but start the
+          # packaged front-end runtime with a clean diagnostic log so this gate
+          # attributes only rendered-route diagnostics to Briite.
+          mkdir -p /tmp/wordpress/wp-content
+          : > /tmp/wordpress/wp-content/debug.log
+
           php -S 127.0.0.1:8080 -t /tmp/wordpress >/tmp/briite-wordpress-org-server.log 2>&1 &
           SERVER_PID=$!
           trap 'kill "${SERVER_PID}" 2>/dev/null || true' EXIT
