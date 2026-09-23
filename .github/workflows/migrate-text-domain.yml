@@ -1,0 +1,104 @@
+name: Migrate Briite text domain
+
+on:
+  push:
+    branches:
+      - fix/briite-text-domain
+    paths:
+      - '.github/workflows/migrate-text-domain.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout migration branch
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: fix/briite-text-domain
+
+      - name: Set up PHP and WP-CLI
+        uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # v2
+        with:
+          php-version: '8.3'
+          coverage: none
+          tools: wp-cli
+
+      - name: Migrate gettext literals to briite
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 <<'PY'
+          from pathlib import Path
+
+          root = Path('.')
+          excluded_parts = {'.git', '.github', 'dist', 'tools', 'vendor'}
+
+          for path in root.rglob('*.php'):
+              if any(part in excluded_parts for part in path.parts):
+                  continue
+              source = path.read_text(encoding='utf-8')
+              migrated = source.replace("'kriate'", "'briite'").replace('"kriate"', '"briite"')
+              if migrated != source:
+                  path.write_text(migrated, encoding='utf-8')
+
+          style = Path('style.css')
+          source = style.read_text(encoding='utf-8')
+          old = 'Text Domain: kriate'
+          new = 'Text Domain: briite'
+          if old not in source:
+              raise SystemExit('Expected historical Text Domain header was not found.')
+          style.write_text(source.replace(old, new, 1), encoding='utf-8')
+          PY
+
+      - name: Regenerate translation template
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -f languages/kriate.pot
+          wp i18n make-pot . languages/briite.pot \
+            --domain=briite \
+            --exclude=.git,.github,dist,layouts,sass,tools,vendor
+          test -s languages/briite.pot
+          grep -q 'Project-Id-Version: Briite' languages/briite.pot
+
+      - name: Verify migration boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -q '^Text Domain: briite$' style.css
+          test ! -e languages/kriate.pot
+          test -s languages/briite.pot
+
+          if grep -RInE --include='*.php' \
+            --exclude-dir='.git' \
+            --exclude-dir='.github' \
+            --exclude-dir='dist' \
+            --exclude-dir='tools' \
+            --exclude-dir='vendor' \
+            "(['\"]kriate['\"])" .; then
+            echo 'Historical kriate gettext literal remains in runtime PHP.' >&2
+            exit 1
+          fi
+
+          grep -RIn --include='*.php' \
+            --exclude-dir='.git' \
+            --exclude-dir='.github' \
+            --exclude-dir='dist' \
+            --exclude-dir='tools' \
+            --exclude-dir='vendor' \
+            'kriate_' . >/tmp/kriate-public-api.txt
+          test -s /tmp/kriate-public-api.txt
+
+      - name: Commit migrated source and remove importer
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm .github/workflows/migrate-text-domain.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'Migrate gettext domain to briite'
+          git push origin HEAD:fix/briite-text-domain
