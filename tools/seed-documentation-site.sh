@@ -42,6 +42,11 @@ while IFS= read -r menu_id; do
 	fi
 done < <(wp menu list --path="${WP_PATH}" --field=term_id 2>/dev/null || true)
 
+# Remove the fresh-install widget assignments before seeding Briite's four
+# intentional footer columns. This keeps the documentation fixture focused on
+# the theme's real configured state rather than WordPress starter content.
+wp widget reset --all --path="${WP_PATH}" >/dev/null
+
 create_artwork() {
 	local output="$1"
 	local start_color="$2"
@@ -95,6 +100,7 @@ create_project() {
 		--porcelain)"
 
 	wp post term add "${post_id}" category "${category_id}" --path="${WP_PATH}" >/dev/null
+	wp post term remove "${post_id}" category Uncategorized --path="${WP_PATH}" >/dev/null 2>&1 || true
 
 	local attachment_id
 	attachment_id="$(wp media import "${image_path}" \
