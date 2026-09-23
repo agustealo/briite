@@ -1,31 +1,17 @@
 <?php
 /**
- * Historical Briite social-profile compatibility callbacks.
+ * Historical Briite social-profile compatibility entry point.
  *
- * Briite no longer registers user-profile fields or writes user metadata.
- * Existing twitter, facebook, and linkedin user-meta rows are intentionally
- * left untouched so upgrades do not destroy site data. The callback names are
- * retained as inert compatibility shims for child themes that test for them.
+ * The normal consumer package includes inc/legacy-compat.php so established
+ * child themes and integrations keep Briite's historical callback symbols.
+ * The WordPress.org release profile intentionally omits that consumer-only
+ * compatibility file to satisfy the directory's public-identifier prefix rules.
  *
  * @package kriate
  */
 
-/**
- * Historical social-profile renderer retained as an inert compatibility shim.
- *
- * @param WP_User $user User being edited.
- * @return void
- */
-function social_profile_fields( $user ) {
-	unset( $user );
-}
+$kriate_legacy_compat_file = __DIR__ . '/legacy-compat.php';
 
-/**
- * Historical social-profile save callback retained as an inert compatibility shim.
- *
- * @param int $user_id User ID being updated.
- * @return void
- */
-function social_save_profile_fields( $user_id ) {
-	unset( $user_id );
+if ( is_readable( $kriate_legacy_compat_file ) ) {
+	require_once $kriate_legacy_compat_file;
 }
