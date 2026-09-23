@@ -42,9 +42,9 @@ while IFS= read -r menu_id; do
 	fi
 done < <(wp menu list --path="${WP_PATH}" --field=term_id 2>/dev/null || true)
 
-# Remove the fresh-install widget assignments before seeding Briite's four
-# intentional footer columns. This keeps the documentation fixture focused on
-# the theme's real configured state rather than WordPress starter content.
+# Remove fresh-install widget assignments before seeding Briite's four
+# intentional footer columns. The documentation runtime should show the
+# configured theme rather than WordPress starter content.
 wp widget reset --all --path="${WP_PATH}" >/dev/null
 
 create_artwork() {
@@ -54,8 +54,8 @@ create_artwork() {
 	local accent_color="$4"
 
 	# Keep fixture artwork intentionally typeless. Briite's real HTML/CSS owns
-	# project titles and captions, and the abstract composition survives both
-	# the square grid crop and the wide single-post hero crop without clipping.
+	# project titles and captions, and the composition survives both canonical
+	# image crops without clipping copy into the frame.
 	convert \
 		-size 1600x1000 \
 		gradient:"${start_color}-${end_color}" \
@@ -82,7 +82,7 @@ create_project() {
 	local start_color="$6"
 	local end_color="$7"
 	local accent_color="$8"
-	local category_id="$9"
+	local category_slug="$9"
 
 	local image_path="${FIXTURE_DIR}/${slug}.png"
 	create_artwork "${image_path}" "${start_color}" "${end_color}" "${accent_color}"
@@ -99,8 +99,8 @@ create_project() {
 		--post_content="${content}" \
 		--porcelain)"
 
-	wp post term add "${post_id}" category "${category_id}" --path="${WP_PATH}" >/dev/null
-	wp post term remove "${post_id}" category Uncategorized --path="${WP_PATH}" >/dev/null 2>&1 || true
+	wp post term add "${post_id}" category "${category_slug}" --by=slug --path="${WP_PATH}" >/dev/null
+	wp post term remove "${post_id}" category Uncategorized --by=slug --path="${WP_PATH}" >/dev/null 2>&1 || true
 
 	local attachment_id
 	attachment_id="$(wp media import "${image_path}" \
@@ -141,7 +141,7 @@ PROJECT_ONE_ID="$(create_project \
 	'A modular editorial identity built around rhythm, hierarchy, and reusable visual rules.' \
 	'<p class="lead">A study in editorial rhythm, reusable systems, and image-led storytelling.</p><h2>One visual language, many surfaces</h2><p>The system balances large-format imagery with concise typography so each story has room to breathe while the overall portfolio remains unmistakably connected.</p><blockquote><p>Consistency should create freedom, not sameness.</p></blockquote><p>Reusable spacing, type, and image rules keep the presentation coherent across project notes, case studies, and long-form writing.</p>' \
 	'#0b132b' '#31587a' '#182d47' \
-	"${PORTFOLIO_CATEGORY_ID}")"
+	'portfolio')"
 
 PROJECT_TWO_ID="$(create_project \
 	'Northline Identity' \
@@ -150,7 +150,7 @@ PROJECT_TWO_ID="$(create_project \
 	'A restrained identity study pairing geometric structure with warm editorial texture.' \
 	'<p>Northline explores a visual identity that can move from compact digital layouts to broad campaign surfaces without losing its center.</p><h2>Structure first</h2><p>A limited system of type, scale, and negative space gives imagery the leading role while navigation remains direct and familiar.</p>' \
 	'#1f2937' '#8b5e3c' '#5d3d29' \
-	"${PORTFOLIO_CATEGORY_ID}")"
+	'portfolio')"
 
 PROJECT_THREE_ID="$(create_project \
 	'Object / Space' \
@@ -159,7 +159,7 @@ PROJECT_THREE_ID="$(create_project \
 	'An image-first collection studying product form, proportion, and negative space.' \
 	'<p>Object / Space uses Briite as a quiet frame for a sequence of visual studies.</p><p>The portfolio grid provides a fast overview, while the single-project view expands each study into a broader narrative surface.</p>' \
 	'#2d3748' '#557c83' '#34545b' \
-	"${PORTFOLIO_CATEGORY_ID}")"
+	'portfolio')"
 
 PROJECT_FOUR_ID="$(create_project \
 	'Type Studies' \
@@ -168,7 +168,7 @@ PROJECT_FOUR_ID="$(create_project \
 	'Experiments in scale and pacing for expressive but readable digital typography.' \
 	'<p>Type Studies examines how a compact set of typographic decisions can carry a portfolio across image-heavy and text-heavy work.</p><h2>Readable by design</h2><p>The goal is not decoration. It is a dependable rhythm that gives every project a clear entry point.</p>' \
 	'#171717' '#5b4b75' '#3a3150' \
-	"${PORTFOLIO_CATEGORY_ID}")"
+	'portfolio')"
 
 PROJECT_FIVE_ID="$(create_project \
 	'Field Notes' \
@@ -177,7 +177,7 @@ PROJECT_FIVE_ID="$(create_project \
 	'Short studio observations collected between larger project releases.' \
 	'<p>Field Notes keeps smaller observations close to the main body of work without requiring a second publishing system.</p><p>Briite supports the same WordPress content model for concise notes and larger case studies.</p>' \
 	'#263238' '#65786f' '#43534c' \
-	"${JOURNAL_CATEGORY_ID}")"
+	'journal')"
 
 PROJECT_SIX_ID="$(create_project \
 	'Quiet Interfaces' \
@@ -186,11 +186,11 @@ PROJECT_SIX_ID="$(create_project \
 	'A set of interface studies focused on clarity, restraint, and durable interaction patterns.' \
 	'<p>Quiet Interfaces treats navigation and interaction as supporting structure rather than spectacle.</p><p>That principle fits Briite itself: strong imagery, familiar controls, and just enough interface to move through the work.</p>' \
 	'#121826' '#4f6675' '#314653' \
-	"${PORTFOLIO_CATEGORY_ID}")"
+	'portfolio')"
 
 wp post term add "${PROJECT_ONE_ID}" post_tag 'identity' --by=slug --path="${WP_PATH}" >/dev/null 2>&1 || \
 	wp term create post_tag 'identity' --slug=identity --path="${WP_PATH}" >/dev/null
-wp post term add "${PROJECT_ONE_ID}" post_tag identity --path="${WP_PATH}" >/dev/null
+wp post term add "${PROJECT_ONE_ID}" post_tag identity --by=slug --path="${WP_PATH}" >/dev/null
 
 MENU_ID="$(wp menu create 'Briite Primary' --path="${WP_PATH}" --porcelain)"
 wp menu item add-custom "${MENU_ID}" 'Work' "${SITE_URL}/" --path="${WP_PATH}" >/dev/null
