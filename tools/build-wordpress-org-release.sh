@@ -32,6 +32,23 @@ if [[ ! -d "${STAGE_DIR}" ]]; then
 	exit 1
 fi
 
+LEGACY_COMPAT_FILE="${STAGE_DIR}/inc/legacy-compat.php"
+if [[ ! -f "${LEGACY_COMPAT_FILE}" ]]; then
+	echo "Consumer release is missing the expected legacy compatibility module before WordPress.org filtering." >&2
+	exit 1
+fi
+rm "${LEGACY_COMPAT_FILE}"
+
+if [[ -f "${LEGACY_COMPAT_FILE}" ]]; then
+	echo "WordPress.org staging still contains the consumer-only legacy compatibility module." >&2
+	exit 1
+fi
+
+if [[ -f "${STAGE_DIR}/inc/profile.php" ]]; then
+	echo "WordPress.org staging contains retired inc/profile.php." >&2
+	exit 1
+fi
+
 STAGE_DIR="${STAGE_DIR}" php <<'PHP'
 <?php
 $stage_dir = getenv( 'STAGE_DIR' );
@@ -161,6 +178,8 @@ if ! grep -q 'Raleway' "${STAGE_DIR}/css/fonts.css"; then
 	exit 1
 fi
 
+php "${ROOT_DIR}/tools/check-theme-scope-contracts.php" wordpress-org "${STAGE_DIR}"
+
 rm -f "${WORDPRESS_ORG_ARCHIVE}" "${WORDPRESS_ORG_CHECKSUM}"
 (
 	cd "${STAGE_ROOT}"
@@ -180,6 +199,15 @@ for required_path in \
 	'briite/js/theme.js'; do
 	if ! grep -qxF "${required_path}" <<< "${PACKAGE_LIST}"; then
 		echo "WordPress.org release archive is missing required path: ${required_path}" >&2
+		exit 1
+	fi
+done
+
+for forbidden_path in \
+	'briite/inc/legacy-compat.php' \
+	'briite/inc/profile.php'; do
+	if grep -qxF "${forbidden_path}" <<< "${PACKAGE_LIST}"; then
+		echo "WordPress.org release archive contains forbidden compatibility path: ${forbidden_path}" >&2
 		exit 1
 	fi
 done
