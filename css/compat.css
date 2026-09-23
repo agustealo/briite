@@ -48,6 +48,22 @@
 	color: inherit;
 }
 
+/*
+ * Required keyboard-focus contract.
+ *
+ * Briite's historical stylesheet already changes several form controls on
+ * :focus, but that does not cover every link/control. Keep a consistent,
+ * layout-neutral indicator for keyboard focus across all front-end controls.
+ */
+a:not(.screen-reader-text):focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+	outline: 2px solid currentColor;
+	outline-offset: 3px;
+}
+
 .main .work a:focus .caption,
 .main .work a:focus-visible .caption {
 	opacity: 1;
