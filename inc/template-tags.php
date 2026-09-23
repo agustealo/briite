@@ -114,34 +114,34 @@ endif;
 /**
  * Return whether the blog has more than one populated category.
  *
+ * The historical implementation cached this count in a transient and flushed
+ * it on content changes. Resource caching is plugin territory, and the query
+ * is intentionally bounded to two IDs, so Briite now derives the value without
+ * persisting site state.
+ *
  * @return bool
  */
 function kriate_categorized_blog() {
-	$kriate_category_count = get_transient( 'kriate_categories' );
+	$kriate_category_ids = get_categories(
+		array(
+			'fields'     => 'ids',
+			'hide_empty' => 1,
+			'number'     => 2,
+		)
+	);
 
-	if ( false === $kriate_category_count ) {
-		$kriate_category_ids = get_categories(
-			array(
-				'fields'     => 'ids',
-				'hide_empty' => 1,
-				'number'     => 2,
-			)
-		);
-
-		$kriate_category_count = count( $kriate_category_ids );
-		set_transient( 'kriate_categories', $kriate_category_count );
-	}
-
-	return $kriate_category_count > 1;
+	return count( $kriate_category_ids ) > 1;
 }
 
 /**
- * Flush the transient used by kriate_categorized_blog().
+ * Retain the historical category-cache callback for child-theme compatibility.
+ *
+ * Briite no longer owns a persistent category cache, so there is nothing to
+ * flush. The callback intentionally remains available for downstream code that
+ * checks for or calls the historical symbol.
  *
  * @return void
  */
 function kriate_category_transient_flusher() {
-	delete_transient( 'kriate_categories' );
+	// Intentionally empty: Briite no longer persists category-count state.
 }
-add_action( 'edit_category', 'kriate_category_transient_flusher' );
-add_action( 'save_post', 'kriate_category_transient_flusher' );
