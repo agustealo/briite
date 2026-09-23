@@ -34,6 +34,7 @@ REQUIRED_FILES=(
 	footer.php
 	functions.php
 	header.php
+	inc/legacy-compat.php
 	index.php
 	LICENSE.txt
 	page.php
@@ -67,6 +68,11 @@ for relative_path in "${REQUIRED_DIRECTORIES[@]}"; do
 		exit 1
 	fi
 done
+
+if [[ -f "${ROOT_DIR}/inc/profile.php" ]]; then
+	echo "Retired inc/profile.php compatibility file remains in the release source." >&2
+	exit 1
+fi
 
 if ! grep -q 'Bootstrap v3.3.7' "${ROOT_DIR}/css/bootstrap-3.3.7.css"; then
 	echo "Bundled unminified Bootstrap CSS does not identify itself as version 3.3.7." >&2
@@ -170,6 +176,7 @@ PACKAGE_LIST="$(unzip -Z1 "${ARCHIVE_PATH}")"
 for required_path in \
 	'briite/style.css' \
 	'briite/functions.php' \
+	'briite/inc/legacy-compat.php' \
 	'briite/index.php' \
 	'briite/readme.txt' \
 	'briite/LICENSE.txt' \
@@ -183,6 +190,11 @@ for required_path in \
 		exit 1
 	fi
 done
+
+if grep -qxF 'briite/inc/profile.php' <<< "${PACKAGE_LIST}"; then
+	echo "Release archive contains retired inc/profile.php." >&2
+	exit 1
+fi
 
 FORBIDDEN_PATTERN='^briite/(\.git|\.github|tools|sass|layouts|vendor|dist)(/|$)|^briite/(composer\.json|composer\.lock|phpcs\.xml\.dist|README\.md|\.gitignore|\.gitattributes)$|\.map$'
 if grep -Eq "${FORBIDDEN_PATTERN}" <<< "${PACKAGE_LIST}"; then
