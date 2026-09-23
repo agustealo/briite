@@ -7,7 +7,7 @@
 
 ?>
 
-<div class="work">
+<div id="post-<?php the_ID(); ?>" <?php post_class( 'work' ); ?>>
 	<a href="<?php echo esc_url( get_permalink() ); ?>" title="<?php echo esc_attr( the_title_attribute( array( 'echo' => false ) ) ); ?>">
 		<?php
 		if ( has_post_thumbnail() ) {
