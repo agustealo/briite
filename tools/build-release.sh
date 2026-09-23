@@ -34,7 +34,6 @@ REQUIRED_FILES=(
 	footer.php
 	functions.php
 	header.php
-	inc/legacy-compat.php
 	index.php
 	LICENSE.txt
 	page.php
@@ -68,6 +67,11 @@ for relative_path in "${REQUIRED_DIRECTORIES[@]}"; do
 		exit 1
 	fi
 done
+
+if [[ ! -f "${ROOT_DIR}/inc/legacy-compat.php" ]]; then
+	echo "Missing consumer legacy compatibility module: inc/legacy-compat.php" >&2
+	exit 1
+fi
 
 if [[ -f "${ROOT_DIR}/inc/profile.php" ]]; then
 	echo "Retired inc/profile.php compatibility file remains in the release source." >&2
