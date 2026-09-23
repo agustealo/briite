@@ -28,4 +28,9 @@
 			</property>
 		</properties>
 	</rule>
+
+	<!-- WPCS 3.4.1 misclassifies the documented compatibility-only include wrapper as lacking a file comment. Keep every other sniff active on that file. -->
+	<rule ref="Squiz.Commenting.FileComment.Missing">
+		<exclude-pattern>inc/profile.php</exclude-pattern>
+	</rule>
 </ruleset>
