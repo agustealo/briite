@@ -112,12 +112,15 @@ $kriate_parse_catalog = static function ( $kriate_path ) use ( $kriate_decode_po
 			}
 
 			$kriate_quoted = substr( $kriate_trimmed, strlen( $kriate_prefix ) );
+
 			$kriate_entry[ $kriate_candidate_field ] = $kriate_decode_po_string(
 				$kriate_quoted,
 				$kriate_path,
 				$kriate_line_number
 			);
-			$kriate_field         = $kriate_candidate_field;
+
+			$kriate_field = $kriate_candidate_field;
+
 			$kriate_matched_field = true;
 			break;
 		}
