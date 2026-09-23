@@ -1,17 +1,171 @@
 /*
-Theme Name: kriate
+Theme Name: Briite
 
-Adding support for language written in a Right To Left (RTL) direction is easy -
-it's just a matter of overwriting all the horizontal positioning attributes
-of your CSS stylesheet in a separate stylesheet file named rtl.css.
+Briite RTL compatibility layer.
 
-http://codex.wordpress.org/Right_to_Left_Language_Support
-
+This stylesheet mirrors Briite's established directional layout without
+changing its dimensions, breakpoints, hierarchy, or visual identity.
 */
 
-/*
 body {
 	direction: rtl;
 	unicode-bidi: embed;
 }
-*/
+
+.main .work {
+	float: right;
+}
+
+.main .work .caption {
+	left: auto;
+	right: 0;
+}
+
+.main-navigation ul li {
+	padding-left: 0;
+	padding-right: 15px;
+}
+
+.main-navigation ul ul {
+	margin-left: 0;
+	margin-right: 185px;
+}
+
+.main-navigation ul ul ul {
+	margin-left: 0;
+	margin-right: 285px;
+}
+
+.main-navigation ul .page_item_has_children:nth-child(1n+1):after,
+.main-navigation ul .menu-item-has-children:nth-child(1n+1):after {
+	content: "\2039";
+	float: left;
+}
+
+.current_page_item > a,
+.main-navigation a:hover,
+.main-navigation a:active,
+.main-navigation a:focus {
+	border-left: 0;
+	border-right: solid 5px;
+	padding-left: 0;
+	padding-right: 3px;
+}
+
+.work_nav .btn {
+	float: left;
+}
+
+.work_nav ul li {
+	float: right;
+	margin: 0 1px 1px 0;
+}
+
+.nav-previous {
+	float: right;
+	margin-left: 0 !important;
+	margin-right: 50px !important;
+}
+
+.nav-next {
+	float: left;
+	margin-left: 50px !important;
+	margin-right: 0 !important;
+}
+
+header ul.social li {
+	float: right;
+	margin: 0 0 15px 15px;
+}
+
+.widget-area .widget-col .widget-title {
+	border-left: 0;
+	border-right: 5px solid #7b8ba7;
+}
+
+.widget-area .widget-col .widget_search .search-field {
+	background-position: right 10px top 10px;
+	padding: 12px 40px 12px 20px;
+}
+
+.widget-area .widget-col ul li {
+	padding-left: 0;
+	padding-right: 10px;
+}
+
+.widget-area .widget-col ul li:before {
+	float: right;
+	left: auto;
+	right: -10px;
+}
+
+.comment-author > img {
+	float: right;
+	margin-left: 10px;
+	margin-right: 0;
+}
+
+.comment-reply-link,
+.comment-list .edit-link,
+.comment-metadata > a,
+.comment-reply-title small a {
+	float: left;
+}
+
+.comment-list .edit-link {
+	margin-left: 0;
+	margin-right: 20px;
+}
+
+.comment-metadata > strong.fn {
+	margin: 0 0 0 12px;
+}
+
+dl:before {
+	left: auto;
+	right: -30px;
+}
+
+.content_header {
+	left: auto;
+	margin-left: 0;
+	margin-right: -46.36363636363637%;
+	right: 50%;
+}
+
+@media (min-width: 1000px) {
+	.site-header {
+		float: right;
+		left: auto;
+		padding: 0 50px 0 0;
+		right: 0;
+	}
+
+	.main {
+		padding-left: 0;
+		padding-right: 300px;
+	}
+}
+
+@media (max-width: 1100px) {
+	.site-header .logo {
+		margin: 40px 30px 0 0;
+	}
+
+	.main {
+		padding-left: 0;
+		padding-right: 0;
+	}
+
+	.site-header #menu_icon,
+	.site-header .close_menu {
+		float: left;
+		margin: 30px 0 0 30px;
+	}
+
+	.main-navigation ul ul,
+	.main-navigation ul ul ul {
+		margin-left: 0;
+		margin-right: 0;
+	}
+}
