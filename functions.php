@@ -101,9 +101,9 @@ add_action( 'after_setup_theme', 'kriate_setup' );
  * attachments that already contain the old generated files can still serve
  * those files until WordPress generates the canonical derivatives naturally.
  *
- * @param bool|array $downsize      Existing image_downsize short-circuit value.
- * @param int        $attachment_id Attachment ID.
- * @param string|int[] $size        Requested image size.
+ * @param bool|array   $downsize      Existing image_downsize short-circuit value.
+ * @param int          $attachment_id Attachment ID.
+ * @param string|int[] $size          Requested image size.
  * @return bool|array
  */
 function briite_legacy_image_size_fallback( $downsize, $attachment_id, $size ) {
