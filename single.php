@@ -66,7 +66,7 @@ while ( have_posts() ) :
 
 	<section class="wrapper">
 		<div class="content">
-			<article class="entry-content">
+			<article id="post-<?php the_ID(); ?>" <?php post_class( 'entry-content' ); ?>>
 				<?php the_content(); ?>
 				<?php
 				wp_link_pages(
