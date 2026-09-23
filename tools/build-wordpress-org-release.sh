@@ -173,6 +173,15 @@ for stylesheet in \
 	fi
 done
 
+if grep -R -E -n \
+	--include='*.css' \
+	--include='*.scss' \
+	'Glyphicons Halflings|glyphicons-halflings-regular|FontAwesome' \
+	"${STAGE_DIR}"; then
+	echo "WordPress.org package contains a theme-owned dependency on a removed or unbundled icon font." >&2
+	exit 1
+fi
+
 if ! grep -q 'Raleway' "${STAGE_DIR}/css/fonts.css"; then
 	echo "WordPress.org package lost Briite's Raleway font configuration." >&2
 	exit 1

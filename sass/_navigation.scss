@@ -81,14 +81,14 @@
 		.menu-item-has-children:hover:nth-child(2n+1):after {
 			
 			background: $base;
-			content: "\e178";
+			content: "\203A";
 			display: hidden;
 		}
 		
 		.page_item_has_children:nth-child(1n+1):after,
 		.menu-item-has-children:nth-child(1n+1):after {
-			font-family: 'Glyphicons Halflings';
-	   		content: "\e178";
+			font-family: Arial, sans-serif;
+	   		content: "\203A";
 			float: right;
 			height: 40px;
 			animation: arrow .5s infinite ease;
