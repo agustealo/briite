@@ -15,6 +15,7 @@ $kriate_files = array(
 	'header.php',
 	'css/compat.css',
 	'rtl.css',
+	'js/customizer.js',
 	'inc/custom-header.php',
 	'inc/customizer.php',
 	'inc/jetpack.php',
@@ -172,6 +173,31 @@ if ( isset( $kriate_sources['rtl.css'] ) ) {
 		if ( false === strpos( $kriate_rtl_source, $kriate_required_rtl_style ) ) {
 			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fwrite -- Development-only CLI output; WordPress is not bootstrapped.
 			fwrite( STDERR, "Missing Briite RTL compatibility style: {$kriate_required_rtl_style}\n" );
+			$kriate_failed = true;
+		}
+	}
+}
+
+if ( isset( $kriate_sources['js/customizer.js'] ) ) {
+	$kriate_customizer_asset_source = $kriate_sources['js/customizer.js'];
+
+	if ( false === strpos( $kriate_customizer_asset_source, 'Historical Briite Customizer asset path.' ) ) {
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fwrite -- Development-only CLI output; WordPress is not bootstrapped.
+		fwrite( STDERR, "Briite's historical Customizer asset is no longer marked as an inert compatibility path.\n" );
+		$kriate_failed = true;
+	}
+
+	$kriate_retired_customizer_asset_patterns = array(
+		'wp.customize(',
+		"$( '.site-title",
+		"$( '.site-description",
+		"'header_textcolor'",
+	);
+
+	foreach ( $kriate_retired_customizer_asset_patterns as $kriate_retired_customizer_asset_pattern ) {
+		if ( false !== strpos( $kriate_customizer_asset_source, $kriate_retired_customizer_asset_pattern ) ) {
+			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fwrite -- Development-only CLI output; WordPress is not bootstrapped.
+			fwrite( STDERR, "Retired Briite Customizer JavaScript behavior remains: {$kriate_retired_customizer_asset_pattern}\n" );
 			$kriate_failed = true;
 		}
 	}
