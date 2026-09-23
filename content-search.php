@@ -25,14 +25,14 @@
 		<footer class="entry-footer">
 			<?php if ( 'post' === get_post_type() ) : ?>
 				<?php
-				$kriate_categories_list = get_the_category_list( esc_html__( ', ', 'kriate' ) );
+				$kriate_categories_list = get_the_category_list( esc_html__( ', ', 'briite' ) );
 				if ( $kriate_categories_list && kriate_categorized_blog() ) :
 					?>
 					<span class="cat-links">
 						<?php
 						printf(
 							/* translators: %s: post categories. */
-							wp_kses_post( __( 'Posted in %1$s', 'kriate' ) ),
+							wp_kses_post( __( 'Posted in %1$s', 'briite' ) ),
 							wp_kses_post( $kriate_categories_list )
 						);
 						?>
@@ -40,14 +40,14 @@
 				<?php endif; ?>
 
 				<?php
-				$kriate_tags_list = get_the_tag_list( '', esc_html__( ', ', 'kriate' ) );
+				$kriate_tags_list = get_the_tag_list( '', esc_html__( ', ', 'briite' ) );
 				if ( $kriate_tags_list ) :
 					?>
 					<span class="tags-links">
 						<?php
 						printf(
 							/* translators: %s: post tags. */
-							wp_kses_post( __( 'Tagged %1$s', 'kriate' ) ),
+							wp_kses_post( __( 'Tagged %1$s', 'briite' ) ),
 							wp_kses_post( $kriate_tags_list )
 						);
 						?>
@@ -57,11 +57,11 @@
 
 			<?php if ( ! post_password_required() && ( comments_open() || 0 < (int) get_comments_number() ) ) : ?>
 				<span class="comments-link">
-					<?php comments_popup_link( esc_html__( 'Leave a comment', 'kriate' ), esc_html__( '1 Comment', 'kriate' ), esc_html__( '% Comments', 'kriate' ) ); ?>
+					<?php comments_popup_link( esc_html__( 'Leave a comment', 'briite' ), esc_html__( '1 Comment', 'briite' ), esc_html__( '% Comments', 'briite' ) ); ?>
 				</span>
 			<?php endif; ?>
 
-			<?php edit_post_link( esc_html__( 'Edit', 'kriate' ), '<span class="edit-link">', '</span>' ); ?>
+			<?php edit_post_link( esc_html__( 'Edit', 'briite' ), '<span class="edit-link">', '</span>' ); ?>
 		</footer><!-- .entry-footer -->
 	</div><!-- .entry-content -->
 </article><!-- #post-## -->

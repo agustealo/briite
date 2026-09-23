@@ -9,7 +9,7 @@
 
 <section class="work no-results not-found">
 	<header class="page-header">
-		<h1 class="page-title"><?php esc_html_e( 'Nothing Found', 'kriate' ); ?></h1>
+		<h1 class="page-title"><?php esc_html_e( 'Nothing Found', 'briite' ); ?></h1>
 	</header><!-- .page-header -->
 
 	<div class="page-content">
@@ -17,15 +17,15 @@
 			<p>
 				<?php
 				/* translators: %1$s: URL to create a new post. */
-				$kriate_publish_prompt = __( 'Ready to publish your first post? <a href="%1$s">Get started here</a>.', 'kriate' );
+				$kriate_publish_prompt = __( 'Ready to publish your first post? <a href="%1$s">Get started here</a>.', 'briite' );
 				echo wp_kses_post( sprintf( $kriate_publish_prompt, esc_url( admin_url( 'post-new.php' ) ) ) );
 				?>
 			</p>
 		<?php elseif ( is_search() ) : ?>
-			<p><?php esc_html_e( 'Sorry, but nothing matched your search terms. Please try again with some different keywords.', 'kriate' ); ?></p>
+			<p><?php esc_html_e( 'Sorry, but nothing matched your search terms. Please try again with some different keywords.', 'briite' ); ?></p>
 			<?php get_search_form(); ?>
 		<?php else : ?>
-			<p><?php esc_html_e( 'It seems we can’t find what you’re looking for. Perhaps searching can help.', 'kriate' ); ?></p>
+			<p><?php esc_html_e( 'It seems we can’t find what you’re looking for. Perhaps searching can help.', 'briite' ); ?></p>
 			<?php get_search_form(); ?>
 		<?php endif; ?>
 	</div><!-- .page-content -->

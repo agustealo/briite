@@ -31,7 +31,7 @@ if ( ! function_exists( 'kriate_setup' ) ) :
 	 * Set up theme defaults and register support for WordPress features.
 	 */
 	function kriate_setup() {
-		load_theme_textdomain( 'kriate', get_template_directory() . '/languages' );
+		load_theme_textdomain( 'briite', get_template_directory() . '/languages' );
 
 		add_theme_support( 'automatic-feed-links' );
 		add_theme_support( 'title-tag' );
@@ -51,7 +51,7 @@ if ( ! function_exists( 'kriate_setup' ) ) :
 
 		register_nav_menus(
 			array(
-				'primary' => __( 'Primary Menu', 'kriate' ),
+				'primary' => __( 'Primary Menu', 'briite' ),
 			)
 		);
 
@@ -122,7 +122,7 @@ function smashing_jpeg_quality( $quality, $mime_type = '' ) {
  * @return array
  */
 function kriate_Thumbnail_Column( $columns ) {
-	$columns['thumbnail'] = __( 'Thumbnail', 'kriate' );
+	$columns['thumbnail'] = __( 'Thumbnail', 'briite' );
 	return $columns;
 }
 
@@ -164,7 +164,7 @@ function kriate_render_thumbnail_column( $column_name, $post_id ) {
 		}
 	}
 
-	echo esc_html__( 'None', 'kriate' );
+	echo esc_html__( 'None', 'briite' );
 }
 
 // phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedFunctionFound -- Public callback retained for backwards compatibility.
@@ -199,20 +199,20 @@ function kriate_AddThumbValue( $column_name, $post_id ) {
 function kriate_widgets_init() {
 	$sidebars = array(
 		'bottom-widget-1' => array(
-			'name'        => __( 'Widget 1', 'kriate' ),
-			'description' => __( 'Located at the bottom of your theme', 'kriate' ),
+			'name'        => __( 'Widget 1', 'briite' ),
+			'description' => __( 'Located at the bottom of your theme', 'briite' ),
 		),
 		'bottom-widget-2' => array(
-			'name'        => __( 'Widget 2', 'kriate' ),
-			'description' => __( 'The second located at the bottom of your theme', 'kriate' ),
+			'name'        => __( 'Widget 2', 'briite' ),
+			'description' => __( 'The second located at the bottom of your theme', 'briite' ),
 		),
 		'bottom-widget-3' => array(
-			'name'        => __( 'Widget 3', 'kriate' ),
-			'description' => __( 'The third widget located at the bottom of your theme', 'kriate' ),
+			'name'        => __( 'Widget 3', 'briite' ),
+			'description' => __( 'The third widget located at the bottom of your theme', 'briite' ),
 		),
 		'bottom-widget-4' => array(
-			'name'        => __( 'Widget 4', 'kriate' ),
-			'description' => __( 'The fourth widget located at the bottom of your theme', 'kriate' ),
+			'name'        => __( 'Widget 4', 'briite' ),
+			'description' => __( 'The fourth widget located at the bottom of your theme', 'briite' ),
 		),
 	);
 

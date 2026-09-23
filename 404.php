@@ -13,11 +13,11 @@ get_header();
 
 			<section class="error-404 not-found">
 				<header class="page-header">
-					<h1 class="page-title"><?php esc_html_e( 'Oops! That page can’t be found.', 'kriate' ); ?></h1>
+					<h1 class="page-title"><?php esc_html_e( 'Oops! That page can’t be found.', 'briite' ); ?></h1>
 				</header><!-- .page-header -->
 
 				<div class="page-content">
-					<p><?php esc_html_e( 'It looks like nothing was found at this location. Maybe try one of the links below or a search?', 'kriate' ); ?></p>
+					<p><?php esc_html_e( 'It looks like nothing was found at this location. Maybe try one of the links below or a search?', 'briite' ); ?></p>
 				</div><!-- .page-content -->
 			</section><!-- .error-404 -->
 

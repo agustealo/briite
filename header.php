@@ -17,7 +17,7 @@
 </head>
 <body <?php body_class(); ?>>
 <?php wp_body_open(); ?>
-<a class="screen-reader-text skip-link" href="#content"><?php esc_html_e( 'Skip to content', 'kriate' ); ?></a>
+<a class="screen-reader-text skip-link" href="#content"><?php esc_html_e( 'Skip to content', 'briite' ); ?></a>
 	<header id="masthead" class="site-header" role="banner">
 		<div class="logo">
 			<a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home">
@@ -32,9 +32,9 @@
 			</a>
 		</div><!-- end logo -->
 		<button id="menu_icon" class="menu-toggle" type="button" aria-controls="site-navigation" aria-expanded="false">
-			<span class="screen-reader-text"><?php esc_html_e( 'Toggle navigation', 'kriate' ); ?></span>
+			<span class="screen-reader-text"><?php esc_html_e( 'Toggle navigation', 'briite' ); ?></span>
 		</button>
-		<nav id="site-navigation" class="main-navigation" role="navigation" aria-label="<?php esc_attr_e( 'Primary Menu', 'kriate' ); ?>">
+		<nav id="site-navigation" class="main-navigation" role="navigation" aria-label="<?php esc_attr_e( 'Primary Menu', 'briite' ); ?>">
 			<?php
 			wp_nav_menu(
 				array(
@@ -49,15 +49,15 @@
 				<li><a class="fb" aria-hidden="true" tabindex="-1"></a></li>
 				<li><a class="google" aria-hidden="true" tabindex="-1"></a></li>
 				<li><a class="behance" aria-hidden="true" tabindex="-1"></a></li>
-				<li><a href="<?php echo esc_url( get_feed_link() ); ?>" class="rss" data-title="RSS"><span class="screen-reader-text"><?php esc_html_e( 'RSS', 'kriate' ); ?></span></a></li>
+				<li><a href="<?php echo esc_url( get_feed_link() ); ?>" class="rss" data-title="RSS"><span class="screen-reader-text"><?php esc_html_e( 'RSS', 'briite' ); ?></span></a></li>
 			</ul><!-- end social -->
 			<div class="rights">
-				<p><?php esc_html_e( 'Proudly powered by', 'kriate' ); ?> <a href="https://wordpress.org/">WordPress</a></p>
+				<p><?php esc_html_e( 'Proudly powered by', 'briite' ); ?> <a href="https://wordpress.org/">WordPress</a></p>
 				<p>
 					<?php
 					printf(
 						/* translators: 1: theme name, 2: theme author link. */
-						wp_kses_post( __( 'Theme: %1$s by %2$s.', 'kriate' ) ),
+						wp_kses_post( __( 'Theme: %1$s by %2$s.', 'briite' ) ),
 						'Briite',
 						'<a href="https://agustealo.com/" rel="designer">Kriate Project</a>'
 					);

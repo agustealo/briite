@@ -19,14 +19,14 @@ if ( ! function_exists( 'kriate_paging_nav' ) ) :
 		}
 		?>
 		<nav class="navigation paging-navigation" role="navigation">
-			<h1 class="screen-reader-text"><?php esc_html_e( 'Posts navigation', 'kriate' ); ?></h1>
+			<h1 class="screen-reader-text"><?php esc_html_e( 'Posts navigation', 'briite' ); ?></h1>
 			<div class="nav-links">
 				<?php if ( get_next_posts_link() ) : ?>
-				<div class="nav-previous"><?php next_posts_link( wp_kses_post( __( '<span class="meta-nav">&larr;</span> Older posts', 'kriate' ) ) ); ?></div>
+				<div class="nav-previous"><?php next_posts_link( wp_kses_post( __( '<span class="meta-nav">&larr;</span> Older posts', 'briite' ) ) ); ?></div>
 				<?php endif; ?>
 
 				<?php if ( get_previous_posts_link() ) : ?>
-				<div class="nav-next"><?php previous_posts_link( wp_kses_post( __( 'Newer posts <span class="meta-nav">&rarr;</span>', 'kriate' ) ) ); ?></div>
+				<div class="nav-next"><?php previous_posts_link( wp_kses_post( __( 'Newer posts <span class="meta-nav">&rarr;</span>', 'briite' ) ) ); ?></div>
 				<?php endif; ?>
 			</div><!-- .nav-links -->
 		</nav><!-- .navigation -->
@@ -50,17 +50,17 @@ if ( ! function_exists( 'kriate_post_nav' ) ) :
 		}
 		?>
 		<nav class="navigation post-navigation" role="navigation">
-			<h1 class="screen-reader-text"><?php esc_html_e( 'Post navigation', 'kriate' ); ?></h1>
+			<h1 class="screen-reader-text"><?php esc_html_e( 'Post navigation', 'briite' ); ?></h1>
 			<div class="nav-links">
 				<?php
 				/* translators: %title: previous post title. */
-				$kriate_previous_label = _x( '<span class="meta-nav">&larr;</span>&nbsp;%title', 'Previous post link', 'kriate' );
+				$kriate_previous_label = _x( '<span class="meta-nav">&larr;</span>&nbsp;%title', 'Previous post link', 'briite' );
 				previous_post_link(
 					'<div class="nav-previous">%link</div>',
 					wp_kses_post( $kriate_previous_label )
 				);
 				/* translators: %title: next post title. */
-				$kriate_next_label = _x( '%title&nbsp;<span class="meta-nav">&rarr;</span>', 'Next post link', 'kriate' );
+				$kriate_next_label = _x( '%title&nbsp;<span class="meta-nav">&rarr;</span>', 'Next post link', 'briite' );
 				next_post_link(
 					'<div class="nav-next">%link</div>',
 					wp_kses_post( $kriate_next_label )
@@ -94,14 +94,14 @@ if ( ! function_exists( 'kriate_posted_on' ) ) :
 		);
 
 		/* translators: %s: linked post date. */
-		$kriate_posted_on_format = _x( 'Posted on %s', 'post date', 'kriate' );
+		$kriate_posted_on_format = _x( 'Posted on %s', 'post date', 'briite' );
 		$kriate_posted_on        = sprintf(
 			$kriate_posted_on_format,
 			'<a href="' . esc_url( get_permalink() ) . '" rel="bookmark">' . $kriate_time_string . '</a>'
 		);
 
 		/* translators: %s: linked post author. */
-		$kriate_byline_format = _x( 'by %s', 'post author', 'kriate' );
+		$kriate_byline_format = _x( 'by %s', 'post author', 'briite' );
 		$kriate_byline        = sprintf(
 			$kriate_byline_format,
 			'<span class="author vcard"><a class="url fn n" href="' . esc_url( get_author_posts_url( get_the_author_meta( 'ID' ) ) ) . '">' . esc_html( get_the_author() ) . '</a></span>'
