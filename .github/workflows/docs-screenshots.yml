@@ -104,6 +104,15 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+
+          # WP-CLI installation may attempt WordPress.org update checks before
+          # the documentation runtime starts. Those setup-only network warnings
+          # are outside the screenshot evidence boundary. Start the capture
+          # window with a clean diagnostic log, then fail on anything produced
+          # by the actual rendered runtime below.
+          mkdir -p /tmp/wordpress/wp-content
+          : > /tmp/wordpress/wp-content/debug.log
+
           php -S 127.0.0.1:8080 -t /tmp/wordpress >/tmp/briite-doc-server.log 2>&1 &
           echo $! > /tmp/briite-doc-server.pid
 
