@@ -14,6 +14,7 @@ $kriate_files = array(
 	'functions.php',
 	'header.php',
 	'css/compat.css',
+	'rtl.css',
 	'inc/custom-header.php',
 	'inc/customizer.php',
 	'inc/jetpack.php',
@@ -145,6 +146,32 @@ if ( isset( $kriate_sources['css/compat.css'] ) ) {
 		if ( false === strpos( $kriate_compat_source, $kriate_required_accessibility_style ) ) {
 			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fwrite -- Development-only CLI output; WordPress is not bootstrapped.
 			fwrite( STDERR, "Missing Briite accessibility compatibility style: {$kriate_required_accessibility_style}\n" );
+			$kriate_failed = true;
+		}
+	}
+}
+
+if ( isset( $kriate_sources['rtl.css'] ) ) {
+	$kriate_rtl_source = $kriate_sources['rtl.css'];
+
+	$kriate_required_rtl_styles = array(
+		'direction: rtl;',
+		'.main .work {',
+		'float: right;',
+		'margin-right: 185px;',
+		'border-right: solid 5px;',
+		'.nav-previous {',
+		'.nav-next {',
+		'.site-header {',
+		'padding-right: 300px;',
+		'.site-header #menu_icon,',
+		'margin-right: 0;',
+	);
+
+	foreach ( $kriate_required_rtl_styles as $kriate_required_rtl_style ) {
+		if ( false === strpos( $kriate_rtl_source, $kriate_required_rtl_style ) ) {
+			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fwrite -- Development-only CLI output; WordPress is not bootstrapped.
+			fwrite( STDERR, "Missing Briite RTL compatibility style: {$kriate_required_rtl_style}\n" );
 			$kriate_failed = true;
 		}
 	}
