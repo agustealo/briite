@@ -11,7 +11,7 @@
 	<a href="<?php echo esc_url( get_permalink() ); ?>" title="<?php echo esc_attr( the_title_attribute( array( 'echo' => false ) ) ); ?>">
 		<?php
 		if ( has_post_thumbnail() ) {
-			the_post_thumbnail( 'grid-thumb', array( 'class' => 'media' ) );
+			the_post_thumbnail( 'kriate-grid-thumb', array( 'class' => 'media' ) );
 		}
 		?>
 		<div class="caption">
